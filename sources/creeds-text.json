@@ -1,0 +1,13 @@
+{
+  "_note": "Canonical memorisation text, assembled from the phrase cells of creeds-annotated.json. Wording is the docx's; capitalisation of row starts and missing commas are normalised. Starred Apostles' phrases are placed in the creed's own order here.",
+  "apostles": [
+    "I believe in God, the Father Almighty, Maker of heaven and earth.",
+    "And in Jesus Christ, His only Son, our Lord, Who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and was buried. He descended into hell. The third day He rose again from the dead. He ascended into heaven, and sits at the right hand of God the Father Almighty. From thence He shall come to judge the living and the dead.",
+    "I believe in the Holy Spirit, the holy catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and the life everlasting. Amen."
+  ],
+  "nicene": [
+    "I believe in one God, the Father Almighty, Maker of heaven and earth and all things visible and invisible.",
+    "And in one Lord, Jesus Christ, the only-begotten Son of God, begotten of His Father before all worlds, God of God, Light of Light, very God of very God, begotten, not made, being of one substance with the Father, by Whom all things were made; Who for us men and for our salvation came down from heaven and was incarnate by the Holy Spirit of the Virgin Mary and was made man; and was crucified also for us under Pontius Pilate. He suffered and was buried. And the third day He rose again according to the Scriptures and ascended into heaven and sits at the right hand of the Father. And He will come again with glory to judge both the living and the dead, Whose kingdom will have no end.",
+    "And I believe in the Holy Spirit, the Lord and giver of life, Who proceeds from the Father and the Son, Who with the Father and the Son together is worshiped and glorified, Who spoke by the prophets. And I believe in one holy catholic and apostolic Church, I acknowledge one Baptism for the remission of sins, and I look for the resurrection of the dead and the life of the world to come. Amen."
+  ]
+}

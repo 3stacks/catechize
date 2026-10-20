@@ -1,0 +1,32 @@
+{
+  "name": "catechize",
+  "version": "1.0.0",
+  "description": "Memorise and study the Reformed confessions, creeds and Scripture.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "data": "node scripts/build-data.ts",
+    "extract:creeds": "python3 -I scripts/extract-creeds-docx.py"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "dependencies": {
+    "dexie": "^4.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "ts-fsrs": "^5.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.0.5"
+  },
+  "private": true
+}

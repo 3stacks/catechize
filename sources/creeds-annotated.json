@@ -1,0 +1,489 @@
+{
+  "source": "Apostles' and Nicene Creeds.docx (Luke Boyle)",
+  "articles": [
+    {
+      "title": "Article I: God the Father, Creation",
+      "rows": [
+        {
+          "apostles": "I believe",
+          "apostlesOutOfOrder": false,
+          "nicene": "I believe",
+          "scripture": "Rom. 10:9, Jas 2:19, John 14:1",
+          "hymn": "Sing Praises to God, Sing Praises (R62)"
+        },
+        {
+          "apostles": "in God,",
+          "apostlesOutOfOrder": false,
+          "nicene": "in one God,",
+          "scripture": "Deut. 6:4, Is. 44:6",
+          "hymn": null
+        },
+        {
+          "apostles": "The Father",
+          "apostlesOutOfOrder": false,
+          "nicene": "the Father",
+          "scripture": "Is. 63:16, 2 Pet. 1:17, Mt. 6:9",
+          "hymn": "Immortal, Invisible, God Only Wise (R38)"
+        },
+        {
+          "apostles": "Almighty,",
+          "apostlesOutOfOrder": false,
+          "nicene": "Almighty,",
+          "scripture": "Gen. 17:1, Ps. 91:1, Rev. 4:8",
+          "hymn": null
+        },
+        {
+          "apostles": "Maker",
+          "apostlesOutOfOrder": false,
+          "nicene": "Maker",
+          "scripture": "Job 4:17, 35:10, Is. 17:7, 54:5",
+          "hymn": "Praise to the Lord, the Almighty (R46)"
+        },
+        {
+          "apostles": "of heaven",
+          "apostlesOutOfOrder": false,
+          "nicene": "of heaven",
+          "scripture": "Gen. 1:1, 1:8",
+          "hymn": null
+        },
+        {
+          "apostles": "And earth",
+          "apostlesOutOfOrder": false,
+          "nicene": "and earth",
+          "scripture": "Ps. 104:5, Jer. 51:15",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "and all things",
+          "scripture": "Gen. 1:31",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "visible and invisible,",
+          "scripture": "Ps. 89:11-12, Amos 4:13, Rev. 3:5, Col. 1:16",
+          "hymn": null
+        }
+      ]
+    },
+    {
+      "title": "Article II: God the Son, Justification",
+      "rows": [
+        {
+          "apostles": "our Lord",
+          "apostlesOutOfOrder": true,
+          "nicene": "And in one Lord,",
+          "scripture": "Eph. 4:5",
+          "hymn": "At the Name of Jesus (R123)"
+        },
+        {
+          "apostles": "And in Jesus Christ",
+          "apostlesOutOfOrder": true,
+          "nicene": "Jesus Christ",
+          "scripture": "Acts 10:36, 11:17, Rom. 1:7, 5:1, 1 Cor. 1:2, 6:11, 2 Cor. 1:2, 8:9, Gal. 1:3, 6:14, Eph. 1:2, 3:11, Phil. 1:2, 3:20, Col. 1:3, 2:6, 1 Thes. 1:1, 5:9, 2 Thes. 1:1, 2:14, 1 Tim. 6:3, 6:14, 2 Tim. 1:2, Phil. 3, 25, Heb. 13:20, Jas. 1:1, 2:1, 1 Pet. 1:3, 3:15, 2 Pet. 1:8, 1:14, Jude 17, 21, Rev. 22:20-21",
+          "hymn": null
+        },
+        {
+          "apostles": "His only",
+          "apostlesOutOfOrder": true,
+          "nicene": "The only-begotten",
+          "scripture": "John 1:18",
+          "hymn": "To Jordan Came the Christ, Our Lord (LSB406)"
+        },
+        {
+          "apostles": "Son",
+          "apostlesOutOfOrder": true,
+          "nicene": "Son of God,",
+          "scripture": "Matt. 3:17, John 3:16",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "begotten of His Father",
+          "scripture": "Ps. 2:7, Heb. 1:5",
+          "hymn": "Of the Father’s Love Begotten (LSB384)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "before all worlds,",
+          "scripture": "John 1:1, Col. 1:17, 1 John 1:1",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "God of God,",
+          "scripture": "John 1:1-2",
+          "hymn": "O Christ, Who Art the Light and Day (LSB882)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "Light of Light",
+          "scripture": "Ps. 27:1, John 1:9, 8:12, 12:35-36, 1 John 1:5-7, Mt. 17:2, 17:5",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "very God of very God",
+          "scripture": "John 5:18, 8:58, 17:1-5",
+          "hymn": "O Morning Star, How Fair and Bright (LSB395)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "begotten,",
+          "scripture": "John 1:1, Heb. 1:5",
+          "hymn": "O Wondrous Type! O Vision Fair (LSB413)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "not made,",
+          "scripture": "Mic. 5:2, John 1:18, 17:5",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "being of one substance with the Father,",
+          "scripture": "John 10:30, 14:9",
+          "hymn": "Savior of the Nations, Come (LSB 332)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "by Whom all things were made;",
+          "scripture": "1 Cor. 8:6, Col. 1:16",
+          "hymn": "Thy Strong Word (LSB 578)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "Who for us men",
+          "scripture": "Mt. 20:28, John 10:10",
+          "hymn": "O Love, How Deep (LSB 544)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "and for our salvation",
+          "scripture": "Mt. 1:21, Luke 19:10",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "came down from heaven",
+          "scripture": "Rom. 10:6, Eph. 4:10",
+          "hymn": null
+        },
+        {
+          "apostles": "Who was conceived",
+          "apostlesOutOfOrder": false,
+          "nicene": "and was incarnate",
+          "scripture": "Col. 2:9",
+          "hymn": "The Angel Gabriel From Heaven Came (LSB 356)"
+        },
+        {
+          "apostles": "by the Holy Spirit",
+          "apostlesOutOfOrder": false,
+          "nicene": "by the Holy Spirit",
+          "scripture": "Mt. 1:18",
+          "hymn": null
+        },
+        {
+          "apostles": "born of the Virgin Mary,",
+          "apostlesOutOfOrder": false,
+          "nicene": "of the Virgin Mary",
+          "scripture": "Luke 1:34-35",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "and was made man;",
+          "scripture": "John 1:14",
+          "hymn": "All My Heart Again Rejoices (LSB 360)"
+        },
+        {
+          "apostles": "was crucified,",
+          "apostlesOutOfOrder": true,
+          "nicene": "and was crucified",
+          "scripture": "Mt. 20:19, John 19:18, Rom. 5:6, 5:8, 2 Cor. 13:4",
+          "hymn": "Jesus, I Will Ponder Now (LSB 440)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "also for us",
+          "scripture": "Rom. 5:8, 2 Cor. 5:15",
+          "hymn": null
+        },
+        {
+          "apostles": "under Pontius Pilate,",
+          "apostlesOutOfOrder": false,
+          "nicene": "under Pontius Pilate",
+          "scripture": "Mt. 27:2, 27:26, 1 Tim. 6:13",
+          "hymn": null
+        },
+        {
+          "apostles": "suffered",
+          "apostlesOutOfOrder": true,
+          "nicene": "He suffered",
+          "scripture": "1 Pet. 2:21, Heb. 2:10",
+          "hymn": "O Sacred Head, Now Wounded (LSB 450)"
+        },
+        {
+          "apostles": "died",
+          "apostlesOutOfOrder": false,
+          "nicene": null,
+          "scripture": "Mt. 27:50, Mark 15:37, Luke 23:46, John 19:30, 19:33, Rom. 5:6, 6:3, 1 Cor. 11:26, 15:3",
+          "hymn": null
+        },
+        {
+          "apostles": "and was buried,",
+          "apostlesOutOfOrder": false,
+          "nicene": "and was buried.",
+          "scripture": "Mark 15:46, 1 Cor. 15:4",
+          "hymn": null
+        },
+        {
+          "apostles": "He descended into hell.",
+          "apostlesOutOfOrder": false,
+          "nicene": null,
+          "scripture": "1 Pet. 3:19, Eph. 4:9",
+          "hymn": "Christ is the World’s Redeemer (R135)"
+        },
+        {
+          "apostles": "The third day",
+          "apostlesOutOfOrder": false,
+          "nicene": "And the third day",
+          "scripture": "Mt. 27:63, 28:1, 1 Cor. 15:4",
+          "hymn": "Christ is the World’s Redeemer (LSB 539)"
+        },
+        {
+          "apostles": "He rose again from the dead.",
+          "apostlesOutOfOrder": false,
+          "nicene": "He rose again",
+          "scripture": "Mark 16:6, 2 Tim. 2:8",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "according to the Scriptures",
+          "scripture": "Ps. 16:10, Luke 24:25-27, 1 Cor. 15:4",
+          "hymn": null
+        },
+        {
+          "apostles": "He ascended",
+          "apostlesOutOfOrder": false,
+          "nicene": "and ascended",
+          "scripture": "Luke 24:51, Acts 1:9",
+          "hymn": "Up Through Endless Ranks of Angels (LSB 491)"
+        },
+        {
+          "apostles": "into heaven",
+          "apostlesOutOfOrder": false,
+          "nicene": "into heaven",
+          "scripture": "Mark 16:19, Acts 1:11",
+          "hymn": null
+        },
+        {
+          "apostles": "and sits at the right hand of God the Father Almighty",
+          "apostlesOutOfOrder": false,
+          "nicene": "and sits at the right hand of the Father.",
+          "scripture": "Ps. 110:1, Mt. 26:64, Acts 7:56, Heb. 1:3",
+          "hymn": "See, the Lord Ascends in Triumph (LSB 494)"
+        },
+        {
+          "apostles": "From thence He shall come",
+          "apostlesOutOfOrder": false,
+          "nicene": "And He will come again",
+          "scripture": "John 14:3, 1 Thes. 4:16",
+          "hymn": "The Day Is Surely Drawing Near (LSB 508)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "with glory",
+          "scripture": "Mt. 16:27, 24:30, 25:31, 26:64, Mark 8:38, Col. 3:4",
+          "hymn": null
+        },
+        {
+          "apostles": "to judge",
+          "apostlesOutOfOrder": false,
+          "nicene": "to judge",
+          "scripture": "Mt. 25:31-46, Acts 17:31",
+          "hymn": null
+        },
+        {
+          "apostles": "the living and the dead.",
+          "apostlesOutOfOrder": false,
+          "nicene": "both the living and the dead,",
+          "scripture": "Acts 10:42, 1 Pet. 4:5",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "Whose kingdom",
+          "scripture": "John 18:36, 2 Tim. 4:1, 4:18",
+          "hymn": "The Clouds of Judgment Gather (LSB 513)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "will have no end.",
+          "scripture": "Luke 1:33, Rev. 11:15, Ps. 145:13",
+          "hymn": null
+        }
+      ]
+    },
+    {
+      "title": "Article III: God the Holy Spirit, Sanctification",
+      "rows": [
+        {
+          "apostles": "I believe in the Holy Spirit",
+          "apostlesOutOfOrder": false,
+          "nicene": "And I believe in the Holy Spirit,",
+          "scripture": "Mt. 28:19, Acts 13:2",
+          "hymn": "Come, Holy Ghost, God and Lord (LSB 497)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "the Lord",
+          "scripture": "2 Cor. 3:17",
+          "hymn": "O Day Full of Grace (LSB 503)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "and giver of life,",
+          "scripture": "John 6:63, Rom. 7:6, 8:2, 2 Cor. 3:6",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "Who proceeds from the Father",
+          "scripture": "John 14:16-17",
+          "hymn": "Come, Holy Ghost Creator Blest (LSB 498/499)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "and the Son,",
+          "scripture": "John 15:26, Rom. 8:9, Gal. 4:6",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "Who with the Father and the Son together is worshiped",
+          "scripture": "Luke 4:8, John 4:24",
+          "hymn": "The Lord, My God, Be Praised (LSB 794)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "and glorified,",
+          "scripture": "John 4:24, 1 Tim. 1:17",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "Who spoke by the prophets.",
+          "scripture": "1 Pet. 1:10-11, 2 Pet. 1:21",
+          "hymn": "God has spoken - by His prophets (R282)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "And I believe in one",
+          "scripture": "1 Cor. 10:16-17, 12:12-13",
+          "hymn": "The Church’s One Foundation (R294)"
+        },
+        {
+          "apostles": "the holy",
+          "apostlesOutOfOrder": false,
+          "nicene": "holy",
+          "scripture": "Eph. 3:16-17, 5:27, 1 Pet. 2:9",
+          "hymn": null
+        },
+        {
+          "apostles": "catholic",
+          "apostlesOutOfOrder": false,
+          "nicene": "catholic",
+          "scripture": "1 Cor. 1:2",
+          "hymn": null
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "and apostolic",
+          "scripture": "Eph. 2:20, Rev. 21:14",
+          "hymn": null
+        },
+        {
+          "apostles": "Church,",
+          "apostlesOutOfOrder": false,
+          "nicene": "Church,",
+          "scripture": "Acts 20:28, Eph. 1:22-23, Col. 1:24, Heb. 12:23, 1 Pet. 2:9",
+          "hymn": null
+        },
+        {
+          "apostles": "the communion of saints,",
+          "apostlesOutOfOrder": false,
+          "nicene": null,
+          "scripture": "1 Cor. 1:2, 10:16-17, Eph. 2:19, 6:18, Rev. 7:9, 7:14",
+          "hymn": "For All the Saints (R308)"
+        },
+        {
+          "apostles": null,
+          "apostlesOutOfOrder": false,
+          "nicene": "I acknowledge one Baptism",
+          "scripture": "John 3:5, Rom. 6:3, Eph. 4:5",
+          "hymn": "God’s Own Child, I Gladly Say It (LSB 594)"
+        },
+        {
+          "apostles": "the forgiveness of sins,",
+          "apostlesOutOfOrder": false,
+          "nicene": "for the remission of sins,",
+          "scripture": "Acts 2:38, 1 Pet. 3:21, Tit. 3:5",
+          "hymn": null
+        },
+        {
+          "apostles": "the resurrection of the body,",
+          "apostlesOutOfOrder": false,
+          "nicene": "and I look for the resurrection of the dead",
+          "scripture": "1 Thes. 4:16, 1 Cor. 15:12-13, 15:16, 15:52",
+          "hymn": "Lord, Thee I Love with All My Heart (LSB 708)"
+        },
+        {
+          "apostles": "and the life everlasting",
+          "apostlesOutOfOrder": false,
+          "nicene": "and the life of the world to come.",
+          "scripture": "1 Cor. 15:54-57, Rev. 22:5",
+          "hymn": "Jerusalem the Golden (R603)"
+        },
+        {
+          "apostles": "Amen.",
+          "apostlesOutOfOrder": false,
+          "nicene": "Amen.",
+          "scripture": "Ps. 41:13, 2 Cor. 1:20",
+          "hymn": "Praise God, from Whom All Blessings Flow (Rejoice front)"
+        }
+      ]
+    }
+  ]
+}

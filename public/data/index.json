@@ -1,0 +1,161 @@
+{
+ "builtAt": "2026-10-20T11:58:08.749Z",
+ "docs": [
+  {
+   "id": "wsc",
+   "title": "Westminster Shorter Catechism",
+   "short": "WSC",
+   "kind": "catechism",
+   "year": "1647",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://github.com/NonlinearFruit/Creeds.json",
+    "license": "Public domain",
+    "note": "1647 text. Proof texts are the OPC footnotes (github.com/ReformedDevs/hubot-wsc), aligned onto this wording."
+   },
+   "unitCount": 107
+  },
+  {
+   "id": "wlc",
+   "title": "Westminster Larger Catechism",
+   "short": "WLC",
+   "kind": "catechism",
+   "year": "1648",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://github.com/NonlinearFruit/Creeds.json",
+    "license": "Public domain"
+   },
+   "unitCount": 196
+  },
+  {
+   "id": "wcf",
+   "title": "Westminster Confession of Faith",
+   "short": "WCF",
+   "kind": "confession",
+   "year": "1646",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://github.com/NonlinearFruit/Creeds.json",
+    "license": "Public domain",
+    "note": "Original 1646 text (chapters 20, 23 and 31 differ from the American revision)."
+   },
+   "unitCount": 172
+  },
+  {
+   "id": "decalogue",
+   "title": "The Ten Commandments",
+   "short": "10C",
+   "kind": "law",
+   "source": {
+    "name": "King James Version (1769), Exodus 20",
+    "license": "Public domain",
+    "note": "Reformed numbering. Short forms are the traditional summaries; long forms are the full text."
+   },
+   "unitCount": 16
+  },
+  {
+   "id": "apostles",
+   "title": "Apostles' Creed",
+   "short": "AC",
+   "kind": "creed",
+   "source": {
+    "name": "Apostles' and Nicene Creeds (annotated harmony)",
+    "license": "Private",
+    "note": "Luke's annotated harmony: phrase-by-phrase Scripture and hymn references (R = Rejoice!, LSB = Lutheran Service Book)."
+   },
+   "unitCount": 3
+  },
+  {
+   "id": "nicene",
+   "title": "Nicene Creed",
+   "short": "NC",
+   "kind": "creed",
+   "year": "381",
+   "source": {
+    "name": "Apostles' and Nicene Creeds (annotated harmony)",
+    "license": "Private",
+    "note": "Luke's annotated harmony: phrase-by-phrase Scripture and hymn references (R = Rejoice!, LSB = Lutheran Service Book)."
+   },
+   "unitCount": 3
+  },
+  {
+   "id": "athanasian",
+   "title": "Athanasian Creed",
+   "short": "Ath",
+   "kind": "creed",
+   "year": "6th c.",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://www.wikiwand.com/en/Athanasian_Creed",
+    "license": "Public domain"
+   },
+   "unitCount": 22
+  },
+  {
+   "id": "chalcedon",
+   "title": "Chalcedonian Definition",
+   "short": "Chal",
+   "kind": "creed",
+   "year": "451",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://www.ccel.org/ccel/schaff/creeds2.iv.i.iii.html",
+    "license": "Public domain"
+   },
+   "unitCount": 1
+  },
+  {
+   "id": "hc",
+   "title": "Heidelberg Catechism",
+   "short": "HC",
+   "kind": "catechism",
+   "year": "1563",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://github.com/NonlinearFruit/Creeds.json",
+    "license": "Labelled public domain upstream; see note",
+    "note": "This English text appears to be the Canadian Reformed Book of Praise translation, which is under copyright. Fine for private use; swap for Schaff (1877) before any public release."
+   },
+   "unitCount": 129
+  },
+  {
+   "id": "bc",
+   "title": "Belgic Confession",
+   "short": "BC",
+   "kind": "confession",
+   "year": "1561",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://github.com/NonlinearFruit/Creeds.json",
+    "license": "Labelled public domain upstream; see note",
+    "note": "This English text appears to be the CRC 1985 translation, which is under copyright. Fine for private use; swap for a public-domain translation before any public release."
+   },
+   "unitCount": 37
+  },
+  {
+   "id": "dort",
+   "title": "Canons of Dort",
+   "short": "CD",
+   "kind": "confession",
+   "year": "1619",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://github.com/NonlinearFruit/Creeds.json",
+    "license": "Public domain",
+    "note": "Older translation; Scripture is quoted inline rather than footnoted."
+   },
+   "unitCount": 93
+  }
+ ],
+ "harmonies": [
+  {
+   "id": "creeds",
+   "title": "Apostles' and Nicene Creeds"
+  },
+  {
+   "id": "decalogue",
+   "title": "The Ten Commandments in the catechisms"
+  }
+ ]
+}
