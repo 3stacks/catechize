@@ -3,3 +3,6 @@ dist
 sources/cache
 *.local
 /data
+/site/out
+/site/.next
+/site/node_modules

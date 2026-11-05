@@ -23,6 +23,24 @@ export function SettingsView() {
       <h1>Settings</h1>
 
       <section className="card">
+        <h3>Tradition</h3>
+        <div className="segmented">
+          {(
+            [
+              ['reformed', 'Reformed'],
+              ['lutheran', 'Lutheran'],
+              ['both', 'Both'],
+            ] as const
+          ).map(([t, label]) => (
+            <button key={t} className={s.tradition === t ? 'on' : ''} onClick={() => set({ tradition: t })}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <p className="muted small">Chooses the catechisms and confessions in your library. The creeds and Scripture are always there. Progress you have made elsewhere stays in your reviews.</p>
+      </section>
+
+      <section className="card">
         <h3>Typing</h3>
         <div className="segmented">
           <button className={s.inputMode === 'first-letter' ? 'on' : ''} onClick={() => set({ inputMode: 'first-letter' })}>

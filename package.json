@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "data": "node scripts/build-data.ts",
-    "extract:creeds": "python3 -I scripts/extract-creeds-docx.py"
+    "extract:creeds": "python3 -I scripts/extract-creeds-docx.py",
+    "site": "npm run build && npm --prefix site run build && node scripts/merge-site.mjs"
   },
   "license": "UNLICENSED",
   "type": "module",

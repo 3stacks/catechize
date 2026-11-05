@@ -32,9 +32,26 @@ export function App() {
         </nav>
       </header>
       <main>{route(page, args)}</main>
+      {HOSTED && (
+        <footer className="app-foot">
+          <a href="../?home">About Catechize</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://ko-fi.com/lukeboyle" target="_blank" rel="noopener noreferrer">
+            Support on Ko-fi
+          </a>
+        </footer>
+      )}
     </div>
   )
 }
+
+/**
+ * On the public site the app lives at /app/, under the homepage. There the
+ * footer links back to the homepage, and `?home` keeps the homepage from
+ * sending the visitor straight back here. A self-hosted copy runs at its own
+ * root and has no homepage.
+ */
+const HOSTED = typeof location !== 'undefined' && /\/app\/?$/.test(location.pathname.replace(/index\.html$/, ''))
 
 function route(page: string | undefined, args: string[]) {
   switch (page) {

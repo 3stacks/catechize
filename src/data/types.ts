@@ -7,6 +7,9 @@ export type Span = [number, number]
 
 export type DocKind = 'catechism' | 'confession' | 'creed' | 'law' | 'scripture'
 
+/** Which confessional tradition a document belongs to. Creeds and Scripture are common to both. */
+export type Tradition = 'common' | 'reformed' | 'lutheran'
+
 export interface Source {
   name: string
   url?: string
@@ -24,6 +27,7 @@ export interface DocSummary {
   title: string
   short: string
   kind: DocKind
+  tradition: Tradition
   year?: string
   unitCount: number
   source: Source
@@ -60,6 +64,7 @@ export interface Note {
 export interface Harmony {
   id: string
   title: string
+  tradition: Tradition
   description?: string
   columns: { key: string; label: string; docId?: string }[]
   sections: { title: string; rows: HarmonyRow[] }[]
@@ -81,7 +86,7 @@ export interface CellRef {
 export interface DataIndex {
   builtAt: string
   docs: DocSummary[]
-  harmonies: { id: string; title: string }[]
+  harmonies: { id: string; title: string; tradition: Tradition }[]
 }
 
 /** KJV book file: chapters[c-1][v-1]. */

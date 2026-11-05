@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable, type Table } from 'dexie'
 import type { Card } from 'ts-fsrs'
 import type { Unit } from '../data/types.ts'
+import type { TraditionChoice } from '../lib/tradition.ts'
 import { SYNCED_TABLES, type SyncedTable } from '../../shared/protocol.ts'
 
 // Learner state lives in IndexedDB on the device, so the app works offline.
@@ -73,7 +74,11 @@ export interface Settings extends Synced {
   fade: boolean
   /** Most reviews in one day. Units over the limit wait for the next day. 0 = no limit. */
   dailyReviewLimit: number
+  /** Which confessions and catechisms to show. Unset until the learner chooses. */
+  tradition?: TraditionChoice
 }
+
+export { inTradition, type TraditionChoice } from '../lib/tradition.ts'
 
 export const DEFAULT_SETTINGS: Settings = {
   id: 'settings',
