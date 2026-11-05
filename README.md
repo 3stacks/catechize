@@ -79,6 +79,31 @@ The app shows "About Catechize" in its footer under `/app/`. That link goes to
 The screenshots in `site/src/images/screens/` come from the real app, with a
 demo learner that the FSRS scheduler generated.
 
+### Deployment
+
+CI owns the deployment to Cloudflare Pages. Do not deploy from a workstation.
+
+1. A push to `main` starts the `Website` workflow. It runs the tests and builds
+   `site/out/`.
+2. When `Website` passes, the `Deploy to Cloudflare Pages` workflow starts.
+3. That workflow downloads the `site/out/` artifact. It does not build again.
+4. It makes the Pages project `catechize` if the project does not exist.
+5. It deploys the artifact to the production branch `main`.
+6. It checks the homepage, `/app/`, `/app/data/index.json` and the guide.
+
+A pull request from this repository also gets a preview. The job summary of
+the `Website` run shows the preview address.
+
+The workflows need two repository secrets:
+
+| Secret | Value |
+|--------|-------|
+| `CLOUDFLARE_API_TOKEN` | An API token with the permission Account, Cloudflare Pages, Edit |
+| `CLOUDFLARE_ACCOUNT_ID` | The account ID from the Cloudflare dashboard |
+
+To add a custom domain, open the `catechize` project in the Cloudflare
+dashboard. Then open Custom domains.
+
 ## Sync
 
 The server keeps one SQLite file, `DATA_DIR/catechize.db`. Each learner
