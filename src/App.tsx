@@ -4,8 +4,9 @@ import { Library } from './views/Library.tsx'
 import { DocView } from './views/DocView.tsx'
 import { UnitView } from './views/UnitView.tsx'
 import { HarmonyView } from './views/HarmonyView.tsx'
-import { ReviewSession, LearnSession } from './views/Sessions.tsx'
+import { ReviewSession, LearnSession, TroubleSession } from './views/Sessions.tsx'
 import { SettingsView } from './views/SettingsView.tsx'
+import { StatsView } from './views/StatsView.tsx'
 
 export function App() {
   const [page, ...args] = useRoute()
@@ -21,6 +22,9 @@ export function App() {
           </a>
           <a href={href('library')} className={page === 'library' || page === 'doc' || page === 'unit' || page === 'harmony' ? 'active' : ''}>
             Library
+          </a>
+          <a href={href('progress')} className={page === 'progress' ? 'active' : ''}>
+            Progress
           </a>
           <a href={href('settings')} className={page === 'settings' ? 'active' : ''}>
             Settings
@@ -48,6 +52,10 @@ function route(page: string | undefined, args: string[]) {
       return <ReviewSession />
     case 'learn':
       return <LearnSession key={args.join('/')} docId={args[0]} unitId={args[1]} />
+    case 'trouble':
+      return <TroubleSession />
+    case 'progress':
+      return <StatsView />
     case 'settings':
       return <SettingsView />
     default:

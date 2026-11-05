@@ -5,6 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 // Relative base so the build works from any path (GitHub Pages, a subfolder, file server).
 export default defineConfig({
   base: './',
+  // `npm start` in another terminal gives the dev server sync.
+  server: { proxy: { '/api': 'http://localhost:3000' } },
   plugins: [
     react(),
     VitePWA({
@@ -25,6 +27,7 @@ export default defineConfig({
         // as they are first opened so the install stays small.
         globPatterns: ['**/*.{js,css,html,svg}', 'data/index.json', 'data/docs/*.json', 'data/harmonies/*.json'],
         maximumFileSizeToCacheInBytes: 2_000_000,
+        navigateFallbackDenylist: [/\/api\//],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.includes('/data/kjv/'),

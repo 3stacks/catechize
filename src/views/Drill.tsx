@@ -1,34 +1,42 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Unit } from '../data/types.ts'
-import { gradeChunk, normWord, tokenize, AGAIN, EASY, GOOD, HARD, type Grade, type Token } from '../lib/grade.ts'
-import type { InputMode } from '../store/db.ts'
+import { gradeChunk, normWord, scoreSpoken, tokenize, AGAIN, EASY, GOOD, HARD, type Grade, type Token } from '../lib/grade.ts'
+import type { InputMode, ReviewRow } from '../store/db.ts'
 import { recordDrill, type ChunkResult } from '../store/srs.ts'
-import { speak } from '../lib/speech.ts'
+import { canListen, listen, speak } from '../lib/speech.ts'
 
 // One drill over one unit. Stages:
-//   read   – see (and optionally hear) the whole text
+//   read   – see (and optionally hear) the whole text, with the learner's memory aid
 //   trace  – type through it with the words shown faintly (practice, not graded)
-//   recall – type it with the tested chunks hidden; each chunk is graded
+//   fade   – type it with every other word hidden (practice, not graded)
+//   recall – type or say it with the tested chunks hidden; each chunk is graded
 // A review starts at recall and hides only the chunks that are due (or all of
-// them for a whole-recitation review).
+// them for a whole-recitation review). The grades are saved on Continue, after
+// the learner has had the chance to forgive a typo.
 
-type Stage = 'read' | 'trace' | 'recall' | 'done'
+type Stage = 'read' | 'trace' | 'fade' | 'recall' | 'done'
 type Status = 'pending' | 'ok' | 'slip' | 'revealed' | 'given'
 
 interface Props {
   unit: Unit
   docId: string
   inputMode: InputMode
-  /** learn: read → trace → recall all chunks. review: recall the listed chunks. */
+  /** learn: read → trace → (fade) → recall all chunks. review: recall the listed chunks. */
   kind: 'learn' | 'review'
   dueChunks?: number[]
   whole?: boolean
+  /** Include the fade stage when learning. */
+  fade?: boolean
+  /** false: practice only, the schedule is not touched. */
+  record?: boolean
+  /** The learner's memory aid for this unit. */
+  note?: string
   onDone: (results: ChunkResult[]) => void
 }
 
 const MAX_STRIKES = 3
 
-export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }: Props) {
+export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, fade = true, record = true, note, onDone }: Props) {
   const tokens = useMemo(() => tokenize(unit.text), [unit.text])
   const chunkOf = useMemo(
     () => tokens.map((t) => Math.max(0, unit.chunks.findIndex(([s, e]) => t.start >= s && t.end <= e))),
@@ -46,13 +54,33 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
   const [buffer, setBuffer] = useState('')
   const [shake, setShake] = useState(0)
   const [results, setResults] = useState<ChunkResult[] | null>(null)
+  const mode = useRef<ReviewRow['mode']>(inputMode)
+  const [heard, setHeard] = useState<{ settled: string; pending: string } | null>(null)
+  const [micError, setMicError] = useState('')
   const input = useRef<HTMLInputElement>(null)
-  const saved = useRef<Promise<void>>(Promise.resolve())
+  const mic = useRef<{ stop: () => string } | null>(null)
 
   // The sequence of token indices the learner must produce in this stage.
   const order = useMemo(
-    () => tokens.map((_, i) => i).filter((i) => stage === 'trace' || tested.has(chunkOf[i])),
+    () => tokens.map((_, i) => i).filter((i) => stage === 'trace' || stage === 'fade' || tested.has(chunkOf[i])),
     [tokens, stage, tested, chunkOf],
+  )
+
+  // Save once: on Continue, or when the learner leaves before pressing it.
+  const pending = useRef<ChunkResult[] | null>(null)
+  const save = () => {
+    const toSave = pending.current
+    pending.current = null
+    if (!toSave || !record) return Promise.resolve()
+    return recordDrill(unit, docId, toRecord(toSave, whole), mode.current)
+  }
+  useEffect(
+    () => () => {
+      mic.current?.stop()
+      void save()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   )
 
   const restart = (next: Stage) => {
@@ -65,7 +93,7 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
   }
 
   useEffect(() => {
-    if (stage === 'trace' || stage === 'recall') input.current?.focus()
+    if (stage === 'trace' || stage === 'fade' || stage === 'recall') input.current?.focus()
   }, [stage])
 
   const current = order[cursor]
@@ -89,10 +117,8 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
   }
 
   const finish = (final: Status[]) => {
-    if (stage === 'trace') {
-      restart('recall')
-      return
-    }
+    if (stage === 'trace') return restart(fade ? 'fade' : 'recall')
+    if (stage === 'fade') return restart('recall')
     const byChunk = new Map<number, { errors: number; words: number; revealed: boolean }>()
     order.forEach((i) => {
       const c = chunkOf[i]
@@ -108,19 +134,18 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
       errors: r.errors,
       words: r.words,
     }))
-    let toRecord = chunkResults
-    if (whole) {
-      // The whole card gets the overall grade; chunks that broke down are sent
-      // back through their own reviews.
-      const errors = chunkResults.reduce((n, r) => n + r.errors, 0)
-      const words = chunkResults.reduce((n, r) => n + r.words, 0)
-      const revealed = [...byChunk.values()].some((r) => r.revealed)
-      const wholeResult: ChunkResult = { index: -1, grade: gradeChunk(errors, words, revealed), errors, words }
-      toRecord = [wholeResult, ...chunkResults.filter((r) => r.grade === AGAIN)]
-    }
+    pending.current = chunkResults
     setResults(chunkResults)
     setStage('done')
-    saved.current = recordDrill(unit, docId, toRecord, inputMode)
+  }
+
+  /** The learner says a chunk was right after all (a typo, a misheard word). */
+  const regrade = (index: number) => {
+    if (!results) return
+    const cycle = (g: Grade): Grade => (g === AGAIN ? HARD : g === HARD ? GOOD : AGAIN)
+    const next = results.map((r) => (r.index === index ? { ...r, grade: cycle(r.grade) } : r))
+    pending.current = next
+    setResults(next)
   }
 
   const onKey = (raw: string) => {
@@ -149,6 +174,51 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
 
   const hint = () => current !== undefined && advance(current, 'revealed')
 
+  // Recite aloud: listen, then score what was heard against the words still to come.
+  const startListening = () => {
+    setMicError('')
+    setHeard({ settled: '', pending: '' })
+    try {
+      mic.current = listen(
+        (settled, pending) => setHeard({ settled, pending }),
+        (msg) => {
+          setMicError(msg)
+          mic.current?.stop()
+          mic.current = null
+          setHeard(null)
+        },
+      )
+    } catch (e) {
+      setMicError((e as Error).message)
+      setHeard(null)
+    }
+  }
+  const stopListening = () => {
+    const said = mic.current?.stop() ?? ''
+    mic.current = null
+    const text = [said, heard?.pending].filter(Boolean).join(' ')
+    setHeard(null)
+    if (!text.trim()) return
+    const rest = order.slice(cursor)
+    const ok = scoreSpoken(
+      rest.map((i) => tokens[i].word),
+      text,
+    )
+    const next = status.slice()
+    rest.forEach((i, k) => (next[i] = ok[k] ? (strikes[i] > 0 ? 'slip' : 'ok') : 'given'))
+    setStatus(next)
+    setCursor(order.length)
+    mode.current = 'spoken'
+    finish(next)
+  }
+
+  const memoryAid = note ? (
+    <p className="memory-aid">
+      <span className="muted small">Your memory aid: </span>
+      {note}
+    </p>
+  ) : null
+
   if (stage === 'read')
     return (
       <div className="drill">
@@ -160,6 +230,7 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
             </span>
           ))}
         </p>
+        {memoryAid}
         <div className="row">
           <button className="ghost" onClick={() => speak(unit.text)}>
             Listen
@@ -180,30 +251,36 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
       <div className="drill">
         <Prompt unit={unit} />
         <TextView unit={unit} tokens={tokens} status={status} chunkOf={chunkOf} tested={tested} stage={stage} current={-1} buffer="" />
+        {memoryAid}
         <div className="results">
           {results.map((r) => (
             <div key={r.index} className={`result g${r.grade}`}>
               <span className="dot" />
               <span className="result-text">{unit.text.slice(...unit.chunks[r.index])}</span>
-              <span className="result-grade">{gradeLabel(r.grade)}</span>
+              <button className="result-grade" onClick={() => regrade(r.index)} title="Tap to change the grade, for a typo or a misheard word">
+                {gradeLabel(r.grade)}
+              </button>
             </div>
           ))}
         </div>
         <div className="row">
+          <span className="muted small">{record ? 'Tap a grade to change it.' : 'Practice only: your schedule is unchanged.'}</span>
           <span className="spacer" />
-          <button className="primary" onClick={() => saved.current.then(() => onDone(results))} autoFocus>
+          <button className="primary" onClick={() => save().then(() => onDone(results))} autoFocus>
             Continue
           </button>
         </div>
       </div>
     )
 
+  const listening = heard !== null
   return (
-    <div className="drill" onClick={() => input.current?.focus()}>
+    <div className="drill" onClick={() => !listening && input.current?.focus()}>
       <Prompt unit={unit} />
       <div className="stage-label">
-        {stage === 'trace' ? 'Trace: type the ' : 'Recall: type the '}
+        {stage === 'trace' ? 'Trace: type the ' : stage === 'fade' ? 'Fade: half the words are gone. Type the ' : 'Recall: type the '}
         {inputMode === 'first-letter' ? 'first letter of each word' : 'each word, then space'}
+        {stage === 'recall' && canListen() ? ', or say it aloud' : ''}
       </div>
       <TextView
         unit={unit}
@@ -212,11 +289,18 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
         chunkOf={chunkOf}
         tested={tested}
         stage={stage}
-        current={current ?? -1}
+        current={listening ? -1 : (current ?? -1)}
         buffer={buffer}
         shake={shake}
         struck={current !== undefined && strikes[current] > 0}
       />
+      {listening && (
+        <p className="heard" aria-live="polite">
+          {heard.settled} <span className="muted">{heard.pending}</span>
+          {!heard.settled && !heard.pending && <span className="muted">Listening…</span>}
+        </p>
+      )}
+      {micError && <p className="note">{micError}</p>}
       <input
         ref={input}
         className="key-capture"
@@ -226,6 +310,7 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
         autoCorrect="off"
         spellCheck={false}
         value=""
+        disabled={listening}
         onChange={(e) => onKey(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && inputMode === 'full-word') onKey(' ')
@@ -236,12 +321,40 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, onDone }
           {cursor}/{order.length}
         </span>
         <span className="spacer" />
-        <button className="ghost" onClick={hint}>
-          Show word
-        </button>
+        {stage === 'recall' &&
+          canListen() &&
+          (listening ? (
+            <button className="primary" onClick={stopListening}>
+              Done speaking
+            </button>
+          ) : (
+            <button className="ghost" onClick={startListening}>
+              Say it
+            </button>
+          ))}
+        {!listening && (
+          <button className="ghost" onClick={hint}>
+            Show word
+          </button>
+        )}
       </div>
     </div>
   )
+}
+
+/**
+ * What to save. A whole recitation gets one overall grade; chunks that broke
+ * down are also sent back through their own reviews.
+ */
+function toRecord(chunkResults: ChunkResult[], whole?: boolean): ChunkResult[] {
+  if (!whole) return chunkResults
+  const errors = chunkResults.reduce((n, r) => n + r.errors, 0)
+  const words = chunkResults.reduce((n, r) => n + r.words, 0)
+  const grade = chunkResults.some((r) => r.grade === AGAIN) ? AGAIN : gradeChunk(errors, words, false)
+  // The learner may have forgiven every slip: then the whole recitation is Good.
+  const forgiven = chunkResults.every((r) => r.grade >= GOOD)
+  const wholeResult: ChunkResult = { index: -1, grade: forgiven ? GOOD : grade, errors, words }
+  return [wholeResult, ...chunkResults.filter((r) => r.grade === AGAIN)]
 }
 
 function Prompt({ unit }: { unit: Unit }) {
@@ -271,7 +384,7 @@ function TextView(props: {
   tokens.forEach((t, i) => {
     if (t.start > at) parts.push(unit.text.slice(at, t.start))
     at = t.end
-    const hiddenChunk = tested.has(chunkOf[i]) && stage !== 'trace'
+    const hidden = stage === 'fade' ? i % 2 === 1 : stage !== 'trace' && tested.has(chunkOf[i])
     const s = status[i]
     let cls = 'w'
     let shown: React.ReactNode = t.word
@@ -279,10 +392,10 @@ function TextView(props: {
     else if (s === 'slip' || s === 'given') cls += ' slip'
     else if (s === 'revealed') cls += ' revealed'
     else if (stage === 'trace') cls += ' ghost'
-    else if (hiddenChunk) {
+    else if (hidden) {
       cls += ' blank'
       shown = <span style={{ width: `${Math.max(2, t.word.length) * 0.55}em` }} className="blank-bar" />
-    } else cls += ' context'
+    } else cls += stage === 'fade' ? ' ghost-strong' : ' context'
     if (i === current) {
       cls += struck ? ' current struck' : ' current'
       if (buffer) shown = <span className="buffer">{buffer}</span>

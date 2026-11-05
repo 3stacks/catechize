@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { chunk, MAX_WORDS } from './chunk.ts'
-import { diffWords, errorCount, gradeChunk, tokenize, AGAIN, GOOD, HARD } from './grade.ts'
+import { diffWords, errorCount, gradeChunk, scoreSpoken, soundsLike, tokenize, AGAIN, GOOD, HARD } from './grade.ts'
 import { formatPassage, parseOsis, parseRefs, passageFromId, passageId } from './refs.ts'
 
 const ids = (s: string) => parseRefs(s).passages.map(passageId)
@@ -92,5 +92,20 @@ describe('grading', () => {
     expect(gradeChunk(1, 8, false)).toBe(HARD)
     expect(gradeChunk(3, 8, false)).toBe(AGAIN)
     expect(gradeChunk(0, 8, true)).toBe(AGAIN)
+  })
+})
+
+describe('spoken recall', () => {
+  it('forgives spelling the recogniser chooses', () => {
+    expect(soundsLike('Saviour', 'savior')).toBe(true)
+    expect(soundsLike('baptised', 'baptized')).toBe(true)
+    expect(soundsLike("God's", 'gods')).toBe(true)
+    expect(soundsLike('righteousness', 'rightiousness')).toBe(true)
+    expect(soundsLike('man', 'men')).toBe(false) // short words must match
+  })
+  it('marks the words that were said, ignoring filler', () => {
+    const expected = "Man's chief end is to glorify God".split(' ')
+    expect(scoreSpoken(expected, 'mans chief um end is to glorify god')).toEqual([true, true, true, true, true, true, true])
+    expect(scoreSpoken(expected, 'mans chief end is glorify god')).toEqual([true, true, true, true, false, true, true])
   })
 })

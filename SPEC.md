@@ -51,16 +51,26 @@ stable across builds unless a text or the algorithm changes.
 
 | Stage  | What the learner sees | Graded |
 |--------|-----------------------|--------|
-| Read   | Whole text, chunk boundaries tinted; "Listen" uses device TTS | no |
+| Read   | Whole text, chunk boundaries tinted, memory aid; "Listen" uses device TTS | no |
 | Trace  | Words shown faintly; type through | no |
-| Recall | Tested chunks blank; others shown dimmed as context | yes, per chunk |
+| Fade   | Every other word hidden; type through (Settings can turn it off) | no |
+| Recall | Tested chunks blank; others shown dimmed as context; type, or "Say it" | yes, per chunk |
 
 Input modes: **first letters** (default; one key per word) or **whole
 words** (checked on space). Three wrong keys on a word, or "Show word",
 reveal it.
 
 Grading is automatic: per chunk, 0 errors = Good, 1 error (or ≤10%) = Hard,
-more or any reveal = Again. No self-rating.
+more or any reveal = Again. No self-rating, but the results screen lets the
+learner tap a grade to forgive a typo or a misheard word before it is saved.
+
+**Spoken recitation.** Where the browser has speech recognition, "Say it"
+listens to the rest of the answer and scores it with `diffWords`, leniently
+(`soundsLike`: British/American spelling, one-letter slips in long words).
+Extra words are ignored. Reviews record `mode: 'spoken'`.
+
+**Memory aids.** A free-text note per unit (an acrostic, a picture, a verse
+it echoes), shown on the read stage and the results screen.
 
 ## Scheduling
 
@@ -73,9 +83,37 @@ FSRS (`ts-fsrs`), target retention 90% (configurable to 85/95%).
   whole recitation are sent back through their own reviews.
 - Courses: work through a document in order at N new units/day.
 - Optional: no new material on the Lord's Day, reviews only.
+- Optional daily review limit (20/40/80 units); the most overdue go first
+  and the rest wait, so a backlog after a break is spread over days.
+- **Trouble spots** (leeches): a chunk with 4+ lapses that is still under
+  21 days' stability. Today links to a practice session over them that does
+  not touch the schedule, and the unit page suggests a memory aid.
 
-All learner state is in IndexedDB on the device; Settings exports and
-imports a JSON backup.
+## Progress
+
+Streak (days in a row with a review; yesterday's streak lasts until today
+ends), longest streak, a 26-week review heatmap, a 14-day forecast of units
+due, true recall over 30 days (excluding each card's first attempt), mature
+parts, and per-document counts.
+
+## Storage and sync
+
+All learner state is in IndexedDB on the device, so the app works offline.
+Settings exports and imports a JSON backup (version 2; version 1 files still
+import).
+
+When served by `server/main.ts`, the app also syncs to SQLite:
+
+- Synced tables: `cards`, `log` (reviews, string ids), `courses`,
+  `learned`, `verses`, `settings`, `notes`. `meta` (sync position) and
+  `tombstones` (pending deletions) stay on the device.
+- Dexie hooks stamp each local write with `_u` (time) and `_dirty = 1`.
+  Deletions go through `removeRows`, which records a tombstone.
+- `POST /api/sync { epoch, since, changes }` applies the changes last-writer-
+  wins on `_u`, then returns server changes with `seq > since` (paged).
+- A new or restored server database (different epoch, or `since` ahead of
+  the server) makes the client pull from 0 and push every row again.
+- Optional bearer token (`CATECHIZE_TOKEN`), entered once per device.
 
 ## Content (built)
 
@@ -122,10 +160,10 @@ Private use only for now. Before any public release:
    WCF 11.1") and long-press adds a verse to My verses.
 2. **Lord's Prayer** (Matt. 6:9–13 KJV) with WSC 98–107 and HC LD 45–52,
    completing Creed / Commandments / Prayer.
-3. **Spoken recitation**: on-device speech-to-text, scored with the
-   existing word diff (`diffWords`).
-4. **More drill modes**: cloze by phrase; chain recall (given chunk *n*,
+3. **More drill modes**: cloze by phrase; chain recall (given chunk *n*,
    produce *n*+1).
+4. **Daily reminder**: a push notification when reviews are due (needs
+   Web Push keys on the server).
 
 **Later**
 
@@ -137,6 +175,5 @@ Private use only for now. Before any public release:
 - Children's / First Catechism; metrical psalms (1650 Scottish Psalter).
 - Polity: Form of Presbyterial Church Government, Directory for Public
   Worship, a denomination's Book of Church Order.
-- Sync between devices (currently export/import).
 
 Out of scope by decision: household and congregation features.

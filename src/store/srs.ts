@@ -1,7 +1,7 @@
 import { createEmptyCard, fsrs, State, type Card, type Grade as FsrsGrade } from 'ts-fsrs'
 import type { Unit } from '../data/types.ts'
 import { AGAIN, type Grade } from '../lib/grade.ts'
-import { db, getSettings, type InputMode } from './db.ts'
+import { db, getSettings, newId, removeRows, type ReviewRow } from './db.ts'
 
 // Scheduling is per chunk. A unit's "whole" card (recite the full answer with
 // nothing showing) is created once every chunk is stable, so long answers are
@@ -29,11 +29,11 @@ export interface ChunkResult {
  * (that is what "learning" a unit means), reviews each chunk that was tested,
  * and unlocks or reviews the whole card.
  */
-export async function recordDrill(unit: Unit, docId: string, results: ChunkResult[], mode: InputMode, now = new Date()) {
+export async function recordDrill(unit: Unit, docId: string, results: ChunkResult[], mode: ReviewRow['mode'], now = new Date()) {
   const f = await scheduler()
   const at = now.getTime()
 
-  await db.transaction('rw', db.cards, db.reviews, db.learned, async () => {
+  await db.transaction('rw', db.cards, db.log, db.learned, async () => {
     for (const r of results) {
       const id = `${unit.id}#${r.index < 0 ? 'whole' : r.index}`
       const existing = await db.cards.get(id)
@@ -48,7 +48,7 @@ export async function recordDrill(unit: Unit, docId: string, results: ChunkResul
         due: next.due.getTime(),
         card: next,
       })
-      await db.reviews.add({ cardId: id, unitId: unit.id, at, rating: r.grade, errors: r.errors, words: r.words, mode })
+      await db.log.add({ id: newId(), cardId: id, unitId: unit.id, at, rating: r.grade, errors: r.errors, words: r.words, mode })
     }
     if (!(await db.learned.get(unit.id))) await db.learned.put({ unitId: unit.id, docId, at })
 
@@ -121,12 +121,12 @@ export async function learnedToday(docId?: string): Promise<number> {
   return docId ? rows.filter((r) => r.docId === docId).length : rows.length
 }
 
-/** Forget a unit entirely (cards, reviews and learned flag). */
+/** Forget a unit entirely (cards, reviews and learned flag), on every device. */
 export async function resetUnit(unitId: string) {
-  await db.transaction('rw', db.cards, db.reviews, db.learned, async () => {
-    await db.cards.where('unitId').equals(unitId).delete()
-    await db.reviews.where('unitId').equals(unitId).delete()
-    await db.learned.delete(unitId)
+  await db.transaction('rw', db.cards, db.log, db.learned, db.tombstones, async () => {
+    await removeRows('cards', (await db.cards.where('unitId').equals(unitId).primaryKeys()) as string[])
+    await removeRows('log', (await db.log.where('unitId').equals(unitId).primaryKeys()) as string[])
+    if (await db.learned.get(unitId)) await removeRows('learned', [unitId])
   })
 }
 

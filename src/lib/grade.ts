@@ -64,6 +64,55 @@ export function diffWords(expected: string[], typed: string[]): Op[] {
   return ops
 }
 
+/**
+ * Lenient match for spoken words: speech recognition spells the way it likes
+ * ("Savior" for "Saviour", "baptized" for "baptised") and drops apostrophes.
+ */
+export function soundsLike(expected: string, heard: string): boolean {
+  const fold = (w: string) =>
+    normWord(w)
+      .replace(/'/g, '')
+      .replace(/our(s?)$/, 'or$1')
+      .replace(/is(e|ed|es|ing)$/, 'iz$1')
+      .replace(/ll(ed|ing)$/, 'l$1')
+  const a = fold(expected)
+  const b = fold(heard)
+  if (a === b) return true
+  if (a.length < 5) return false
+  return editDistance(a, b) <= 1
+}
+
+function editDistance(a: string, b: string): number {
+  if (Math.abs(a.length - b.length) > 1) return 2
+  const prev = Array.from({ length: b.length + 1 }, (_, j) => j)
+  for (let i = 1; i <= a.length; i++) {
+    let diag = prev[0]
+    prev[0] = i
+    for (let j = 1; j <= b.length; j++) {
+      const t = prev[j]
+      prev[j] = Math.min(prev[j] + 1, prev[j - 1] + 1, diag + (a[i - 1] === b[j - 1] ? 0 : 1))
+      diag = t
+    }
+  }
+  return prev[b.length]
+}
+
+/**
+ * Score a spoken recitation against the expected words. Returns, for each
+ * expected word, whether it was said. Extra words are ignored: people repeat
+ * themselves and recognisers add filler.
+ */
+export function scoreSpoken(expected: string[], heard: string): boolean[] {
+  const typed = heard.split(/\s+/).filter(Boolean)
+  const out: boolean[] = []
+  for (const op of diffWords(expected, typed)) {
+    if (op.kind === 'ok') out.push(true)
+    else if (op.kind === 'wrong') out.push(soundsLike(op.expected, op.typed))
+    else if (op.kind === 'missing') out.push(false)
+  }
+  return out
+}
+
 export const errorCount = (ops: Op[]) => ops.filter((o) => o.kind !== 'ok').length
 
 // FSRS ratings (same numbering as ts-fsrs Rating).
