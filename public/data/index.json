@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-10-20T11:58:08.749Z",
+ "builtAt": "2026-11-05T23:42:03.586Z",
  "docs": [
   {
    "id": "wsc",
@@ -13,6 +13,7 @@
     "license": "Public domain",
     "note": "1647 text. Proof texts are the OPC footnotes (github.com/ReformedDevs/hubot-wsc), aligned onto this wording."
    },
+   "tradition": "reformed",
    "unitCount": 107
   },
   {
@@ -26,6 +27,7 @@
     "url": "https://github.com/NonlinearFruit/Creeds.json",
     "license": "Public domain"
    },
+   "tradition": "reformed",
    "unitCount": 196
   },
   {
@@ -40,6 +42,7 @@
     "license": "Public domain",
     "note": "Original 1646 text (chapters 20, 23 and 31 differ from the American revision)."
    },
+   "tradition": "reformed",
    "unitCount": 172
   },
   {
@@ -52,58 +55,8 @@
     "license": "Public domain",
     "note": "Reformed numbering. Short forms are the traditional summaries; long forms are the full text."
    },
+   "tradition": "reformed",
    "unitCount": 16
-  },
-  {
-   "id": "apostles",
-   "title": "Apostles' Creed",
-   "short": "AC",
-   "kind": "creed",
-   "source": {
-    "name": "Apostles' and Nicene Creeds (annotated harmony)",
-    "license": "Private",
-    "note": "Luke's annotated harmony: phrase-by-phrase Scripture and hymn references (R = Rejoice!, LSB = Lutheran Service Book)."
-   },
-   "unitCount": 3
-  },
-  {
-   "id": "nicene",
-   "title": "Nicene Creed",
-   "short": "NC",
-   "kind": "creed",
-   "year": "381",
-   "source": {
-    "name": "Apostles' and Nicene Creeds (annotated harmony)",
-    "license": "Private",
-    "note": "Luke's annotated harmony: phrase-by-phrase Scripture and hymn references (R = Rejoice!, LSB = Lutheran Service Book)."
-   },
-   "unitCount": 3
-  },
-  {
-   "id": "athanasian",
-   "title": "Athanasian Creed",
-   "short": "Ath",
-   "kind": "creed",
-   "year": "6th c.",
-   "source": {
-    "name": "Creeds.json (NonlinearFruit)",
-    "url": "https://www.wikiwand.com/en/Athanasian_Creed",
-    "license": "Public domain"
-   },
-   "unitCount": 22
-  },
-  {
-   "id": "chalcedon",
-   "title": "Chalcedonian Definition",
-   "short": "Chal",
-   "kind": "creed",
-   "year": "451",
-   "source": {
-    "name": "Creeds.json (NonlinearFruit)",
-    "url": "https://www.ccel.org/ccel/schaff/creeds2.iv.i.iii.html",
-    "license": "Public domain"
-   },
-   "unitCount": 1
   },
   {
    "id": "hc",
@@ -117,6 +70,7 @@
     "license": "Labelled public domain upstream; see note",
     "note": "This English text appears to be the Canadian Reformed Book of Praise translation, which is under copyright. Fine for private use; swap for Schaff (1877) before any public release."
    },
+   "tradition": "reformed",
    "unitCount": 129
   },
   {
@@ -131,6 +85,7 @@
     "license": "Labelled public domain upstream; see note",
     "note": "This English text appears to be the CRC 1985 translation, which is under copyright. Fine for private use; swap for a public-domain translation before any public release."
    },
+   "tradition": "reformed",
    "unitCount": 37
   },
   {
@@ -145,17 +100,105 @@
     "license": "Public domain",
     "note": "Older translation; Scripture is quoted inline rather than footnoted."
    },
+   "tradition": "reformed",
    "unitCount": 93
+  },
+  {
+   "id": "lsc",
+   "title": "Luther's Small Catechism",
+   "short": "SC",
+   "kind": "catechism",
+   "year": "1529",
+   "source": {
+    "name": "Triglot Concordia (1921), tr. F. Bente and W. H. T. Dau",
+    "license": "Public domain",
+    "url": "https://bookofconcord.org/small-catechism/",
+    "note": "Bracketed editorial additions are left out. Each part is the text, then its explanation, as it is taught."
+   },
+   "tradition": "lutheran",
+   "unitCount": 39
+  },
+  {
+   "id": "llc",
+   "title": "Luther's Large Catechism",
+   "short": "LC",
+   "kind": "catechism",
+   "year": "1529",
+   "source": {
+    "name": "Triglot Concordia (1921), tr. F. Bente and W. H. T. Dau",
+    "license": "Public domain",
+    "url": "https://www.gutenberg.org/ebooks/1722",
+    "note": "From Project Gutenberg. One unit per paragraph; paragraph numbers are this app's own, not the Triglot's."
+   },
+   "tradition": "lutheran",
+   "unitCount": 354
+  },
+  {
+   "id": "apostles",
+   "title": "Apostles' Creed",
+   "short": "AC",
+   "kind": "creed",
+   "source": {
+    "name": "Apostles' and Nicene Creeds (annotated harmony)",
+    "license": "Private",
+    "note": "Luke's annotated harmony: phrase-by-phrase Scripture and hymn references (R = Rejoice!, LSB = Lutheran Service Book)."
+   },
+   "tradition": "common",
+   "unitCount": 3
+  },
+  {
+   "id": "nicene",
+   "title": "Nicene Creed",
+   "short": "NC",
+   "kind": "creed",
+   "year": "381",
+   "source": {
+    "name": "Apostles' and Nicene Creeds (annotated harmony)",
+    "license": "Private",
+    "note": "Luke's annotated harmony: phrase-by-phrase Scripture and hymn references (R = Rejoice!, LSB = Lutheran Service Book)."
+   },
+   "tradition": "common",
+   "unitCount": 3
+  },
+  {
+   "id": "athanasian",
+   "title": "Athanasian Creed",
+   "short": "Ath",
+   "kind": "creed",
+   "year": "6th c.",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://www.wikiwand.com/en/Athanasian_Creed",
+    "license": "Public domain"
+   },
+   "tradition": "common",
+   "unitCount": 22
+  },
+  {
+   "id": "chalcedon",
+   "title": "Chalcedonian Definition",
+   "short": "Chal",
+   "kind": "creed",
+   "year": "451",
+   "source": {
+    "name": "Creeds.json (NonlinearFruit)",
+    "url": "https://www.ccel.org/ccel/schaff/creeds2.iv.i.iii.html",
+    "license": "Public domain"
+   },
+   "tradition": "common",
+   "unitCount": 1
   }
  ],
  "harmonies": [
   {
    "id": "creeds",
-   "title": "Apostles' and Nicene Creeds"
+   "title": "Apostles' and Nicene Creeds",
+   "tradition": "common"
   },
   {
    "id": "decalogue",
-   "title": "The Ten Commandments in the catechisms"
+   "title": "The Ten Commandments in the catechisms",
+   "tradition": "reformed"
   }
  ]
 }

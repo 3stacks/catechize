@@ -18,3 +18,5 @@ for f in westminster_shorter_catechism westminster_larger_catechism westminster_
 done
 get "$WSC_PROOFS" cache/wsc-proofs.coffee
 get "$KJV" cache/kjv.json
+# Luther's Large Catechism, Bente and Dau (Triglot Concordia, 1921). Public domain.
+get https://www.gutenberg.org/cache/epub/1722/pg1722.txt cache/large-catechism.txt

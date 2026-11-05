@@ -875,3 +875,15 @@ button.result-grade:focus-visible {
 label.row + label.row {
   margin-top: 10px;
 }
+
+.app-foot {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.app-foot a {
+  color: var(--muted);
+}
