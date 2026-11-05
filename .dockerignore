@@ -1,0 +1,8 @@
+node_modules
+dist
+/data
+sources/cache
+.git
+.github
+*.local
+Dockerfile

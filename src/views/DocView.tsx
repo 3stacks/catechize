@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { loadDoc } from '../data/load.ts'
 import { href } from '../router.ts'
-import { db } from '../store/db.ts'
+import { db, removeRows } from '../store/db.ts'
+import { useDataVersion } from '../store/sync.ts'
 import { unitProgress, type UnitProgress } from '../store/srs.ts'
 import { useAsync } from '../useAsync.ts'
 
@@ -12,12 +13,13 @@ const HARMONY_FOR: Record<string, { id: string; label: string }> = {
 }
 
 export function DocView({ docId }: { docId: string }) {
+  const v = useDataVersion()
   const [data, , reload] = useAsync(async () => {
     const doc = await loadDoc(docId)
     const progress = await unitProgress(doc.units.map((u) => u.id))
     const course = await db.courses.get(docId)
     return { doc, progress, course }
-  }, [docId])
+  }, [docId, v])
   const [filter, setFilter] = useState('')
 
   if (!data) return <p className="empty">Loading…</p>
@@ -28,7 +30,7 @@ export function DocView({ docId }: { docId: string }) {
   const harmony = HARMONY_FOR[docId]
 
   const startCourse = async (perDay: number) => {
-    if (perDay <= 0) await db.courses.delete(docId)
+    if (perDay <= 0) await db.transaction('rw', db.courses, db.tombstones, () => removeRows('courses', [docId]))
     else await db.courses.put({ docId, perDay, startedAt: course?.startedAt ?? Date.now() })
     reload()
   }

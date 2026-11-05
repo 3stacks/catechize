@@ -1,22 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { loadDoc, loadUnit } from '../data/load.ts'
 import type { Span, Unit } from '../data/types.ts'
 import { href } from '../router.ts'
-import { db } from '../store/db.ts'
+import { db, getNote, removeRows, saveNote } from '../store/db.ts'
 import { resetUnit, unitProgress, daysUntil } from '../store/srs.ts'
+import { isLeech } from '../store/stats.ts'
+import { useDataVersion } from '../store/sync.ts'
 import { useAsync } from '../useAsync.ts'
 import { speak } from '../lib/speech.ts'
 import { ProofSheet, type SheetContent } from './ProofSheet.tsx'
 
 export function UnitView({ docId, unitId }: { docId: string; unitId: string }) {
+  const v = useDataVersion()
   const [data, , reload] = useAsync(async () => {
-    const [doc, unit, progress] = await Promise.all([loadDoc(docId), loadUnit(docId, unitId), unitProgress([unitId])])
-    return { doc, unit, progress: progress.get(unitId)! }
-  }, [docId, unitId])
+    const [doc, unit, progress, note, cards] = await Promise.all([
+      loadDoc(docId),
+      loadUnit(docId, unitId),
+      unitProgress([unitId]),
+      getNote(unitId),
+      db.cards.where('unitId').equals(unitId).toArray(),
+    ])
+    return { doc, unit, progress: progress.get(unitId)!, note: note?.text ?? '', trouble: cards.filter(isLeech).length }
+  }, [docId, unitId, v])
   const [sheet, setSheet] = useState<SheetContent>()
 
   if (!data) return <p className="empty">Loading…</p>
-  const { doc, unit, progress } = data
+  const { doc, unit, progress, note, trouble } = data
   if (!unit) return <p className="empty">Not found.</p>
 
   const i = doc.units.findIndex((u) => u.id === unitId)
@@ -40,8 +49,11 @@ export function UnitView({ docId, unitId }: { docId: string; unitId: string }) {
           {progress.learned && progress.nextDue !== undefined
             ? ` · ${progress.mature}/${progress.chunks} mature · next review ${dueText(progress.nextDue)}`
             : ''}
+          {trouble ? ` · ${trouble} trouble ${trouble === 1 ? 'spot' : 'spots'}` : ''}
         </p>
       </section>
+
+      <MemoryAid key={unitId + note} unitId={unitId} docId={docId} initial={note} prompt={trouble > 0} />
 
       <div className="row wrap">
         <button className="ghost" onClick={() => speak(unit.text)}>
@@ -67,7 +79,10 @@ export function UnitView({ docId, unitId }: { docId: string; unitId: string }) {
             onClick={async () => {
               if (confirm('Remove this passage from My verses?')) {
                 await resetUnit(unit.id)
-                await db.verses.delete(unit.id)
+                await db.transaction('rw', db.verses, db.notes, db.tombstones, async () => {
+                  await removeRows('verses', [unit.id])
+                  if (await db.notes.get(unit.id)) await removeRows('notes', [unit.id])
+                })
                 location.hash = href('doc', 'verses').slice(1)
               }
             }}
@@ -87,6 +102,42 @@ export function UnitView({ docId, unitId }: { docId: string; unitId: string }) {
 
       {sheet && <ProofSheet content={sheet} onClose={() => setSheet(undefined)} />}
     </div>
+  )
+}
+
+/**
+ * The learner's own hook for an answer: a picture, an acrostic, a linked verse.
+ * Shown before each drill of the unit. Saved as the learner types.
+ */
+function MemoryAid({ unitId, docId, initial, prompt }: { unitId: string; docId: string; initial: string; prompt: boolean }) {
+  const [text, setText] = useState(initial)
+  const [open, setOpen] = useState(!!initial)
+  useEffect(() => {
+    if (text === initial) return
+    const t = setTimeout(() => void saveNote(unitId, docId, text), 600)
+    return () => clearTimeout(t)
+  }, [text, initial, unitId, docId])
+  if (!open)
+    return (
+      <button className="ghost small" onClick={() => setOpen(true)}>
+        {prompt ? 'This one keeps slipping. Add a memory aid' : 'Add a memory aid'}
+      </button>
+    )
+  return (
+    <section className="card">
+      <label className="memory-label" htmlFor="memory-aid">
+        Memory aid
+      </label>
+      <textarea
+        id="memory-aid"
+        className="memory-input"
+        rows={2}
+        value={text}
+        placeholder="A picture, an acrostic, a verse it echoes. You see this before each drill."
+        onChange={(e) => setText(e.target.value)}
+        onBlur={() => text !== initial && void saveNote(unitId, docId, text)}
+      />
+    </section>
   )
 }
 

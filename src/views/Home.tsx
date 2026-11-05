@@ -1,13 +1,18 @@
 import { loadDoc, loadIndex } from '../data/load.ts'
 import { href } from '../router.ts'
 import { db, getSettings } from '../store/db.ts'
-import { dueUnits, learnedToday } from '../store/srs.ts'
+import { learnedToday } from '../store/srs.ts'
+import { loadStats, troubleSpots } from '../store/stats.ts'
+import { useDataVersion } from '../store/sync.ts'
 import { useAsync } from '../useAsync.ts'
+import { reviewQueue } from './Sessions.tsx'
 
 export const isLordsDay = () => new Date().getDay() === 0
 
 async function loadHome() {
-  const [index, due, courses, settings] = await Promise.all([loadIndex(), dueUnits(), db.courses.toArray(), getSettings()])
+  const settings = await getSettings()
+  const [index, queue, courses, trouble, stats] = await Promise.all([loadIndex(), reviewQueue(settings), db.courses.toArray(), troubleSpots(), loadStats()])
+  const due = queue.due
   const courseInfo = await Promise.all(
     courses.map(async (c) => {
       const doc = await loadDoc(c.docId)
@@ -18,20 +23,28 @@ async function loadHome() {
       return { course: c, doc, learned, today, next }
     }),
   )
-  return { index, due, courseInfo, settings }
+  return { index, due, held: queue.held, courseInfo, settings, trouble, streak: stats.streak }
 }
 
 export function Home() {
-  const [data] = useAsync(loadHome, [])
+  const v = useDataVersion()
+  const [data] = useAsync(loadHome, [v])
   if (!data) return <p className="empty">Loading…</p>
-  const { due, courseInfo, settings } = data
+  const { due, held, courseInfo, settings, trouble, streak } = data
   const dueChunks = due.reduce((n, u) => n + u.chunks.length + (u.whole ? 1 : 0), 0)
   const restDay = settings.lordsDayReviewOnly && isLordsDay()
 
   return (
     <div className="stack">
       <section className="card hero">
-        <h1>{greeting()}</h1>
+        <div className="hero-head">
+          <h1>{greeting()}</h1>
+          {streak.days > 0 && (
+            <a className={streak.today ? 'streak done' : 'streak'} href={href('progress')} title={streak.today ? 'Reviewed today' : 'Review today to keep your streak'}>
+              {streak.days} {streak.days === 1 ? 'day' : 'days'}
+            </a>
+          )}
+        </div>
         {due.length ? (
           <>
             <p>
@@ -42,7 +55,15 @@ export function Home() {
             </a>
           </>
         ) : (
-          <p>Nothing due for review.</p>
+          <p>{held ? `Today's review limit is reached. ${held} more wait for tomorrow.` : 'Nothing due for review.'}</p>
+        )}
+        {trouble.length > 0 && (
+          <p className="small">
+            <a href={href('trouble')}>
+              Practise {trouble.length} {trouble.length === 1 ? 'answer' : 'answers'} with trouble spots
+            </a>{' '}
+            <span className="muted">(does not change your schedule)</span>
+          </p>
         )}
       </section>
 
