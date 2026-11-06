@@ -6,7 +6,7 @@ name: Reminder Worker
 
 on:
   push:
-    branches: [main, feat/push]
+    branches: [main]
     paths: [worker/**, shared/push.ts, .github/workflows/push-worker.yml]
   workflow_dispatch:
 
