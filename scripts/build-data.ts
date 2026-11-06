@@ -12,7 +12,7 @@ import type { BookText, CellRef, DataIndex, Doc, Group, Harmony, HarmonyRow, Pro
 import { BOOKS, findBook } from '../src/lib/books.ts'
 import { chunk } from '../src/lib/chunk.ts'
 import { normWord, tokenize } from '../src/lib/grade.ts'
-import { parseOsis, parseRefs, passageId, type Passage } from '../src/lib/refs.ts'
+import { parseOsis, parseRefs, passageFromId, passageId, type Passage } from '../src/lib/refs.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SRC = join(ROOT, 'sources')
@@ -734,6 +734,32 @@ const index: DataIndex = {
   harmonies: harmonies.map((h) => ({ id: h.id, title: h.title, tradition: h.tradition })),
 }
 writeFileSync(join(OUT, 'index.json'), JSON.stringify(index, null, 1))
+
+// Verse → the units that cite it, for other sites (the Self-Interpreting Bible
+// links each verse to the answers that use it as a proof). A long passage is
+// filed under its first verse only, so a chapter cited whole does not list the
+// unit on every verse.
+const LONG = 5
+const cited: { units: Record<string, [doc: string, label: string]>; verses: Record<string, string[]> } = { units: {}, verses: {} }
+for (const id of ORDER) {
+  const d = docs.get(id)!
+  for (const u of d.units) {
+    const keys = new Set<string>()
+    for (const p of u.proofs) for (const r of p.refs) for (const k of citedVerses(r)) keys.add(k)
+    if (!keys.size) continue
+    cited.units[u.id] = [d.id, `${d.short} ${u.ref.replace(/^Q\. /, '')}`]
+    for (const k of keys) (cited.verses[k] ??= []).push(u.id)
+  }
+}
+writeFileSync(join(OUT, 'cited.json'), JSON.stringify(cited))
+
+function citedVerses(id: string): string[] {
+  const p = passageFromId(id)
+  if (!p) return []
+  if (p.v1 === 0) return [`${p.book}.${p.c1}.1`]
+  if (p.c1 !== p.c2 || p.v2 - p.v1 + 1 > LONG) return [`${p.book}.${p.c1}.${p.v1}`]
+  return Array.from({ length: p.v2 - p.v1 + 1 }, (_, i) => `${p.book}.${p.c1}.${p.v1 + i}`)
+}
 
 // ---------------------------------------------------------------- report
 

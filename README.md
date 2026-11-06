@@ -52,6 +52,18 @@ the other tradition stays in the reviews.
 `scripts/build-data.ts` gives each document a `tradition`. Add a new document
 to the `TRADITION` map there.
 
+## Links to other sites
+
+Each proof text links to its verse in the
+[Self-Interpreting Bible](https://self-interpreting-bible.pages.dev) of John Brown of Haddington. If that chapter is not
+online yet, the link does not show.
+
+- `scripts/fetch-sib.mjs` writes the list of online chapters to `public/sib.json`. CI runs it
+  before each build. If the site is not reachable, the build uses the copy in git.
+- `npm run data` writes `public/data/cited.json`. This file maps each verse to the answers that
+  cite it. The Self-Interpreting Bible reads it to link each verse back to those answers. The file
+  puts a proof of more than five verses under its first verse only.
+
 ## Website
 
 `site/` holds the homepage, a Next.js static export from the Tailwind Plus

@@ -887,3 +887,7 @@ label.row + label.row {
 .app-foot a {
   color: var(--muted);
 }
+.passage .brown {
+  display: inline-block;
+  margin-top: 4px;
+}
