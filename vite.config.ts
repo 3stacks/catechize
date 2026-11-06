@@ -27,6 +27,8 @@ export default defineConfig({
         // as they are first opened so the install stays small.
         globPatterns: ['**/*.{js,css,html,svg}', 'data/index.json', 'data/docs/*.json', 'data/harmonies/*.json', 'sib.json', 'data/reading.json'],
         maximumFileSizeToCacheInBytes: 2_000_000,
+        // Review reminders: the push and notificationclick handlers.
+        importScripts: ['push-sw.js'],
         navigateFallbackDenylist: [/\/api\//],
         runtimeCaching: [
           {

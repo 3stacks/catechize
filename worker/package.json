@@ -1,0 +1,14 @@
+{
+  "name": "catechize-push",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20261101.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.40.0"
+  }
+}

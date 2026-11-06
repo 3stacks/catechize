@@ -55,3 +55,16 @@ describe('invalidChanges', () => {
     expect(invalidChanges('x')).toMatch(/array/)
   })
 })
+
+describe('Store reminders', () => {
+  const r = { endpoint: 'https://fcm.googleapis.com/fcm/send/x', hour: 8, tz: 'UTC', nextDue: 5 }
+  it('keeps the last send time when the device updates its reminder', () => {
+    const s = new Store(':memory:')
+    s.putReminder(r)
+    s.markSent(r.endpoint, 99)
+    s.putReminder({ ...r, hour: 9, nextDue: null })
+    expect(s.reminders()).toEqual([{ ...r, hour: 9, nextDue: null, lastSent: 99 }])
+    s.removeReminder(r.endpoint)
+    expect(s.reminders()).toEqual([])
+  })
+})

@@ -898,3 +898,16 @@ label.row + label.row {
 .reading li {
   margin: 0 0 6px;
 }
+.reminder-error {
+  color: var(--again);
+}
+select {
+  font: inherit;
+  font-size: 0.95rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  padding: 9px 12px;
+  border-radius: 10px;
+  min-height: 40px;
+}

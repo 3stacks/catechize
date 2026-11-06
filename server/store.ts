@@ -3,6 +3,7 @@ import { mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { MAX_ID, MAX_PULL, isSyncedTable, type Change, type SyncResponse } from '../shared/protocol.ts'
+import type { Reminder, StoredReminder } from '../shared/push.ts'
 
 // Learner state in SQLite. One table holds every synced record as JSON, keyed
 // by (tbl, id). `seq` is a server-wide change counter: a client pulls every
@@ -20,6 +21,14 @@ CREATE TABLE IF NOT EXISTS records (
 ) WITHOUT ROWID;
 CREATE INDEX IF NOT EXISTS records_seq ON records (seq);
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+-- Daily review reminders, one row per device (see shared/push.ts).
+CREATE TABLE IF NOT EXISTS reminders (
+  endpoint  TEXT PRIMARY KEY,
+  hour      INTEGER NOT NULL,
+  tz        TEXT    NOT NULL,
+  next_due  INTEGER,
+  last_sent INTEGER
+) WITHOUT ROWID;
 
 CREATE VIEW IF NOT EXISTS cards AS
   SELECT id,
@@ -103,6 +112,35 @@ export class Store {
       this.db.exec('ROLLBACK')
       throw e
     }
+  }
+
+  /** Add or change a device's reminder. Keeps the time of the last one sent. */
+  putReminder(r: Reminder) {
+    this.db
+      .prepare(
+        `INSERT INTO reminders (endpoint, hour, tz, next_due) VALUES (?, ?, ?, ?)
+         ON CONFLICT (endpoint) DO UPDATE SET hour = excluded.hour, tz = excluded.tz, next_due = excluded.next_due`,
+      )
+      .run(r.endpoint, r.hour, r.tz, r.nextDue)
+  }
+
+  removeReminder(endpoint: string) {
+    this.db.prepare('DELETE FROM reminders WHERE endpoint = ?').run(endpoint)
+  }
+
+  reminders(): StoredReminder[] {
+    const rows = this.db.prepare('SELECT endpoint, hour, tz, next_due, last_sent FROM reminders').all() as {
+      endpoint: string
+      hour: number
+      tz: string
+      next_due: number | null
+      last_sent: number | null
+    }[]
+    return rows.map((r) => ({ endpoint: r.endpoint, hour: r.hour, tz: r.tz, nextDue: r.next_due, lastSent: r.last_sent }))
+  }
+
+  markSent(endpoint: string, at: number) {
+    this.db.prepare('UPDATE reminders SET last_sent = ? WHERE endpoint = ?').run(at, endpoint)
   }
 
   /** A consistent copy of the database at `path` (for backups). */

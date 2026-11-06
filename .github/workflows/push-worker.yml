@@ -1,0 +1,58 @@
+# Deploys the review reminder Worker for the hosted app (worker/).
+# Needs: secrets CLOUDFLARE_API_TOKEN (Workers Scripts: Edit, D1: Edit) and
+# CLOUDFLARE_ACCOUNT_ID, secret VAPID_PRIVATE_KEY and variable VAPID_PUBLIC_KEY
+# (`node server/vapid.ts` prints a pair). Without them, the job does nothing.
+name: Reminder Worker
+
+on:
+  push:
+    branches: [main, feat/push]
+    paths: [worker/**, shared/push.ts, .github/workflows/push-worker.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: push-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+      VAPID_PUBLIC_KEY: ${{ vars.VAPID_PUBLIC_KEY }}
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - id: ready
+        working-directory: .
+        run: echo "ok=$([ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$VAPID_PRIVATE_KEY" ] && [ -n "$VAPID_PUBLIC_KEY" ] && echo yes || echo no)" >> "$GITHUB_OUTPUT"
+      - if: steps.ready.outputs.ok == 'yes'
+        uses: actions/checkout@v4
+      - if: steps.ready.outputs.ok == 'yes'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - if: steps.ready.outputs.ok == 'yes'
+        run: npm install --no-package-lock --no-audit --no-fund
+      - if: steps.ready.outputs.ok == 'yes'
+        run: npx tsc --noEmit
+      # Create the database on the first run, then write its id into the config.
+      - if: steps.ready.outputs.ok == 'yes'
+        run: |
+          id=$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "catechize-push") | .uuid')
+          if [ -z "$id" ]; then
+            npx wrangler d1 create catechize-push
+            id=$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "catechize-push") | .uuid')
+          fi
+          sed -i "s/REPLACED_BY_CI/$id/" wrangler.toml
+          npx wrangler d1 execute catechize-push --remote --file schema.sql
+      - if: steps.ready.outputs.ok == 'yes'
+        run: npx wrangler deploy --var "VAPID_PUBLIC_KEY:$VAPID_PUBLIC_KEY"
+      - if: steps.ready.outputs.ok == 'yes'
+        run: printf '%s' "$VAPID_PRIVATE_KEY" | npx wrangler secret put VAPID_PRIVATE_KEY

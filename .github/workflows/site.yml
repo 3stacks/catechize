@@ -26,6 +26,9 @@ jobs:
       # Link proof texts to the chapters of the Self-Interpreting Bible that are online now.
       - run: node scripts/fetch-sib.mjs
       - run: npm run site
+        env:
+          # The reminder Worker (worker/). Empty until it is deployed: then the app has no reminders on static hosts.
+          VITE_PUSH_URL: ${{ vars.PUSH_URL }}
 
       - uses: actions/upload-artifact@v4
         with:
