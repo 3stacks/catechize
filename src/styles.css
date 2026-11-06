@@ -887,3 +887,14 @@ label.row + label.row {
 .app-foot a {
   color: var(--muted);
 }
+.passage .brown {
+  display: inline-block;
+  margin-top: 4px;
+}
+.reading ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+.reading li {
+  margin: 0 0 6px;
+}

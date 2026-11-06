@@ -25,7 +25,7 @@ export default defineConfig({
       workbox: {
         // Precache the app shell and the documents; Scripture books are cached
         // as they are first opened so the install stays small.
-        globPatterns: ['**/*.{js,css,html,svg}', 'data/index.json', 'data/docs/*.json', 'data/harmonies/*.json'],
+        globPatterns: ['**/*.{js,css,html,svg}', 'data/index.json', 'data/docs/*.json', 'data/harmonies/*.json', 'sib.json', 'data/reading.json'],
         maximumFileSizeToCacheInBytes: 2_000_000,
         navigateFallbackDenylist: [/\/api\//],
         runtimeCaching: [

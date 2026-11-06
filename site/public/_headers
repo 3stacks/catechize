@@ -11,3 +11,7 @@
 
 /app/index.html
   Cache-Control: no-cache
+
+# Open data: other sites can read which answers cite each verse.
+/app/data/cited.json
+  Access-Control-Allow-Origin: *
