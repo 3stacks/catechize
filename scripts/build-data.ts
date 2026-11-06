@@ -753,6 +753,40 @@ for (const id of ORDER) {
 }
 writeFileSync(join(OUT, 'cited.json'), JSON.stringify(cited))
 
+// Further reading: public-domain expositions on Monergism and CCEL (sources/reading.json).
+// A source unit "wcf-6" means the whole chapter; "partial" narrows it to some sections.
+interface ReadingSection { url: string; site: string; title: string; units: string[]; partial?: string; excerpt?: boolean; wholeBook?: boolean }
+const readingSrc = JSON.parse(readFileSync(join(ROOT, 'sources', 'reading.json'), 'utf8')) as {
+  works: { id: string; title: string; author: string; year: number; sections: ReadingSection[] }[]
+}
+const allUnits = new Set([...docs.values()].flatMap((d) => d.units.map((u) => u.id)))
+const reading: { works: Record<string, [title: string, author: string, year: number]>; units: Record<string, [work: string, title: string, url: string, kind?: 'excerpt' | 'book'][]> } = { works: {}, units: {} }
+for (const w of readingSrc.works) {
+  reading.works[w.id] = [w.title, w.author, w.year]
+  for (const sec of w.sections) {
+    const ids = sec.units.flatMap((id) => {
+      if (allUnits.has(id)) return [id]
+      const ch = id.match(/^wcf-(\d+)$/)?.[1]
+      if (!ch) {
+        warn(`reading: unknown unit ${id}`)
+        return []
+      }
+      const inChapter = [...allUnits].filter((u) => u.startsWith(`wcf-${ch}.`))
+      if (!sec.partial) return inChapter
+      const [from, to = from] = sec.partial.split('-').map((x) => +x.split('.')[1])
+      return inChapter.filter((u) => {
+        const n = +u.split('.')[1]
+        return n >= from && n <= to
+      })
+    })
+    const kind = sec.wholeBook ? 'book' : sec.excerpt ? 'excerpt' : undefined
+    for (const id of ids) (reading.units[id] ??= []).push(kind ? [w.id, sec.title, sec.url, kind] : [w.id, sec.title, sec.url])
+  }
+}
+// Chapters and excerpts first, whole books last.
+for (const list of Object.values(reading.units)) list.sort((a, b) => +(a[3] === 'book') - +(b[3] === 'book'))
+writeFileSync(join(OUT, 'reading.json'), JSON.stringify(reading))
+
 function citedVerses(id: string): string[] {
   const p = passageFromId(id)
   if (!p) return []

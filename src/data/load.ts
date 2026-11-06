@@ -25,6 +25,13 @@ function get<T>(path: string): Promise<T> {
 export const loadIndex = () => get<DataIndex>('index.json')
 export const loadHarmony = (id: string) => get<Harmony>(`harmonies/${id}.json`)
 
+/** Public-domain expositions per unit (scripts/build-data.ts, from sources/reading.json). */
+export interface ReadingIndex {
+  works: Record<string, [title: string, author: string, year: number]>
+  units: Record<string, [work: string, title: string, url: string, kind?: 'excerpt' | 'book'][]>
+}
+export const loadReading = () => get<ReadingIndex>('reading.json')
+
 /** Chapters of the Self-Interpreting Bible that are online (scripts/fetch-sib.mjs). */
 interface SibIndex {
   base: string

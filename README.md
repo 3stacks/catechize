@@ -63,6 +63,11 @@ online yet, the link does not show.
 - `npm run data` writes `public/data/cited.json`. This file maps each verse to the answers that
   cite it. The Self-Interpreting Bible reads it to link each verse back to those answers. The file
   puts a proof of more than five verses under its first verse only.
+- Each answer can show a list of further reading. The list has public-domain expositions on
+  [Monergism](https://www.monergism.com) and [CCEL](https://ccel.org), for example Watson, Fisher,
+  Vincent, Ursinus, Ridgley and Shaw. `sources/reading.json` holds the links. `npm run data` writes
+  them to `public/data/reading.json`. Monergism blocks plain HTTP clients, so check its links in a
+  browser.
 
 ## Website
 

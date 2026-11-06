@@ -1,0 +1,1549 @@
+{
+ "checked": "2026-11-06",
+ "notes": [
+  "Every URL here was fetched on 2026-11-06. Monergism HTML pages returned 200 with the expected author and opening text. Monergism PDFs returned application/pdf. CCEL chapter pages returned 200, and section ids come from CCEL's ThML XML for each book.",
+  "Monergism sits behind a Cloudflare managed challenge. Plain curl and WebFetch get HTTP 403. A headless Chromium passes. Its faceted author search (search?f[0]=author:...) stays blocked, so I found pages through keyword search. A link checker that uses plain HTTP will report false 403s for monergism.com HTML pages. PDFs under /thethreshold/ are served without the challenge.",
+  "Watson: Monergism has no per-chapter set for any of the three Watson books, only the whole-book ebooks and about 17 stand-alone Body of Divinity chapter pages. CCEL has all three books split by chapter. In watson-body and watson-commandments, 'url' is the Monergism page where one exists for that exact chapter (I compared the opening text), and the CCEL chapter is in 'altUrl'. All other sections use CCEL.",
+  "Watson mapping: chapters vi.ii to vi.x are the attributes of God, which all expound WSC Q4. Assurance, Peace, Joy, Growth in Grace and Perseverance all expound Q36. The CCEL text misprints some question numbers (for example it labels the Priestly Office question 'Q-35' when it is Q25). I mapped by content.",
+  "Watson's Lord's Prayer on CCEL ends with the sixth petition. I found no exposition of the conclusion (WSC Q107). WSC Q98 (What is prayer?) is covered by the 'Prayer' chapter at the end of The Ten Commandments. Its preface section also opens with the 'After this manner pray ye' introduction (Q99).",
+  "Do not use the Monergism page https://www.monergism.com/lords-supper for watson-commandments. Its text and Scripture differ from the Body of Divinity chapter (Matt 26 instead of Mark 14), so it probably comes from another Watson work.",
+  "Monergism's 'Modernized' editions of Watson's Body of Divinity and Ten Commandments say they are copyright Monergism Books. The Doctrine of Repentance ebook says its modernization and notes are copyright William Gross. The wholeBook links point to the original-text PDFs where an original exists. For Repentance, Monergism offers only the modernized edition.",
+  "Fisher: Monergism has only the whole book (PDF, ePub, mobi, docx) plus three single-question pages. The old per-question site shortercatechism.com, with Fisher, Watson, Vincent, Flavel and Henry on each question, now redirects to bpc.org/shorter-catechism, so its deep links are gone.",
+  "Ursinus: Monergism and CCEL have no per-question or per-Lord's-Day pages. CCEL holds only the Heidelberg Catechism text and two short Ursinus extracts ('What is Catechism?' and 'What is the Gospel'). The 1851 Williard translation is public domain. Monergism's ebook PDF is at the URL listed, and the older link '.../Commentary on the Heidelberg Ca - Zacharias Ursinus.pdf' now redirects to search. I did not map these excerpt pages: what-catechism (introduction, no question), what-are-effects-sin (from the treatise on sin, question unclear) and covenant-0 (it quotes catechism questions 30-31 that do not match the HC, so it is probably Ursinus's Larger Catechism). Outside the allowed sites, reformedperspectives.org (RPM magazine) has the commentary per Lord's Day. I did not fetch it.",
+  "Ridgley: Monergism has the whole book plus 5 multi-question pages. I left out the shorter Ridgley fragments: elect-are-chosen-christ, self-existence-god-0, and punishments-sin-present-life (a partial duplicate of the WLC 28-29 page). Ridgley is not on CCEL.",
+  "J. G. Vos, 'The Westminster Larger Catechism: A Commentary': still in copyright. Vos died in 1983, and P&R published the book in 2002. It is not on Monergism and must not be linked as public domain.",
+  "Shaw: Monergism has full-chapter pages for WCF 2, 6, 8, 9, 10, 13, 15, 19 and 32 (all sections present) and section pages for 1.8-10, 5.2 and 24.3-6. The rest of the book is only the PDF. Unused Shaw excerpts: perspicuity-scripture-0 (1.7), god-and-holy-trinity-1 (duplicate of ch. 2), god-infinitely-good and god-possesses-all-possible-perfections (2.1 excerpts), state-glory (9.5), redemption-effectually-applied (8.8). Shaw is not on CCEL.",
+  "A. A. Hodge, 'Commentary on the Confession of Faith' (1869): not on Monergism or CCEL. Monergism search links out to confessionalcollective.com, which has per-chapter Hodge pages (seen: chapters 22 and 24, not fetched or checked for completeness).",
+  "Belgic Confession and Canons of Dort: Monergism has only the confession texts as ebooks (belgic-confession-faith-ebook, canons-dort-ebook-0, three-forms-unity-ebook), audio series and short articles. I found no public-domain article-by-article exposition on Monergism or CCEL.",
+  "Luther's Small Catechism: Monergism has no exposition. CCEL has the catechism text but no public-domain exposition."
+ ],
+ "works": [
+  {
+   "id": "watson-body",
+   "title": "A Body of Divinity",
+   "author": "Thomas Watson",
+   "year": 1692,
+   "sections": [
+    {
+     "url": "https://www.monergism.com/mans-chief-end",
+     "site": "monergism",
+     "title": "Man's Chief End",
+     "units": [
+      "wsc-1"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.v.i.html"
+    },
+    {
+     "url": "https://www.monergism.com/scriptures-thomas-watson",
+     "site": "monergism",
+     "title": "The Scriptures",
+     "units": [
+      "wsc-2"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.v.ii.html"
+    },
+    {
+     "url": "https://www.monergism.com/being-god",
+     "site": "monergism",
+     "title": "The Being of God",
+     "units": [
+      "wsc-3",
+      "wsc-4"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.i.html"
+    },
+    {
+     "url": "https://www.monergism.com/omniscience-god-0",
+     "site": "monergism",
+     "title": "The Knowledge of God",
+     "units": [
+      "wsc-4"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.ii.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vi.iii.html",
+     "site": "ccel",
+     "title": "The Eternity of God",
+     "units": [
+      "wsc-4"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/thethreshold/sdg/immutable.html",
+     "site": "monergism",
+     "title": "The Unchangeableness of God",
+     "units": [
+      "wsc-4"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.iv.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vi.v.html",
+     "site": "ccel",
+     "title": "The Wisdom of God",
+     "units": [
+      "wsc-4"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vi.vi.html",
+     "site": "ccel",
+     "title": "The Power of God",
+     "units": [
+      "wsc-4"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/holiness-god-2",
+     "site": "monergism",
+     "title": "The Holiness of God",
+     "units": [
+      "wsc-4"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.vii.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vi.viii.html",
+     "site": "ccel",
+     "title": "The Justice of God",
+     "units": [
+      "wsc-4"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/mercy-god-0",
+     "site": "monergism",
+     "title": "The Mercy of God",
+     "units": [
+      "wsc-4"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.ix.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vi.x.html",
+     "site": "ccel",
+     "title": "The Truth of God",
+     "units": [
+      "wsc-4"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/unity-god",
+     "site": "monergism",
+     "title": "The Unity of God",
+     "units": [
+      "wsc-5"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.xi.html"
+    },
+    {
+     "url": "https://www.monergism.com/three-persons-one-god",
+     "site": "monergism",
+     "title": "The Trinity",
+     "units": [
+      "wsc-6"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.xii.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vi.xiii.html",
+     "site": "ccel",
+     "title": "The Creation (decrees, creation, creation of man)",
+     "units": [
+      "wsc-7",
+      "wsc-8",
+      "wsc-9",
+      "wsc-10"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/providence-god-1",
+     "site": "monergism",
+     "title": "The Providence of God",
+     "units": [
+      "wsc-11"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vi.xiv.html"
+    },
+    {
+     "url": "https://www.monergism.com/covenant-works-0",
+     "site": "monergism",
+     "title": "The Covenant of Works",
+     "units": [
+      "wsc-12",
+      "wsc-13",
+      "wsc-14"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vii.i.html"
+    },
+    {
+     "url": "https://www.monergism.com/adams-sin",
+     "site": "monergism",
+     "title": "Adam's Sin",
+     "units": [
+      "wsc-15"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.vii.ii.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vii.iii.html",
+     "site": "ccel",
+     "title": "Original Sin",
+     "units": [
+      "wsc-16",
+      "wsc-17",
+      "wsc-18"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.vii.iv.html",
+     "site": "ccel",
+     "title": "Man's Misery by the Fall",
+     "units": [
+      "wsc-19"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.viii.i.html",
+     "site": "ccel",
+     "title": "The Covenant of Grace",
+     "units": [
+      "wsc-20"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/christ-mediator-new-covenant",
+     "site": "monergism",
+     "title": "Christ the Mediator of the Covenant",
+     "units": [
+      "wsc-21",
+      "wsc-22"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.viii.ii.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.viii.iii.html",
+     "site": "ccel",
+     "title": "Christ's Prophetic Office",
+     "units": [
+      "wsc-23",
+      "wsc-24"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.viii.iv.html",
+     "site": "ccel",
+     "title": "Christ's Priestly Office",
+     "units": [
+      "wsc-25"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.viii.v.html",
+     "site": "ccel",
+     "title": "Christ's Kingly Office",
+     "units": [
+      "wsc-26"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.viii.vi.html",
+     "site": "ccel",
+     "title": "Christ's Humiliation in His Incarnation",
+     "units": [
+      "wsc-27"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.viii.vii.html",
+     "site": "ccel",
+     "title": "Christ's Exaltation",
+     "units": [
+      "wsc-28"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.viii.viii.html",
+     "site": "ccel",
+     "title": "Christ the Redeemer",
+     "units": [
+      "wsc-29",
+      "wsc-30"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.i.html",
+     "site": "ccel",
+     "title": "Faith",
+     "units": [
+      "wsc-30"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.ii.html",
+     "site": "ccel",
+     "title": "Effectual Calling",
+     "units": [
+      "wsc-31",
+      "wsc-32"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.iii.html",
+     "site": "ccel",
+     "title": "Justification",
+     "units": [
+      "wsc-33"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.iv.html",
+     "site": "ccel",
+     "title": "Adoption",
+     "units": [
+      "wsc-34"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.v.html",
+     "site": "ccel",
+     "title": "Sanctification",
+     "units": [
+      "wsc-35"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.vi.html",
+     "site": "ccel",
+     "title": "Assurance",
+     "units": [
+      "wsc-36"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.vii.html",
+     "site": "ccel",
+     "title": "Peace",
+     "units": [
+      "wsc-36"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.ix.viii.html",
+     "site": "ccel",
+     "title": "Joy",
+     "units": [
+      "wsc-36"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/growth-grace-0",
+     "site": "monergism",
+     "title": "Growth in Grace",
+     "units": [
+      "wsc-36"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.ix.ix.html"
+    },
+    {
+     "url": "https://www.monergism.com/perseverance",
+     "site": "monergism",
+     "title": "Perseverance",
+     "units": [
+      "wsc-36"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/divinity/divinity.ix.x.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.x.i.html",
+     "site": "ccel",
+     "title": "The Death of the Righteous",
+     "units": [
+      "wsc-37"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.x.ii.html",
+     "site": "ccel",
+     "title": "A Believer's Privilege at Death",
+     "units": [
+      "wsc-37"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/divinity/divinity.x.iii.html",
+     "site": "ccel",
+     "title": "The Resurrection",
+     "units": [
+      "wsc-38"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "watson-commandments",
+   "title": "The Ten Commandments",
+   "author": "Thomas Watson",
+   "year": 1692,
+   "sections": [
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iii.i.html",
+     "site": "ccel",
+     "title": "Obedience",
+     "units": [
+      "wsc-39",
+      "wsc-40"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iii.ii.html",
+     "site": "ccel",
+     "title": "Love (the sum of the Ten Commandments)",
+     "units": [
+      "wsc-41",
+      "wsc-42"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iii.iii.html",
+     "site": "ccel",
+     "title": "The Preface to the Commandments",
+     "units": [
+      "wsc-43",
+      "wsc-44"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iii.iv.html",
+     "site": "ccel",
+     "title": "The Right Understanding of the Law",
+     "units": [
+      "wsc-41"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.i.html",
+     "site": "ccel",
+     "title": "The First Commandment",
+     "units": [
+      "wsc-45",
+      "wsc-46",
+      "wsc-47",
+      "wsc-48"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.ii.html",
+     "site": "ccel",
+     "title": "The Second Commandment",
+     "units": [
+      "wsc-49",
+      "wsc-50",
+      "wsc-51",
+      "wsc-52"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.iii.html",
+     "site": "ccel",
+     "title": "The Third Commandment",
+     "units": [
+      "wsc-53",
+      "wsc-54",
+      "wsc-55",
+      "wsc-56"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.iv.html",
+     "site": "ccel",
+     "title": "The Fourth Commandment",
+     "units": [
+      "wsc-57",
+      "wsc-58",
+      "wsc-59",
+      "wsc-60",
+      "wsc-61",
+      "wsc-62"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.v.html",
+     "site": "ccel",
+     "title": "The Fifth Commandment",
+     "units": [
+      "wsc-63",
+      "wsc-64",
+      "wsc-65",
+      "wsc-66"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.vi.html",
+     "site": "ccel",
+     "title": "The Sixth Commandment",
+     "units": [
+      "wsc-67",
+      "wsc-68",
+      "wsc-69"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.vii.html",
+     "site": "ccel",
+     "title": "The Seventh Commandment",
+     "units": [
+      "wsc-70",
+      "wsc-71",
+      "wsc-72"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.viii.html",
+     "site": "ccel",
+     "title": "The Eighth Commandment",
+     "units": [
+      "wsc-73",
+      "wsc-74",
+      "wsc-75"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.ix.html",
+     "site": "ccel",
+     "title": "The Ninth Commandment",
+     "units": [
+      "wsc-76",
+      "wsc-77",
+      "wsc-78"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.iv.x.html",
+     "site": "ccel",
+     "title": "The Tenth Commandment",
+     "units": [
+      "wsc-79",
+      "wsc-80",
+      "wsc-81"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/mans-inability-keep-moral-law",
+     "site": "monergism",
+     "title": "Man's Inability to Keep the Moral Law",
+     "units": [
+      "wsc-82"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/commandments/commandments.v.i.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.v.ii.html",
+     "site": "ccel",
+     "title": "Degrees of Sin",
+     "units": [
+      "wsc-83"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.v.iii.html",
+     "site": "ccel",
+     "title": "The Wrath of God",
+     "units": [
+      "wsc-84"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.vi.i.html",
+     "site": "ccel",
+     "title": "Faith",
+     "units": [
+      "wsc-85",
+      "wsc-86"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.vi.ii.html",
+     "site": "ccel",
+     "title": "Repentance",
+     "units": [
+      "wsc-87"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.vi.iii.html",
+     "site": "ccel",
+     "title": "The Word",
+     "units": [
+      "wsc-88",
+      "wsc-89",
+      "wsc-90"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/baptism-0",
+     "site": "monergism",
+     "title": "Baptism (and the sacraments in general)",
+     "units": [
+      "wsc-91",
+      "wsc-92",
+      "wsc-93",
+      "wsc-94",
+      "wsc-95"
+     ],
+     "altUrl": "https://ccel.org/ccel/watson/commandments/commandments.vi.iv.html"
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.vi.v.html",
+     "site": "ccel",
+     "title": "The Lord's Supper",
+     "units": [
+      "wsc-96",
+      "wsc-97"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/commandments/commandments.vi.vi.html",
+     "site": "ccel",
+     "title": "Prayer",
+     "units": [
+      "wsc-98"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "watson-prayer",
+   "title": "The Lord's Prayer",
+   "author": "Thomas Watson",
+   "year": 1692,
+   "sections": [
+    {
+     "url": "https://ccel.org/ccel/watson/prayer/prayer.iii.html",
+     "site": "ccel",
+     "title": "The Preface to the Lord's Prayer",
+     "units": [
+      "wsc-99",
+      "wsc-100"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/prayer/prayer.iv.html",
+     "site": "ccel",
+     "title": "The First Petition",
+     "units": [
+      "wsc-101"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/prayer/prayer.v.html",
+     "site": "ccel",
+     "title": "The Second Petition",
+     "units": [
+      "wsc-102"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/prayer/prayer.vi.html",
+     "site": "ccel",
+     "title": "The Third Petition",
+     "units": [
+      "wsc-103"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/prayer/prayer.vii.html",
+     "site": "ccel",
+     "title": "The Fourth Petition",
+     "units": [
+      "wsc-104"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/prayer/prayer.viii.html",
+     "site": "ccel",
+     "title": "The Fifth Petition",
+     "units": [
+      "wsc-105"
+     ]
+    },
+    {
+     "url": "https://ccel.org/ccel/watson/prayer/prayer.ix.html",
+     "site": "ccel",
+     "title": "The Sixth Petition",
+     "units": [
+      "wsc-106"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fisher-wsc",
+   "title": "The Assembly's Shorter Catechism Explained",
+   "author": "James Fisher (with Ebenezer and Ralph Erskine)",
+   "year": 1753,
+   "sections": [
+    {
+     "url": "https://www.monergism.com/what-are-decrees-god",
+     "site": "monergism",
+     "title": "What are the Decrees of God?",
+     "units": [
+      "wsc-7"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/what-are-gods-works-providence",
+     "site": "monergism",
+     "title": "What are God's works of providence?",
+     "units": [
+      "wsc-11"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/what-sanctification-0",
+     "site": "monergism",
+     "title": "What is Sanctification?",
+     "units": [
+      "wsc-35"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/thethreshold/sdg/fisher/Fisher's%20Catechism.pdf",
+     "site": "monergism",
+     "title": "The Assembly's Shorter Catechism Explained (PDF)",
+     "units": [
+      "wsc-1",
+      "wsc-2",
+      "wsc-3",
+      "wsc-4",
+      "wsc-5",
+      "wsc-6",
+      "wsc-7",
+      "wsc-8",
+      "wsc-9",
+      "wsc-10",
+      "wsc-11",
+      "wsc-12",
+      "wsc-13",
+      "wsc-14",
+      "wsc-15",
+      "wsc-16",
+      "wsc-17",
+      "wsc-18",
+      "wsc-19",
+      "wsc-20",
+      "wsc-21",
+      "wsc-22",
+      "wsc-23",
+      "wsc-24",
+      "wsc-25",
+      "wsc-26",
+      "wsc-27",
+      "wsc-28",
+      "wsc-29",
+      "wsc-30",
+      "wsc-31",
+      "wsc-32",
+      "wsc-33",
+      "wsc-34",
+      "wsc-35",
+      "wsc-36",
+      "wsc-37",
+      "wsc-38",
+      "wsc-39",
+      "wsc-40",
+      "wsc-41",
+      "wsc-42",
+      "wsc-43",
+      "wsc-44",
+      "wsc-45",
+      "wsc-46",
+      "wsc-47",
+      "wsc-48",
+      "wsc-49",
+      "wsc-50",
+      "wsc-51",
+      "wsc-52",
+      "wsc-53",
+      "wsc-54",
+      "wsc-55",
+      "wsc-56",
+      "wsc-57",
+      "wsc-58",
+      "wsc-59",
+      "wsc-60",
+      "wsc-61",
+      "wsc-62",
+      "wsc-63",
+      "wsc-64",
+      "wsc-65",
+      "wsc-66",
+      "wsc-67",
+      "wsc-68",
+      "wsc-69",
+      "wsc-70",
+      "wsc-71",
+      "wsc-72",
+      "wsc-73",
+      "wsc-74",
+      "wsc-75",
+      "wsc-76",
+      "wsc-77",
+      "wsc-78",
+      "wsc-79",
+      "wsc-80",
+      "wsc-81",
+      "wsc-82",
+      "wsc-83",
+      "wsc-84",
+      "wsc-85",
+      "wsc-86",
+      "wsc-87",
+      "wsc-88",
+      "wsc-89",
+      "wsc-90",
+      "wsc-91",
+      "wsc-92",
+      "wsc-93",
+      "wsc-94",
+      "wsc-95",
+      "wsc-96",
+      "wsc-97",
+      "wsc-98",
+      "wsc-99",
+      "wsc-100",
+      "wsc-101",
+      "wsc-102",
+      "wsc-103",
+      "wsc-104",
+      "wsc-105",
+      "wsc-106",
+      "wsc-107"
+     ],
+     "wholeBook": true
+    }
+   ]
+  },
+  {
+   "id": "vincent-wsc",
+   "title": "The Shorter Catechism Explained from Scripture",
+   "author": "Thomas Vincent",
+   "year": 1674,
+   "sections": [
+    {
+     "url": "https://www.monergism.com/thethreshold/sdg/vincent/The%20Shorter%20Catechism%20-%20Thomas%20Vincent.pdf",
+     "site": "monergism",
+     "title": "The Shorter Catechism Explained from Scripture (PDF)",
+     "units": [
+      "wsc-1",
+      "wsc-2",
+      "wsc-3",
+      "wsc-4",
+      "wsc-5",
+      "wsc-6",
+      "wsc-7",
+      "wsc-8",
+      "wsc-9",
+      "wsc-10",
+      "wsc-11",
+      "wsc-12",
+      "wsc-13",
+      "wsc-14",
+      "wsc-15",
+      "wsc-16",
+      "wsc-17",
+      "wsc-18",
+      "wsc-19",
+      "wsc-20",
+      "wsc-21",
+      "wsc-22",
+      "wsc-23",
+      "wsc-24",
+      "wsc-25",
+      "wsc-26",
+      "wsc-27",
+      "wsc-28",
+      "wsc-29",
+      "wsc-30",
+      "wsc-31",
+      "wsc-32",
+      "wsc-33",
+      "wsc-34",
+      "wsc-35",
+      "wsc-36",
+      "wsc-37",
+      "wsc-38",
+      "wsc-39",
+      "wsc-40",
+      "wsc-41",
+      "wsc-42",
+      "wsc-43",
+      "wsc-44",
+      "wsc-45",
+      "wsc-46",
+      "wsc-47",
+      "wsc-48",
+      "wsc-49",
+      "wsc-50",
+      "wsc-51",
+      "wsc-52",
+      "wsc-53",
+      "wsc-54",
+      "wsc-55",
+      "wsc-56",
+      "wsc-57",
+      "wsc-58",
+      "wsc-59",
+      "wsc-60",
+      "wsc-61",
+      "wsc-62",
+      "wsc-63",
+      "wsc-64",
+      "wsc-65",
+      "wsc-66",
+      "wsc-67",
+      "wsc-68",
+      "wsc-69",
+      "wsc-70",
+      "wsc-71",
+      "wsc-72",
+      "wsc-73",
+      "wsc-74",
+      "wsc-75",
+      "wsc-76",
+      "wsc-77",
+      "wsc-78",
+      "wsc-79",
+      "wsc-80",
+      "wsc-81",
+      "wsc-82",
+      "wsc-83",
+      "wsc-84",
+      "wsc-85",
+      "wsc-86",
+      "wsc-87",
+      "wsc-88",
+      "wsc-89",
+      "wsc-90",
+      "wsc-91",
+      "wsc-92",
+      "wsc-93",
+      "wsc-94",
+      "wsc-95",
+      "wsc-96",
+      "wsc-97",
+      "wsc-98",
+      "wsc-99",
+      "wsc-100",
+      "wsc-101",
+      "wsc-102",
+      "wsc-103",
+      "wsc-104",
+      "wsc-105",
+      "wsc-106",
+      "wsc-107"
+     ],
+     "wholeBook": true
+    }
+   ]
+  },
+  {
+   "id": "ursinus-hc",
+   "title": "Commentary on the Heidelberg Catechism",
+   "author": "Zacharias Ursinus (tr. G. W. Williard)",
+   "year": 1851,
+   "sections": [
+    {
+     "url": "https://www.monergism.com/what-gospel",
+     "site": "monergism",
+     "title": "What is the Gospel?",
+     "units": [
+      "hc-19"
+     ],
+     "excerpt": true
+    },
+    {
+     "url": "https://www.monergism.com/concerning-one-true-god%E2%80%99-%E2%80%98-god-father",
+     "site": "monergism",
+     "title": "Concerning the One True God & Of God the Father",
+     "units": [
+      "hc-25",
+      "hc-26"
+     ],
+     "excerpt": true
+    },
+    {
+     "url": "https://www.monergism.com/imputation-christ%E2%80%99s-righteousnes-zacharias-ursinus",
+     "site": "monergism",
+     "title": "The Imputation of Christ's Righteousness",
+     "units": [
+      "hc-60"
+     ],
+     "excerpt": true
+    },
+    {
+     "url": "https://www.monergism.com/what-prayer",
+     "site": "monergism",
+     "title": "What is Prayer?",
+     "units": [
+      "hc-116"
+     ],
+     "excerpt": true
+    },
+    {
+     "url": "https://www.monergism.com/thethreshold/sdg/ursinus/Heidelberg_Catechism_Commentary_Ursinus.pdf",
+     "site": "monergism",
+     "title": "Commentary on the Heidelberg Catechism (PDF)",
+     "units": [
+      "hc-1",
+      "hc-2",
+      "hc-3",
+      "hc-4",
+      "hc-5",
+      "hc-6",
+      "hc-7",
+      "hc-8",
+      "hc-9",
+      "hc-10",
+      "hc-11",
+      "hc-12",
+      "hc-13",
+      "hc-14",
+      "hc-15",
+      "hc-16",
+      "hc-17",
+      "hc-18",
+      "hc-19",
+      "hc-20",
+      "hc-21",
+      "hc-22",
+      "hc-23",
+      "hc-24",
+      "hc-25",
+      "hc-26",
+      "hc-27",
+      "hc-28",
+      "hc-29",
+      "hc-30",
+      "hc-31",
+      "hc-32",
+      "hc-33",
+      "hc-34",
+      "hc-35",
+      "hc-36",
+      "hc-37",
+      "hc-38",
+      "hc-39",
+      "hc-40",
+      "hc-41",
+      "hc-42",
+      "hc-43",
+      "hc-44",
+      "hc-45",
+      "hc-46",
+      "hc-47",
+      "hc-48",
+      "hc-49",
+      "hc-50",
+      "hc-51",
+      "hc-52",
+      "hc-53",
+      "hc-54",
+      "hc-55",
+      "hc-56",
+      "hc-57",
+      "hc-58",
+      "hc-59",
+      "hc-60",
+      "hc-61",
+      "hc-62",
+      "hc-63",
+      "hc-64",
+      "hc-65",
+      "hc-66",
+      "hc-67",
+      "hc-68",
+      "hc-69",
+      "hc-70",
+      "hc-71",
+      "hc-72",
+      "hc-73",
+      "hc-74",
+      "hc-75",
+      "hc-76",
+      "hc-77",
+      "hc-78",
+      "hc-79",
+      "hc-80",
+      "hc-81",
+      "hc-82",
+      "hc-83",
+      "hc-84",
+      "hc-85",
+      "hc-86",
+      "hc-87",
+      "hc-88",
+      "hc-89",
+      "hc-90",
+      "hc-91",
+      "hc-92",
+      "hc-93",
+      "hc-94",
+      "hc-95",
+      "hc-96",
+      "hc-97",
+      "hc-98",
+      "hc-99",
+      "hc-100",
+      "hc-101",
+      "hc-102",
+      "hc-103",
+      "hc-104",
+      "hc-105",
+      "hc-106",
+      "hc-107",
+      "hc-108",
+      "hc-109",
+      "hc-110",
+      "hc-111",
+      "hc-112",
+      "hc-113",
+      "hc-114",
+      "hc-115",
+      "hc-116",
+      "hc-117",
+      "hc-118",
+      "hc-119",
+      "hc-120",
+      "hc-121",
+      "hc-122",
+      "hc-123",
+      "hc-124",
+      "hc-125",
+      "hc-126",
+      "hc-127",
+      "hc-128",
+      "hc-129"
+     ],
+     "wholeBook": true
+    }
+   ]
+  },
+  {
+   "id": "ridgley-wlc",
+   "title": "A Body of Divinity: Lectures on the Assembly's Larger Catechism",
+   "author": "Thomas Ridgley",
+   "year": 1731,
+   "sections": [
+    {
+     "url": "https://www.monergism.com/what-are-punishments-sin-world",
+     "site": "monergism",
+     "title": "What Are the Punishments of Sin in this World?",
+     "units": [
+      "wlc-28",
+      "wlc-29"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/christs-exaltation-his-resurrection",
+     "site": "monergism",
+     "title": "Christ's Exaltation in His Resurrection",
+     "units": [
+      "wlc-51",
+      "wlc-52",
+      "wlc-53",
+      "wlc-54"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/condition-those-who-are-without-gospel",
+     "site": "monergism",
+     "title": "The Condition of Those Who Are Without the Gospel",
+     "units": [
+      "wlc-60"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/effectual-calling-2",
+     "site": "monergism",
+     "title": "Effectual Calling",
+     "units": [
+      "wlc-67",
+      "wlc-68"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/assurance-salvation-1",
+     "site": "monergism",
+     "title": "Assurance of Salvation",
+     "units": [
+      "wlc-80",
+      "wlc-81"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/thethreshold/sdg/ridgeley/A%20Body%20of%20Divinity%20-%20Ridgley.pdf",
+     "site": "monergism",
+     "title": "A Body of Divinity (PDF, ~3000 pp.)",
+     "units": [
+      "wlc-1",
+      "wlc-2",
+      "wlc-3",
+      "wlc-4",
+      "wlc-5",
+      "wlc-6",
+      "wlc-7",
+      "wlc-8",
+      "wlc-9",
+      "wlc-10",
+      "wlc-11",
+      "wlc-12",
+      "wlc-13",
+      "wlc-14",
+      "wlc-15",
+      "wlc-16",
+      "wlc-17",
+      "wlc-18",
+      "wlc-19",
+      "wlc-20",
+      "wlc-21",
+      "wlc-22",
+      "wlc-23",
+      "wlc-24",
+      "wlc-25",
+      "wlc-26",
+      "wlc-27",
+      "wlc-28",
+      "wlc-29",
+      "wlc-30",
+      "wlc-31",
+      "wlc-32",
+      "wlc-33",
+      "wlc-34",
+      "wlc-35",
+      "wlc-36",
+      "wlc-37",
+      "wlc-38",
+      "wlc-39",
+      "wlc-40",
+      "wlc-41",
+      "wlc-42",
+      "wlc-43",
+      "wlc-44",
+      "wlc-45",
+      "wlc-46",
+      "wlc-47",
+      "wlc-48",
+      "wlc-49",
+      "wlc-50",
+      "wlc-51",
+      "wlc-52",
+      "wlc-53",
+      "wlc-54",
+      "wlc-55",
+      "wlc-56",
+      "wlc-57",
+      "wlc-58",
+      "wlc-59",
+      "wlc-60",
+      "wlc-61",
+      "wlc-62",
+      "wlc-63",
+      "wlc-64",
+      "wlc-65",
+      "wlc-66",
+      "wlc-67",
+      "wlc-68",
+      "wlc-69",
+      "wlc-70",
+      "wlc-71",
+      "wlc-72",
+      "wlc-73",
+      "wlc-74",
+      "wlc-75",
+      "wlc-76",
+      "wlc-77",
+      "wlc-78",
+      "wlc-79",
+      "wlc-80",
+      "wlc-81",
+      "wlc-82",
+      "wlc-83",
+      "wlc-84",
+      "wlc-85",
+      "wlc-86",
+      "wlc-87",
+      "wlc-88",
+      "wlc-89",
+      "wlc-90",
+      "wlc-91",
+      "wlc-92",
+      "wlc-93",
+      "wlc-94",
+      "wlc-95",
+      "wlc-96",
+      "wlc-97",
+      "wlc-98",
+      "wlc-99",
+      "wlc-100",
+      "wlc-101",
+      "wlc-102",
+      "wlc-103",
+      "wlc-104",
+      "wlc-105",
+      "wlc-106",
+      "wlc-107",
+      "wlc-108",
+      "wlc-109",
+      "wlc-110",
+      "wlc-111",
+      "wlc-112",
+      "wlc-113",
+      "wlc-114",
+      "wlc-115",
+      "wlc-116",
+      "wlc-117",
+      "wlc-118",
+      "wlc-119",
+      "wlc-120",
+      "wlc-121",
+      "wlc-122",
+      "wlc-123",
+      "wlc-124",
+      "wlc-125",
+      "wlc-126",
+      "wlc-127",
+      "wlc-128",
+      "wlc-129",
+      "wlc-130",
+      "wlc-131",
+      "wlc-132",
+      "wlc-133",
+      "wlc-134",
+      "wlc-135",
+      "wlc-136",
+      "wlc-137",
+      "wlc-138",
+      "wlc-139",
+      "wlc-140",
+      "wlc-141",
+      "wlc-142",
+      "wlc-143",
+      "wlc-144",
+      "wlc-145",
+      "wlc-146",
+      "wlc-147",
+      "wlc-148",
+      "wlc-149",
+      "wlc-150",
+      "wlc-151",
+      "wlc-152",
+      "wlc-153",
+      "wlc-154",
+      "wlc-155",
+      "wlc-156",
+      "wlc-157",
+      "wlc-158",
+      "wlc-159",
+      "wlc-160",
+      "wlc-161",
+      "wlc-162",
+      "wlc-163",
+      "wlc-164",
+      "wlc-165",
+      "wlc-166",
+      "wlc-167",
+      "wlc-168",
+      "wlc-169",
+      "wlc-170",
+      "wlc-171",
+      "wlc-172",
+      "wlc-173",
+      "wlc-174",
+      "wlc-175",
+      "wlc-176",
+      "wlc-177",
+      "wlc-178",
+      "wlc-179",
+      "wlc-180",
+      "wlc-181",
+      "wlc-182",
+      "wlc-183",
+      "wlc-184",
+      "wlc-185",
+      "wlc-186",
+      "wlc-187",
+      "wlc-188",
+      "wlc-189",
+      "wlc-190",
+      "wlc-191",
+      "wlc-192",
+      "wlc-193",
+      "wlc-194",
+      "wlc-195",
+      "wlc-196"
+     ],
+     "wholeBook": true
+    }
+   ]
+  },
+  {
+   "id": "shaw-wcf",
+   "title": "An Exposition of the Confession of Faith",
+   "author": "Robert Shaw",
+   "year": 1845,
+   "sections": [
+    {
+     "url": "https://www.monergism.com/preservation-interpretation-and-supreme-judge-scripture",
+     "site": "monergism",
+     "title": "The Preservation, Interpretation and Supreme Judge of Scripture (WCF 1.8-1.10)",
+     "units": [
+      "wcf-1"
+     ],
+     "partial": "1.8-1.10"
+    },
+    {
+     "url": "https://www.monergism.com/god-and-holy-trinity",
+     "site": "monergism",
+     "title": "Of God and of the Holy Trinity",
+     "units": [
+      "wcf-2"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/primary-and-secondary-causes",
+     "site": "monergism",
+     "title": "Primary and Secondary Causes (WCF 5.2)",
+     "units": [
+      "wcf-5"
+     ],
+     "partial": "5.2"
+    },
+    {
+     "url": "https://www.monergism.com/fall-man-sin-and-punishment-thereof",
+     "site": "monergism",
+     "title": "Of the Fall of Man, of Sin, and of the Punishment Thereof",
+     "units": [
+      "wcf-6"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/christ-mediator-1",
+     "site": "monergism",
+     "title": "Of Christ the Mediator",
+     "units": [
+      "wcf-8"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/free-will-1",
+     "site": "monergism",
+     "title": "Of Free Will",
+     "units": [
+      "wcf-9"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/effectual-calling-3",
+     "site": "monergism",
+     "title": "Of Effectual Calling",
+     "units": [
+      "wcf-10"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/sanctification-0",
+     "site": "monergism",
+     "title": "Of Sanctification",
+     "units": [
+      "wcf-13"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/repentance-unto-life-0",
+     "site": "monergism",
+     "title": "Of Repentance unto Life",
+     "units": [
+      "wcf-15"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/law-god",
+     "site": "monergism",
+     "title": "Of the Law of God",
+     "units": [
+      "wcf-19"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/exposition-wcf-chapter-243",
+     "site": "monergism",
+     "title": "Exposition of WCF 24.3",
+     "units": [
+      "wcf-24"
+     ],
+     "partial": "24.3"
+    },
+    {
+     "url": "https://www.monergism.com/exposition-244%E2%80%93246",
+     "site": "monergism",
+     "title": "Exposition of WCF 24.4-24.6",
+     "units": [
+      "wcf-24"
+     ],
+     "partial": "24.4-24.6"
+    },
+    {
+     "url": "https://www.monergism.com/state-men-after-death-and-resurrection-dead",
+     "site": "monergism",
+     "title": "Of the State of Men after Death, and of the Resurrection of the Dead",
+     "units": [
+      "wcf-32"
+     ]
+    },
+    {
+     "url": "https://www.monergism.com/thethreshold/sdg/shaw/The%20Reformed%20Faith%20-%20Robert%20Shaw.pdf",
+     "site": "monergism",
+     "title": "The Reformed Faith (PDF)",
+     "units": [
+      "wcf-1",
+      "wcf-2",
+      "wcf-3",
+      "wcf-4",
+      "wcf-5",
+      "wcf-6",
+      "wcf-7",
+      "wcf-8",
+      "wcf-9",
+      "wcf-10",
+      "wcf-11",
+      "wcf-12",
+      "wcf-13",
+      "wcf-14",
+      "wcf-15",
+      "wcf-16",
+      "wcf-17",
+      "wcf-18",
+      "wcf-19",
+      "wcf-20",
+      "wcf-21",
+      "wcf-22",
+      "wcf-23",
+      "wcf-24",
+      "wcf-25",
+      "wcf-26",
+      "wcf-27",
+      "wcf-28",
+      "wcf-29",
+      "wcf-30",
+      "wcf-31",
+      "wcf-32",
+      "wcf-33"
+     ],
+     "wholeBook": true
+    }
+   ]
+  }
+ ]
+}
