@@ -1,6 +1,6 @@
 import { loadDoc, loadIndex } from '../data/load.ts'
 import { href } from '../router.ts'
-import { db, getSettings } from '../store/db.ts'
+import { db, getSettings, inTradition, saveSettings, type TraditionChoice } from '../store/db.ts'
 import { learnedToday } from '../store/srs.ts'
 import { loadStats, troubleSpots } from '../store/stats.ts'
 import { useDataVersion } from '../store/sync.ts'
@@ -28,7 +28,7 @@ async function loadHome() {
 
 export function Home() {
   const v = useDataVersion()
-  const [data] = useAsync(loadHome, [v])
+  const [data, , reload] = useAsync(loadHome, [v])
   if (!data) return <p className="empty">Loading…</p>
   const { due, held, courseInfo, settings, trouble, streak } = data
   const dueChunks = due.reduce((n, u) => n + u.chunks.length + (u.whole ? 1 : 0), 0)
@@ -67,15 +67,21 @@ export function Home() {
         )}
       </section>
 
+      {!settings.tradition && <TraditionPicker onPick={reload} />}
+
       <section>
         <h2>Memorising</h2>
         {restDay && <p className="note">Lord's Day: reviews only, no new material today.</p>}
         {courseInfo.length === 0 && (
           <div className="card">
-            <p>Choose something to memorise. The Shorter Catechism is a good place to start.</p>
-            <a className="button primary" href={href('doc', 'wsc')}>
-              Open the Shorter Catechism
-            </a>
+            <p>Choose something to memorise. {starters(settings.tradition).length > 1 ? 'A catechism' : 'The catechism'} is a good place to start.</p>
+            <div className="row wrap">
+              {starters(settings.tradition).map(([id, label]) => (
+                <a key={id} className="button primary" href={href('doc', id)}>
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
         )}
         {courseInfo.map(({ course, doc, learned, today, next }) => {
@@ -124,10 +130,18 @@ export function Home() {
             <strong>Apostles' and Nicene Creeds</strong>
             <span>Phrase by phrase, with proof texts and hymns</span>
           </a>
-          <a className="tile" href={href('harmony', 'decalogue')}>
-            <strong>The Ten Commandments</strong>
-            <span>In the Shorter, Larger and Heidelberg Catechisms</span>
-          </a>
+          {inTradition('reformed', settings.tradition) && (
+            <a className="tile" href={href('harmony', 'decalogue')}>
+              <strong>The Ten Commandments</strong>
+              <span>In the Shorter, Larger and Heidelberg Catechisms</span>
+            </a>
+          )}
+          {inTradition('lutheran', settings.tradition) && (
+            <a className="tile" href={href('doc', 'lsc')}>
+              <strong>The Six Chief Parts</strong>
+              <span>Luther's Small Catechism: Commandments, Creed, Prayer and the Sacraments</span>
+            </a>
+          )}
           <a className="tile" href={href('doc', 'verses')}>
             <strong>My verses</strong>
             <span>Scripture you have added from proof texts</span>
@@ -135,6 +149,46 @@ export function Home() {
         </div>
       </section>
     </div>
+  )
+}
+
+const starters = (t: TraditionChoice | undefined): [string, string][] =>
+  t === 'lutheran'
+    ? [['lsc', "Open Luther's Small Catechism"]]
+    : t === 'reformed'
+      ? [['wsc', 'Open the Shorter Catechism']]
+      : [
+          ['wsc', 'Westminster Shorter Catechism'],
+          ['lsc', "Luther's Small Catechism"],
+        ]
+
+/** Asked once. Creeds and Scripture show either way; Settings can change it. */
+function TraditionPicker({ onPick }: { onPick: () => void }) {
+  const pick = async (tradition: TraditionChoice) => {
+    await saveSettings({ tradition })
+    onPick()
+  }
+  return (
+    <section className="card">
+      <h3>Which confessions do you hold?</h3>
+      <p className="muted small">
+        This chooses the catechisms and confessions in your library. The creeds and Scripture are always there. You can change it in Settings.
+      </p>
+      <div className="row wrap">
+        <button className="primary" onClick={() => pick('reformed')}>
+          Reformed
+        </button>
+        <button className="primary" onClick={() => pick('lutheran')}>
+          Lutheran
+        </button>
+        <button className="ghost" onClick={() => pick('both')}>
+          Show both
+        </button>
+      </div>
+      <p className="muted small">
+        Reformed: Westminster Standards, Heidelberg Catechism, Belgic Confession, Canons of Dort. Lutheran: Luther's Small and Large Catechisms.
+      </p>
+    </section>
   )
 }
 

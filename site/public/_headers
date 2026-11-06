@@ -1,0 +1,13 @@
+# Cloudflare Pages. Hashed files never change. The app shell and its service
+# worker must revalidate, so that an update reaches every visitor.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/app/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/app/sw.js
+  Cache-Control: no-cache
+
+/app/index.html
+  Cache-Control: no-cache

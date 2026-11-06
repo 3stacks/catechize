@@ -8,7 +8,7 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { BookText, CellRef, DataIndex, Doc, Group, Harmony, HarmonyRow, Proof, Span, Unit } from '../src/data/types.ts'
+import type { BookText, CellRef, DataIndex, Doc, Group, Harmony, HarmonyRow, Proof, Span, Tradition, Unit } from '../src/data/types.ts'
 import { BOOKS, findBook } from '../src/lib/books.ts'
 import { chunk } from '../src/lib/chunk.ts'
 import { normWord, tokenize } from '../src/lib/grade.ts'
@@ -122,11 +122,21 @@ function makeUnit(id: string, ref: string, prompt: string, text: string, proofs:
   return { id, ref, prompt, text, chunks: chunk(text, cuts), proofs }
 }
 
-function doc(d: Omit<Doc, 'unitCount'>): Doc {
+// Creeds and Scripture belong to every tradition. The Ten Commandments document
+// uses the Reformed numbering, and the Small Catechism carries Luther's own.
+const TRADITION: Record<string, Tradition> = {
+  wsc: 'reformed', wlc: 'reformed', wcf: 'reformed', hc: 'reformed', bc: 'reformed', dort: 'reformed', decalogue: 'reformed',
+  lsc: 'lutheran', llc: 'lutheran',
+  apostles: 'common', nicene: 'common', athanasian: 'common', chalcedon: 'common',
+}
+
+function doc(d: Omit<Doc, 'unitCount' | 'tradition'>): Doc {
   const ids = new Set(d.units.map((u) => u.id))
   if (ids.size !== d.units.length) throw new Error(`${d.id}: duplicate unit ids`)
   for (const g of d.groups) for (const u of g.units) if (!ids.has(u)) throw new Error(`${d.id}: group ${g.title} names missing ${u}`)
-  return { ...d, unitCount: d.units.length }
+  const tradition = TRADITION[d.id]
+  if (!tradition) throw new Error(`${d.id}: no tradition`)
+  return { ...d, tradition, unitCount: d.units.length }
 }
 
 const range = (a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i) => a + i)
@@ -465,6 +475,7 @@ function buildCreeds(): { apostles: Doc; nicene: Doc; harmony: Harmony } {
     harmony: {
       id: 'creeds',
       title: "Apostles' and Nicene Creeds",
+      tradition: 'common',
       description: 'Phrase by phrase, with proof texts and hymns.',
       columns: [
         { key: 'apostles', label: "Apostles'", docId: 'apostles' },
@@ -573,6 +584,7 @@ function buildDecalogue(all: Map<string, Doc>): { doc: Doc; harmony: Harmony } {
     harmony: {
       id: 'decalogue',
       title: 'The Ten Commandments in the catechisms',
+      tradition: 'reformed',
       description: 'Each commandment with its exposition in the Shorter and Larger Catechisms and the Heidelberg Catechism.',
       columns: [
         { key: 'decalogue', label: 'Commandment', docId: 'decalogue' },
@@ -585,10 +597,114 @@ function buildDecalogue(all: Map<string, Doc>): { doc: Doc; harmony: Harmony } {
   }
 }
 
+// ---------------------------------------------------------------- Luther's catechisms
+
+const SOURCE_TRIGLOT = { name: 'Triglot Concordia (1921), tr. F. Bente and W. H. T. Dau', license: 'Public domain' }
+
+// Scripture behind the Small Catechism's parts, shown as "see also" links.
+const LSC_REFS: Record<string, string> = {
+  'lsc-c1': 'Exod. 20:3', 'lsc-c2': 'Exod. 20:7', 'lsc-c3': 'Exod. 20:8-11', 'lsc-c4': 'Exod. 20:12', 'lsc-c5': 'Exod. 20:13',
+  'lsc-c6': 'Exod. 20:14', 'lsc-c7': 'Exod. 20:15', 'lsc-c8': 'Exod. 20:16', 'lsc-c9': 'Exod. 20:17', 'lsc-c10': 'Exod. 20:17',
+  'lsc-cclose': 'Exod. 20:5-6', 'lsc-p0': 'Matt. 6:9', 'lsc-p1': 'Matt. 6:9', 'lsc-p2': 'Matt. 6:10', 'lsc-p3': 'Matt. 6:10',
+  'lsc-p4': 'Matt. 6:11', 'lsc-p5': 'Matt. 6:12', 'lsc-p6': 'Matt. 6:13', 'lsc-p7': 'Matt. 6:13',
+  'lsc-b1': 'Matt. 28:19', 'lsc-b2': 'Mark 16:16', 'lsc-b3': 'Titus 3:5-8', 'lsc-b4': 'Rom. 6:4',
+  'lsc-s2': 'Matt. 26:26-28; Mark 14:22-24; Luke 22:19-20; 1 Cor. 11:23-25',
+  'lsc-blessing': 'Ps. 145:15-16', 'lsc-thanks': 'Ps. 106:1; 136:25; 147:9-11',
+}
+
+function buildSmallCatechism(): Doc {
+  const data: { parts: { title: string; units: { id: string; ref: string; prompt: string; text: string }[] }[] } = readJson(join(SRC, 'small-catechism.json'))
+  const units: Unit[] = []
+  const groups: Group[] = []
+  for (const part of data.parts) {
+    for (const u of part.units) {
+      const r = LSC_REFS[u.id] ? refs(LSC_REFS[u.id], `LSC ${u.ref}`) : []
+      units.push(makeUnit(u.id, u.ref, u.prompt, u.text, r.length ? [{ span: [0, u.text.length], refs: r }] : []))
+    }
+    groups.push({ title: part.title, units: part.units.map((u) => u.id) })
+  }
+  return doc({
+    id: 'lsc',
+    title: "Luther's Small Catechism",
+    short: 'SC',
+    kind: 'catechism',
+    year: '1529',
+    source: { ...SOURCE_TRIGLOT, url: 'https://bookofconcord.org/small-catechism/', note: 'Bracketed editorial additions are left out. Each part is the text, then its explanation, as it is taught.' },
+    groups,
+    units,
+  })
+}
+
+// Section headings in the Large Catechism, in order. A paragraph that matches
+// starts a new group; the paragraphs under it are its units.
+const LLC_HEADINGS: [RegExp, string][] = [
+  [/^Preface$/, 'Preface'],
+  [/^SHORT PREFACE/, 'Short Preface'],
+  [/^Part First\. The Ten Commandments/, 'The Ten Commandments'],
+  [/^The (First|Second|Third|Fourth|Fifth|Sixth|Seventh|Eighth) Commandment\.$/, '$0'],
+  [/^\[Exposition of the Appendix to the First Commandment\.\]$/, 'Appendix to the First Commandment'],
+  [/^The Ninth and Tenth Commandments$/, '$0'],
+  [/^Conclusion of the Ten Commandments\.$/, 'Conclusion of the Ten Commandments'],
+  [/^Part Second\. OF THE CREED\.$/, 'The Creed'],
+  [/^Article (I|II|III)\.$/, 'The Creed, $0'],
+  [/^Part Third\. OF PRAYER\.$/, 'Prayer'],
+  [/^The Lord's Prayer\.$/, "The Lord's Prayer"],
+  [/^The (First|Second|Third|Fourth|Fifth|Sixth) Petition\.$/, '$0'],
+  [/^The Seventh and Last Petition\.$/, 'The Seventh Petition'],
+  [/^Part Fourth\.$/, 'Baptism'],
+  [/^\[Part Fifth\.\]$/, 'The Sacrament of the Altar'],
+]
+
+function buildLargeCatechism(): Doc {
+  const raw = readFileSync(join(CACHE, 'large-catechism.txt'), 'utf8').replace(/\r\n/g, '\n')
+  // From the preface to the end of Luther's text (before the transcriber's note).
+  const body = raw.slice(raw.indexOf('\nPreface\n'), raw.indexOf('This text was converted to ASCII format for Project Wittenberg'))
+  const paras = body.split(/\n\s*\n/).map((p) => p.replace(/\s+/g, ' ').trim()).filter(Boolean)
+  const groups: Group[] = []
+  const units: Unit[] = []
+  let group: Group | undefined
+  let carry = ''
+  for (const p of paras) {
+    const h = LLC_HEADINGS.find(([re]) => re.test(p))
+    if (h) {
+      group = { title: h[1].replace('$0', p.replace(/[.\[\]]/g, '').trim()), units: [] }
+      groups.push(group)
+      continue
+    }
+    // Headings, quoted commandments and list items in the short preface are
+    // not prose to memorise.
+    if (p.split(' ').length < 8 || /^\d+\. /.test(p) || /^A Christian, Profitable/.test(p) || /^(OF |THE |First\.|Secondly\.|Thirdly\.)/.test(p)) continue
+    // A lead-in that ends in a colon belongs with the passage it introduces.
+    if (p.endsWith(':')) {
+      carry += p + ' '
+      continue
+    }
+    if (!group) throw new Error('LLC: text before the first heading')
+    const n = units.length + 1
+    const k = group.units.length + 1
+    // Bracketed passages are the Triglot editors' additions from the Latin text.
+    const text = (carry + p).replace(/\s*\[[^\]]*\]/g, '').replace(/\s+([,.;:])/g, '$1')
+    carry = ''
+    units.push(makeUnit(`llc-${n}`, `¶${n}`, `${group.title}, paragraph ${k}`, text))
+    group.units.push(`llc-${n}`)
+  }
+  if (units.length < 300) warn(`LLC: only ${units.length} paragraphs`)
+  return doc({
+    id: 'llc',
+    title: "Luther's Large Catechism",
+    short: 'LC',
+    kind: 'catechism',
+    year: '1529',
+    source: { ...SOURCE_TRIGLOT, url: 'https://www.gutenberg.org/ebooks/1722', note: 'From Project Gutenberg. One unit per paragraph; paragraph numbers are this app\'s own, not the Triglot\'s.' },
+    groups: groups.filter((g) => g.units.length),
+    units,
+  })
+}
+
 // ---------------------------------------------------------------- write
 
 const docs = new Map<string, Doc>()
-for (const d of [buildWsc(), buildWlc(), buildWcf(), buildHc(), buildBelgic(), buildDort()]) docs.set(d.id, d)
+for (const d of [buildWsc(), buildWlc(), buildWcf(), buildHc(), buildBelgic(), buildDort(), buildSmallCatechism(), buildLargeCatechism()]) docs.set(d.id, d)
 const cr = buildCreeds()
 docs.set('apostles', cr.apostles)
 docs.set('nicene', cr.nicene)
@@ -598,7 +714,7 @@ const dec = buildDecalogue(docs)
 docs.set('decalogue', dec.doc)
 const harmonies = [cr.harmony, dec.harmony]
 
-const ORDER = ['wsc', 'wlc', 'wcf', 'decalogue', 'apostles', 'nicene', 'athanasian', 'chalcedon', 'hc', 'bc', 'dort']
+const ORDER = ['wsc', 'wlc', 'wcf', 'decalogue', 'hc', 'bc', 'dort', 'lsc', 'llc', 'apostles', 'nicene', 'athanasian', 'chalcedon']
 
 rmSync(OUT, { recursive: true, force: true })
 mkdirSync(join(OUT, 'docs'), { recursive: true })
@@ -615,7 +731,7 @@ const index: DataIndex = {
     const { groups: _g, units: _u, ...summary } = docs.get(id)!
     return summary
   }),
-  harmonies: harmonies.map((h) => ({ id: h.id, title: h.title })),
+  harmonies: harmonies.map((h) => ({ id: h.id, title: h.title, tradition: h.tradition })),
 }
 writeFileSync(join(OUT, 'index.json'), JSON.stringify(index, null, 1))
 

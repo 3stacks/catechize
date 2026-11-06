@@ -69,6 +69,7 @@ async function versesDoc(): Promise<Doc> {
     title: 'My verses',
     short: 'Verses',
     kind: 'scripture',
+    tradition: 'common',
     unitCount: units.length,
     source: { name: 'King James Version (1769)', license: 'Public domain' },
     groups: [{ title: 'Added verses', units: units.map((u) => u.id) }],

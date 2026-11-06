@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { chunk, MAX_WORDS } from './chunk.ts'
 import { diffWords, errorCount, gradeChunk, scoreSpoken, soundsLike, tokenize, AGAIN, GOOD, HARD } from './grade.ts'
+import { inTradition } from './tradition.ts'
 import { formatPassage, parseOsis, parseRefs, passageFromId, passageId } from './refs.ts'
 
 const ids = (s: string) => parseRefs(s).passages.map(passageId)
@@ -107,5 +108,18 @@ describe('spoken recall', () => {
     const expected = "Man's chief end is to glorify God".split(' ')
     expect(scoreSpoken(expected, 'mans chief um end is to glorify god')).toEqual([true, true, true, true, true, true, true])
     expect(scoreSpoken(expected, 'mans chief end is glorify god')).toEqual([true, true, true, true, false, true, true])
+  })
+})
+
+describe('inTradition', () => {
+  it('always shows the creeds and Scripture', () => {
+    expect(inTradition('common', 'lutheran')).toBe(true)
+    expect(inTradition('common', 'reformed')).toBe(true)
+  })
+  it('shows one tradition, or both, or everything before a choice', () => {
+    expect(inTradition('reformed', 'lutheran')).toBe(false)
+    expect(inTradition('lutheran', 'lutheran')).toBe(true)
+    expect(inTradition('reformed', 'both')).toBe(true)
+    expect(inTradition('lutheran', undefined)).toBe(true)
   })
 })

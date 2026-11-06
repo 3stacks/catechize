@@ -1,7 +1,7 @@
 # Catechize: spec
 
-An offline-first app for memorising and studying the Reformed confessions,
-catechisms, creeds and Scripture.
+An offline-first app for memorising and studying the Reformed and Lutheran
+confessions and catechisms, the creeds and Scripture.
 
 ## The problem it solves
 
@@ -130,7 +130,15 @@ When served by `server/main.ts`, the app also syncs to SQLite:
 | Heidelberg Catechism | 129, by Lord's Day | yes | Creeds.json |
 | Belgic Confession | 37 | – | Creeds.json |
 | Canons of Dort | 93 articles + rejections | inline in text | Creeds.json |
+| Luther's Small Catechism | 39 parts (commandments, creed, prayer, sacraments, confession, daily prayers) | Scripture per part | Triglot Concordia (1921), Bente & Dau, via bookofconcord.org |
+| Luther's Large Catechism | 354 paragraphs | – | Triglot Concordia (1921), Bente & Dau, Project Gutenberg #1722 |
 | My verses | learner-added | – | KJV, from any proof text |
+
+**Traditions.** Each document has `tradition: common | reformed | lutheran`.
+The learner picks Reformed, Lutheran or both on first run (Settings can
+change it); Library, Today's study tiles and harmonies filter by it. Creeds
+and Scripture are common. The Ten Commandments document is Reformed because
+of its numbering; Lutherans get Luther's numbering in the Small Catechism.
 
 Harmonies: Apostles' ↔ Nicene phrase by phrase (Scripture + hymn per row);
 each commandment ↔ WSC / WLC / Heidelberg questions.
@@ -148,6 +156,11 @@ Private use only for now. Before any public release:
 - **Nicene wording**: from the annotated docx (LSB-style); confirm the
   source and its terms.
 - Hymn references are titles and numbers only (Rejoice!, LSB).
+- **Luther's catechisms**: Triglot Concordia (1921) is public domain. The
+  Small Catechism text was taken from bookofconcord.org; confirm their terms
+  for the transcription, or re-key it from a scan.
+- **Public website**: `site/` publishes the app, so every item above must be
+  settled before the site goes live.
 
 ## Roadmap
 

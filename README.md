@@ -1,7 +1,8 @@
 # Catechize
 
-Memorise and study the Westminster Standards, the Three Forms of Unity, the
-ecumenical creeds, the Ten Commandments and Scripture. Answers are learned
+Memorise and study the Westminster Standards, the Three Forms of Unity,
+Luther's Small and Large Catechisms, the ecumenical creeds, the Ten
+Commandments and Scripture. Answers are learned
 clause by clause with spaced repetition (FSRS), and every proof text opens
 in the KJV.
 
@@ -34,6 +35,74 @@ The app works in two ways:
 
 To get sync in development, run `npm start` in one terminal and `npm run dev`
 in a second terminal. Vite sends `/api` requests to port 3000.
+
+## Traditions
+
+On the first start, the app asks for a tradition: Reformed, Lutheran, or both.
+The choice sets the documents in the library. The creeds and Scripture show
+for every choice. Settings can change the choice. Progress in a document of
+the other tradition stays in the reviews.
+
+| Tradition | Documents |
+|-----------|-----------|
+| Both | Apostles', Nicene and Athanasian Creeds, Chalcedonian Definition, Scripture |
+| Reformed | WSC, WLC, WCF, Heidelberg, Belgic, Dort, Ten Commandments (Reformed numbering) |
+| Lutheran | Luther's Small Catechism, Luther's Large Catechism |
+
+`scripts/build-data.ts` gives each document a `tradition`. Add a new document
+to the `TRADITION` map there.
+
+## Website
+
+`site/` holds the homepage, a Next.js static export from the Tailwind Plus
+Primer template. The template is under the Tailwind Plus licence.
+
+```bash
+npm --prefix site install
+npm run site        # the app, then the homepage, merged into site/out/
+```
+
+`site/out/` holds the homepage at `/`, the self-hosting guide at
+`/docs/self-hosting/`, and the app at `/app/`. Put the folder on any static
+host. For Cloudflare Pages, `site/public/_headers` sets the cache rules.
+
+The homepage sends a visitor who uses the app straight to `/app/`. These
+visits still show the homepage:
+
+- a first visit
+- a visit from a link inside the app
+- any visit to `/?home`
+
+The app shows "About Catechize" in its footer under `/app/`. That link goes to
+`/?home`. The Docker image serves the app at its root, without the homepage.
+
+The screenshots in `site/src/images/screens/` come from the real app, with a
+demo learner that the FSRS scheduler generated.
+
+### Deployment
+
+CI owns the deployment to Cloudflare Pages. Do not deploy from a workstation.
+
+1. A push to `main` starts the `Website` workflow. It runs the tests and builds
+   `site/out/`.
+2. When `Website` passes, the `Deploy to Cloudflare Pages` workflow starts.
+3. That workflow downloads the `site/out/` artifact. It does not build again.
+4. It makes the Pages project `catechize` if the project does not exist.
+5. It deploys the artifact to the production branch `main`.
+6. It checks the homepage, `/app/`, `/app/data/index.json` and the guide.
+
+A pull request from this repository also gets a preview. The job summary of
+the `Website` run shows the preview address.
+
+The workflows need two repository secrets:
+
+| Secret | Value |
+|--------|-------|
+| `CLOUDFLARE_API_TOKEN` | An API token with the permission Account, Cloudflare Pages, Edit |
+| `CLOUDFLARE_ACCOUNT_ID` | The account ID from the Cloudflare dashboard |
+
+To add a custom domain, open the `catechize` project in the Cloudflare
+dashboard. Then open Custom domains.
 
 ## Sync
 
@@ -88,6 +157,10 @@ npm run extract:creeds -- "<file>.docx" sources/creeds-annotated.json   # only i
 npm run data                             # → public/data/, reports any unresolved reference
 ```
 
+`sources/small-catechism.json` holds Luther's Small Catechism in the Triglot
+Concordia translation (1921), without the editors' bracketed additions. The
+build fetches the Large Catechism from Project Gutenberg.
+
 `sources/creeds-text.json` holds the canonical Apostles' and Nicene wording
 the annotated table is matched against; edit it if the creed text changes.
 
@@ -102,4 +175,5 @@ src/store/      IndexedDB (Dexie), FSRS scheduling, stats and sync
 src/views/      screens; Drill.tsx is the memorisation engine
 shared/         the sync protocol, used by the app and the server
 server/         HTTP server, SQLite store, backup script
+site/           the homepage (Next.js), built into site/out/ with the app at /app/
 ```
