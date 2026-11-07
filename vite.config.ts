@@ -17,7 +17,7 @@ export default defineConfig({
         short_name: 'Catechize',
         description: 'Memorise and study the Reformed confessions, creeds and Scripture.',
         theme_color: '#7a2e2e',
-        background_color: '#f7f4ee',
+        background_color: '#f8fafc',
         display: 'standalone',
         start_url: '.',
         icons: [{ src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }],
@@ -25,7 +25,7 @@ export default defineConfig({
       workbox: {
         // Precache the app shell and the documents; Scripture books are cached
         // as they are first opened so the install stays small.
-        globPatterns: ['**/*.{js,css,html,svg}', 'data/index.json', 'data/docs/*.json', 'data/harmonies/*.json', 'sib.json', 'data/reading.json'],
+        globPatterns: ['**/*.{js,css,html,svg,woff2}', 'data/index.json', 'data/docs/*.json', 'data/harmonies/*.json', 'sib.json', 'data/reading.json'],
         maximumFileSizeToCacheInBytes: 2_000_000,
         // Review reminders: the push and notificationclick handlers.
         importScripts: ['push-sw.js'],

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { loadIndex } from '../data/load.ts'
-import { db, getSettings, newId, saveSettings, type Settings } from '../store/db.ts'
-import { getToken, reviveDates, setToken, syncNow, useDataVersion, useSyncState } from '../store/sync.ts'
-import { SYNCED_TABLES } from '../../shared/protocol.ts'
+import { db, getSettings, saveSettings, type Settings } from '../store/db.ts'
+import { getToken, setToken, syncNow, useDataVersion, useSyncState } from '../store/sync.ts'
+import { backupSummary, download, parseBackup, reviewsCsv, restore, takeout } from '../store/takeout.ts'
 import { useAsync } from '../useAsync.ts'
 import { disableReminders, enableReminders, pushSupport, reminderHour } from '../lib/push.ts'
 
@@ -11,7 +11,6 @@ const KOFI = 'https://ko-fi.com/lukeboyle'
 export function SettingsView() {
   const v = useDataVersion()
   const [loaded, , reload] = useAsync(async () => ({ settings: await getSettings(), index: await loadIndex() }), [v])
-  const [msg, setMsg] = useState('')
   if (!loaded) return <p className="empty">Loading…</p>
   const { settings: s, index } = loaded
   const set = async (patch: Partial<Settings>) => {
@@ -95,30 +94,7 @@ export function SettingsView() {
 
       <SyncCard />
 
-      <section className="card">
-        <h3>Your progress</h3>
-        <p className="muted small">Export a backup to keep a copy, or to move your progress to a device that does not sync.</p>
-        <div className="row wrap">
-          <button onClick={() => exportProgress().then(() => setMsg('Exported.'))}>Export backup</button>
-          <label className="button ghost">
-            Import backup
-            <input
-              type="file"
-              accept="application/json"
-              hidden
-              onChange={async (e) => {
-                const f = e.target.files?.[0]
-                if (!f) return
-                if (!confirm('Replace all progress on this device with the backup?')) return
-                await importProgress(await f.text())
-                setMsg('Imported.')
-                reload()
-              }}
-            />
-          </label>
-          <span className="muted small">{msg}</span>
-        </div>
-      </section>
+      <DataCard onImported={reload} />
 
       <section className="card">
         <h3>Support Catechize</h3>
@@ -282,45 +258,62 @@ function SyncCard() {
   )
 }
 
-const TABLES = SYNCED_TABLES
+/** Data takeout: download everything, or the review history for a spreadsheet, and import a backup. */
+function DataCard({ onImported }: { onImported: () => void }) {
+  const [msg, setMsg] = useState<{ text: string; error?: boolean }>()
+  const day = () => new Date().toISOString().slice(0, 10)
 
-async function exportProgress() {
-  const dump: Record<string, unknown[]> = {}
-  for (const t of TABLES) dump[t] = (await db.table(t).toArray()).map(({ _dirty, ...r }) => r)
-  const blob = new Blob([JSON.stringify({ app: 'catechize', version: 2, at: new Date().toISOString(), ...dump })], { type: 'application/json' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
-  a.download = `catechize-${new Date().toISOString().slice(0, 10)}.json`
-  a.click()
-  URL.revokeObjectURL(a.href)
-}
-
-/**
- * Replace all progress with a backup. With sync on, the backup also replaces
- * the progress on the server and on other devices: the rows it does not have
- * are deleted everywhere.
- */
-async function importProgress(json: string) {
-  const data = JSON.parse(json)
-  if (data.app !== 'catechize') throw new Error('Not a Catechize backup')
-  // Version 1 kept the review log in "reviews", with number ids.
-  if (data.version === 1 && Array.isArray(data.reviews)) data.log = data.reviews.map((r: Record<string, unknown>) => ({ ...r, id: newId() }))
-  const now = Date.now()
-  await db.transaction('rw', [...TABLES.map((t) => db.table(t)), db.tombstones], async () => {
-    for (const t of TABLES) {
-      const table = db.table(t)
-      const keep = new Set<string>()
-      const rows = ((data[t] ?? []) as Record<string, unknown>[]).map((r) => {
-        const { _dirty, _u, ...row } = reviveDates(t, r)
-        keep.add(String(row[table.schema.primKey.keyPath as string]))
-        return row
-      })
-      const gone = ((await table.toCollection().primaryKeys()) as string[]).filter((k) => !keep.has(String(k)))
-      await table.bulkDelete(gone)
-      await db.tombstones.bulkPut(gone.map((id) => ({ key: `${t}:${id}`, tbl: t, id: String(id), u: now })))
-      // Imported rows count as new changes, so they win over older copies elsewhere.
-      await table.bulkPut(rows)
-    }
-  })
-  void syncNow()
+  return (
+    <section className="card">
+      <h3>Your data</h3>
+      <p className="muted small">
+        Your data is yours. Download all of it at any time: progress, review history, your verses, memory aids and settings. To move to another device, import the file there.
+      </p>
+      <div className="row wrap">
+        <button
+          onClick={async () => {
+            download(`catechize-${day()}.json`, 'application/json', JSON.stringify(await takeout()))
+            setMsg({ text: 'Downloaded.' })
+          }}
+        >
+          Download all data
+        </button>
+        <button
+          className="ghost"
+          onClick={async () => {
+            download(`catechize-reviews-${day()}.csv`, 'text/csv', reviewsCsv(await db.log.toArray()))
+            setMsg({ text: 'Downloaded.' })
+          }}
+        >
+          Review history (CSV)
+        </button>
+        <label className="button ghost">
+          Import data
+          <input
+            type="file"
+            accept="application/json,.json"
+            hidden
+            onChange={async (e) => {
+              const input = e.currentTarget
+              const f = input.files?.[0]
+              input.value = '' // so the same file can be chosen again
+              if (!f) return
+              try {
+                const backup = parseBackup(await f.text())
+                const n = backupSummary(backup)
+                const when = n.at ? ` from ${new Date(n.at).toLocaleDateString()}` : ''
+                if (!confirm(`Replace all data on this device with the backup${when}? It has ${n.learned} answers learned, ${n.reviews} reviews and ${n.verses} verses.`)) return
+                await restore(backup)
+                setMsg({ text: 'Imported.' })
+                onImported()
+              } catch (err) {
+                setMsg({ text: (err as Error).message, error: true })
+              }
+            }}
+          />
+        </label>
+      </div>
+      {msg && <p className={msg.error ? 'small error-text' : 'muted small'}>{msg.text}</p>}
+    </section>
+  )
 }
