@@ -73,7 +73,7 @@ describe('handleAnalytics', () => {
 describe('the loader', () => {
   it('is the same in the app (index.html) as on the website', async () => {
     const { readFileSync } = await import('node:fs')
-    const { ANALYTICS_LOADER } = await import('../site/src/lib/analytics.ts')
+    const { ANALYTICS_LOADER } = await import('../shared/analytics-loader.ts')
     expect(readFileSync(new URL('../index.html', import.meta.url), 'utf8')).toContain(ANALYTICS_LOADER)
   })
 })

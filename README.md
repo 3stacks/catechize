@@ -149,7 +149,7 @@ The app sends no answers, no notes and no text that the learner types.
 
 - A Pages Function, `functions/a/[[path]].ts`, serves `/a/`. It forwards the tracker and the events
   to Umami, so the Umami address stays secret. The code is in `functions/_lib/analytics.ts`.
-- The loader is in `site/src/lib/analytics.ts`. The `<head>` of the app (`index.html`) has a copy.
+- The loader is in `shared/analytics-loader.ts`. The `<head>` of the app (`index.html`) has a copy.
   A test makes sure that the two copies are the same.
 - The loader loads the tracker after the first input of the visitor.
 - An element with `data-event="Name"` sends that event when the visitor clicks it. In the app,
