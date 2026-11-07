@@ -17,6 +17,18 @@ const MAX_SCRIPT = 1_000_000
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const OFF = '/* analytics off */\n'
 
+/** Why analytics is off, for whoever sets it up. It never shows a setting's value. */
+export function offReason(env: AnalyticsEnv, host: string | null): string {
+  // A preview or an unknown host says only "analytics off".
+  if (!host) return OFF
+  const reasons: string[] = []
+  if (!env.ANALYTICS_FORWARDING_URL?.trim()) reasons.push('ANALYTICS_FORWARDING_URL is empty')
+  else if (!forwardingOrigin(env.ANALYTICS_FORWARDING_URL)) reasons.push('ANALYTICS_FORWARDING_URL is not an http(s) URL')
+  if (!env.ANALYTICS_WEBSITE_ID?.trim()) reasons.push('ANALYTICS_WEBSITE_ID is empty')
+  else if (!websiteId(env.ANALYTICS_WEBSITE_ID)) reasons.push('ANALYTICS_WEBSITE_ID is not a UUID')
+  return `/* analytics off: ${reasons.join('; ')} */\n`
+}
+
 /** The production hosts. Add another domain with ANALYTICS_HOSTS. */
 const PRODUCTION = ['hearers.app', 'www.hearers.app', 'catechize.pages.dev']
 
@@ -187,7 +199,10 @@ export async function handleAnalytics(request: Request, env: AnalyticsEnv): Prom
   const origin = forwardingOrigin(env.ANALYTICS_FORWARDING_URL)
   const website = websiteId(env.ANALYTICS_WEBSITE_ID)
 
-  if (request.method === 'GET' && path === '/a/boot.js') return scriptResponse(host && origin && website ? bootSource(website) : OFF, 'no-store')
+  if (request.method === 'GET' && path === '/a/boot.js') {
+    if (host && origin && website) return scriptResponse(bootSource(website), 'no-store')
+    return scriptResponse(offReason(env, host), 'no-store')
+  }
   if (!host || !origin || !website) return plain(404)
   if (request.method === 'GET' && path === '/a/script.js') return proxyScript(origin)
   if (request.method === 'POST' && path === '/a/api/send') return proxySend(request, origin, website, host)
