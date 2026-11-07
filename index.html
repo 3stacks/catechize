@@ -6,7 +6,15 @@
     <meta name="theme-color" content="#7a2e2e" />
     <meta name="description" content="Memorise and study the Westminster Standards, the Three Forms of Unity, the creeds and Scripture." />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-    <title>Catechize</title>
+    <title>Hearers</title>
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700&display=swap" />
+    <!-- Analytics on the hosted app only, as on the website (shared/analytics-loader.ts). A self-hosted server has no /a/ route. -->
+    <script>
+      if (/^\/app(\/|$)/.test(location.pathname)) {
+        window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};(function(){var loaded=false;function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/a/boot.js";s.async=true;document.head.appendChild(s)}["pointerdown","keydown","scroll","touchstart"].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true})});document.addEventListener("click",function(e){var el=e.target&&e.target.closest&&e.target.closest("[data-event]");if(!el)return;var props={path:location.pathname};if(el.dataset.eventLabel)props.label=el.dataset.eventLabel;window.plausible(el.dataset.event,{props:props})},true)})();
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

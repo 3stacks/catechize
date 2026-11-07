@@ -2,6 +2,7 @@ import { type Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import clsx from 'clsx'
 
+import { ANALYTICS_LOADER } from '@/lib/analytics'
 import { SITE_URL } from '@/lib/site'
 import '@/styles/tailwind.css'
 
@@ -14,8 +15,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Catechize: learn the catechism by heart',
-    template: '%s | Catechize',
+    default: 'Hearers: learn the catechism by heart',
+    template: '%s | Hearers',
   },
   description:
     'Memorise the Reformed and Lutheran catechisms, the creeds and Scripture, one clause at a time. Free in your browser. Self-host it to sync your devices.',
@@ -41,6 +42,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: openApp }} />
+        <script dangerouslySetInnerHTML={{ __html: ANALYTICS_LOADER }} />
         <link
           rel="preconnect"
           href="https://cdn.fontshare.com"

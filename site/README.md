@@ -1,4 +1,4 @@
-# Catechize website
+# Hearers website
 
 The homepage and the self-hosting guide. Next.js builds a static export to
 `out/`. Run `npm run site` at the repository root to build the app and the

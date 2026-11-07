@@ -13,8 +13,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'Catechize',
-        short_name: 'Catechize',
+        name: 'Hearers',
+        short_name: 'Hearers',
         description: 'Memorise and study the Reformed confessions, creeds and Scripture.',
         theme_color: '#7a2e2e',
         background_color: '#f8fafc',
@@ -31,6 +31,12 @@ export default defineConfig({
         importScripts: ['push-sw.js'],
         navigateFallbackDenylist: [/\/api\//],
         runtimeCaching: [
+          // Cabinet Grotesk, the heading font, from Fontshare (see index.html).
+          {
+            urlPattern: ({ url }) => url.origin === 'https://api.fontshare.com' || url.origin === 'https://cdn.fontshare.com',
+            handler: 'CacheFirst',
+            options: { cacheName: 'fonts', expiration: { maxEntries: 10, maxAgeSeconds: 365 * 24 * 3600 }, cacheableResponse: { statuses: [0, 200] } },
+          },
           {
             urlPattern: ({ url }) => url.pathname.includes('/data/kjv/'),
             handler: 'CacheFirst',

@@ -30,7 +30,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/3stacks/catechize
+          images: ghcr.io/3stacks/hearers
           tags: |
             type=sha,prefix=
             type=semver,pattern={{version}}

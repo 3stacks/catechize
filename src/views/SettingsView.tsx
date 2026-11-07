@@ -1,3 +1,4 @@
+import { track } from '../lib/track.ts'
 import { useState } from 'react'
 import { loadIndex } from '../data/load.ts'
 import { db, getSettings, saveSettings, type Settings } from '../store/db.ts'
@@ -97,8 +98,8 @@ export function SettingsView() {
       <DataCard onImported={reload} />
 
       <section className="card">
-        <h3>Support Catechize</h3>
-        <p className="muted small">Catechize is free, with no ads and no tracking. If it helps you, you can buy me a coffee.</p>
+        <h3>Support Hearers</h3>
+        <p className="muted small">Hearers is free, with no ads. It counts visits without cookies, and your answers and progress stay on your device. If it helps you, you can buy me a coffee.</p>
         <a className="button" href={KOFI} target="_blank" rel="noopener noreferrer">
           Support on Ko-fi
         </a>
@@ -158,7 +159,7 @@ function ReminderCard() {
       ) : !support.ok ? (
         <p className="muted small">
           {support.reason === 'install'
-            ? 'On iPhone and iPad, add Catechize to the Home Screen first: tap Share, then Add to Home Screen. Then open it from there to turn on reminders.'
+            ? 'On iPhone and iPad, add Hearers to the Home Screen first: tap Share, then Add to Home Screen. Then open it from there to turn on reminders.'
             : 'This browser cannot show reminders.'}
         </p>
       ) : (
@@ -217,7 +218,7 @@ function SyncCard() {
     return (
       <section className="card">
         <h3>Sync</h3>
-        <p className="muted small">This copy of Catechize has no server, so your progress stays on this device. Run the Catechize server to sync between devices.</p>
+        <p className="muted small">This copy of Hearers has no server, so your progress stays on this device. Run the Hearers server to sync between devices.</p>
       </section>
     )
   return (
@@ -272,7 +273,8 @@ function DataCard({ onImported }: { onImported: () => void }) {
       <div className="row wrap">
         <button
           onClick={async () => {
-            download(`catechize-${day()}.json`, 'application/json', JSON.stringify(await takeout()))
+            download(`hearers-${day()}.json`, 'application/json', JSON.stringify(await takeout()))
+            track('Data downloaded', { kind: 'json' })
             setMsg({ text: 'Downloaded.' })
           }}
         >
@@ -281,7 +283,8 @@ function DataCard({ onImported }: { onImported: () => void }) {
         <button
           className="ghost"
           onClick={async () => {
-            download(`catechize-reviews-${day()}.csv`, 'text/csv', reviewsCsv(await db.log.toArray()))
+            download(`hearers-reviews-${day()}.csv`, 'text/csv', reviewsCsv(await db.log.toArray()))
+            track('Data downloaded', { kind: 'csv' })
             setMsg({ text: 'Downloaded.' })
           }}
         >
@@ -304,6 +307,7 @@ function DataCard({ onImported }: { onImported: () => void }) {
                 const when = n.at ? ` from ${new Date(n.at).toLocaleDateString()}` : ''
                 if (!confirm(`Replace all data on this device with the backup${when}? It has ${n.learned} answers learned, ${n.reviews} reviews and ${n.verses} verses.`)) return
                 await restore(backup)
+                track('Data imported')
                 setMsg({ text: 'Imported.' })
                 onImported()
               } catch (err) {

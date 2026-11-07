@@ -11,7 +11,7 @@ export function Introduction() {
     >
       <Container className="text-lg tracking-tight text-slate-700">
         <p className="font-display text-4xl font-bold tracking-tight text-slate-900">
-          Flashcards fail on long answers. Catechize learns them in parts, and
+          Flashcards fail on long answers. Hearers learns them in parts, and
           then puts the parts back together.
         </p>
         <p className="mt-4">
@@ -20,7 +20,7 @@ export function Introduction() {
           never sticks.
         </p>
         <p className="mt-4">
-          Catechize splits each answer into clauses of about eight words. Each
+          Hearers splits each answer into clauses of about eight words. Each
           clause has its own schedule. When every clause is stable, you recite
           the whole answer with nothing on the screen.
         </p>
@@ -30,7 +30,7 @@ export function Introduction() {
             'Tap a phrase to read its proof texts in the King James Version',
             'Reformed and Lutheran catechisms, with the creeds of the early church',
             'Works offline, and installs on your phone like an app',
-            'No account, no advertisements, no tracking',
+            'No account, no advertisements, no cookies',
           ].map((feature) => (
             <li key={feature} className="flex">
               <CheckIcon className="h-8 w-8 flex-none fill-brand-500" />
@@ -40,7 +40,7 @@ export function Introduction() {
         </ul>
         <p className="mt-8">
           The schedule uses FSRS, a modern spaced-repetition algorithm. You do
-          not grade yourself. Catechize grades each clause from the words you
+          not grade yourself. Hearers grades each clause from the words you
           get right.
         </p>
         <p className="mt-10">

@@ -1,6 +1,6 @@
 # Fonts
 
-The app uses the same fonts as the website. Both fonts are in the bundle, so the app looks the same offline.
+The app uses the same fonts as the website.
 
-- **Cabinet Grotesk** (headings), by Indian Type Foundry. Fontshare gives it under the ITF Free Font License, which permits personal and commercial use and embedding. Source: https://www.fontshare.com/fonts/cabinet-grotesk.
-- **Inter** (text), from the npm package `@fontsource-variable/inter`. Licence: SIL Open Font License 1.1.
+- **Inter** (text) is in the bundle, from the npm package `@fontsource-variable/inter`. Licence: SIL Open Font License 1.1.
+- **Cabinet Grotesk** (headings), by Indian Type Foundry, loads from Fontshare. See `index.html`. The service worker caches it for offline use. Its licence, the ITF Free Font License, does not allow the font files in a public repository. Do not add the font files to this repository.

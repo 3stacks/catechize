@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { track } from '../lib/track.ts'
 import { loadDoc, loadUnit } from '../data/load.ts'
 import type { Unit } from '../data/types.ts'
 import { href } from '../router.ts'
@@ -23,6 +24,11 @@ export function ReviewSession() {
     return { ...(await reviewQueue(settings)), settings }
   }, [])
   const [i, setI] = useState(0)
+  const finished = !!data && data.due.length > 0 && i >= data.due.length
+  useEffect(() => {
+    if (finished) track('Review done', { answers: data!.due.length })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished])
 
   if (!data) return <p className="empty">Loading…</p>
   const { due, held, settings } = data

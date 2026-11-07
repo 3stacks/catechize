@@ -1,3 +1,4 @@
+import { track } from '../lib/track.ts'
 import { db } from '../store/db.ts'
 import type { BookText, DataIndex, Doc, Harmony, Unit } from './types.ts'
 import { passageFromId, type Passage } from '../lib/refs.ts'
@@ -116,5 +117,6 @@ export async function addVerse(p: Passage): Promise<string> {
     proofs: [],
     addedAt: Date.now(),
   })
+  track('Verse added', { book: p.book })
   return id
 }

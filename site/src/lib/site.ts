@@ -2,7 +2,7 @@ import index from '../../../public/data/index.json'
 
 export const APP_URL = '/app/'
 export const SELF_HOST_URL = '/docs/self-hosting/'
-export const REPO_URL = 'https://github.com/3stacks/catechize'
+export const REPO_URL = 'https://github.com/3stacks/hearers'
 export const KOFI_URL = 'https://ko-fi.com/lukeboyle'
 
 export type Tradition = 'common' | 'reformed' | 'lutheran'

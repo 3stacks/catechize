@@ -22,7 +22,7 @@ function countDue() {
 self.addEventListener('push', (event) => {
   event.waitUntil(
     countDue().then((n) =>
-      self.registration.showNotification('Catechize', {
+      self.registration.showNotification('Hearers', {
         body: n ? `${n} ${n === 1 ? 'answer is' : 'answers are'} ready to review.` : 'Time for your daily review.',
         icon: 'icon.svg',
         tag: 'review',

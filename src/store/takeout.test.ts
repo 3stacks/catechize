@@ -27,7 +27,7 @@ describe('reviewsCsv', () => {
 describe('parseBackup', () => {
   it('refuses files that are not backups', () => {
     expect(() => parseBackup('not json')).toThrow('not JSON')
-    expect(() => parseBackup('{"app":"other"}')).toThrow('not a Catechize backup')
+    expect(() => parseBackup('{"app":"other"}')).toThrow('not a Hearers backup')
     expect(() => parseBackup('{"app":"catechize","version":3}')).toThrow('newer version')
     expect(() => parseBackup('{"app":"catechize","version":2,"log":{}}')).toThrow('"log" is not a list')
   })

@@ -12,7 +12,8 @@ import { parseReminder, sendDueReminders, type VapidKeys } from '../shared/push.
 //   PORT              default 3000
 //   DATA_DIR          default ./data; the database is DATA_DIR/catechize.db
 //   STATIC_DIR        default ./dist
-//   CATECHIZE_TOKEN   optional; when set, /api/sync and /api/push need "Authorization: Bearer <token>"
+//   HEARERS_TOKEN     optional; when set, /api/sync and /api/push need "Authorization: Bearer <token>".
+//                     CATECHIZE_TOKEN, the name before the rename, still works.
 //   VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY
 //                     optional; turn on daily review reminders. `node server/vapid.ts` prints a pair.
 //   VAPID_SUBJECT     contact for the push services, default mailto:admin@localhost
@@ -20,7 +21,7 @@ import { parseReminder, sendDueReminders, type VapidKeys } from '../shared/push.
 const PORT = Number(process.env.PORT ?? 3000)
 const DATA_DIR = process.env.DATA_DIR ?? 'data'
 const STATIC_DIR = resolve(process.env.STATIC_DIR ?? 'dist')
-const TOKEN = process.env.CATECHIZE_TOKEN || ''
+const TOKEN = process.env.HEARERS_TOKEN || process.env.CATECHIZE_TOKEN || ''
 const MAX_BODY = 4_000_000
 const VAPID: VapidKeys | undefined =
   process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY
@@ -170,7 +171,7 @@ function readBody(req: IncomingMessage): Promise<string> {
 if (import.meta.main) {
   const store = new Store(join(DATA_DIR, 'catechize.db'))
   const server = createApp(store).listen(PORT, () => {
-    console.log(`catechize ${VERSION} on :${PORT}, data in ${resolve(DATA_DIR)}${TOKEN ? ', token required' : ''}${VAPID ? ', reminders on' : ''}`)
+    console.log(`hearers ${VERSION} on :${PORT}, data in ${resolve(DATA_DIR)}${TOKEN ? ', token required' : ''}${VAPID ? ', reminders on' : ''}`)
   })
   // Check for due reminders every five minutes.
   const timer = VAPID

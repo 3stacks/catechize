@@ -49,11 +49,11 @@ export function Cta({ href, label, compact = false }: { href: string; label: str
         <p className={compact ? 'font-display text-2xl font-bold' : 'font-display text-3xl font-extrabold sm:text-4xl'}>Use the most effective tool to remember it.</p>
         {!compact && (
           <p className="mt-3 max-w-2xl text-lg tracking-tight text-white/85">
-            Catechize teaches one clause at a time. You read it, trace it and recall it from the first letters. Each clause comes back just before you forget it.
+            Hearers teaches one clause at a time. You read it, trace it and recall it from the first letters. Each clause comes back just before you forget it.
           </p>
         )}
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Button href={href} color="white">
+          <Button href={href} color="white" data-event="Memorise CTA" data-event-label={compact ? 'start' : 'end'}>
             {label}
           </Button>
           <span className="text-base tracking-tight text-white/80">Free. No account. Works offline.</span>

@@ -1,4 +1,4 @@
-# Catechize
+# Hearers
 
 Memorise and study the Westminster Standards, the Three Forms of Unity,
 Luther's Small and Large Catechisms, the ecumenical creeds, the Ten
@@ -8,11 +8,11 @@ in the KJV.
 
 See [SPEC.md](SPEC.md) for the design, content sources and roadmap.
 
-If Catechize helps you, you can support it on [Ko-fi](https://ko-fi.com/lukeboyle).
+If Hearers helps you, you can support it on [Ko-fi](https://ko-fi.com/lukeboyle).
 
 ## Run
 
-Catechize needs Node 24 or later. The server uses the `node:sqlite` module.
+Hearers needs Node 24 or later. The server uses the `node:sqlite` module.
 
 ```bash
 npm install
@@ -90,7 +90,7 @@ visits still show the homepage:
 - a visit from a link inside the app
 - any visit to `/?home`
 
-The app shows "About Catechize" in its footer under `/app/`. That link goes to
+The app shows "About Hearers" in its footer under `/app/`. That link goes to
 `/?home`. The Docker image serves the app at its root, without the homepage.
 
 The screenshots in `site/src/images/screens/` come from the real app, with a
@@ -142,6 +142,33 @@ To turn on reminders:
 
 A new key pair stops all current reminders.
 
+## Analytics
+
+The website and the hosted app count visits with Umami, as lector.dev does. Umami uses no cookies.
+The app sends no answers, no notes and no text that the learner types.
+
+- A Pages Function, `functions/a/[[path]].ts`, serves `/a/`. It forwards the tracker and the events
+  to Umami, so the Umami address stays secret. The code is in `functions/_lib/analytics.ts`.
+- The loader is in `shared/analytics-loader.ts`. The `<head>` of the app (`index.html`) has a copy.
+  A test makes sure that the two copies are the same.
+- The loader loads the tracker after the first input of the visitor.
+- An element with `data-event="Name"` sends that event when the visitor clicks it. In the app,
+  `track()` in `src/lib/track.ts` sends an event.
+
+To turn on analytics, set these secrets on the Pages project `catechize`:
+
+```bash
+npx wrangler pages secret put ANALYTICS_FORWARDING_URL --project-name=catechize
+npx wrangler pages secret put ANALYTICS_WEBSITE_ID --project-name=catechize
+```
+
+`ANALYTICS_FORWARDING_URL` is the Umami origin, with no path. `ANALYTICS_WEBSITE_ID` is the UUID
+of the Umami website for Hearers. Leave either one empty to keep analytics off.
+
+Analytics counts only `hearers.app`, `www.hearers.app` and `catechize.pages.dev`. To count another domain, set `ANALYTICS_HOSTS` to a
+list of hosts with commas between them, for example `example.org,www.example.org`. Branch
+previews, `localhost` and self-hosted servers send nothing.
+
 ## Sync
 
 The server keeps one SQLite file, `DATA_DIR/catechize.db`. Each learner
@@ -167,16 +194,16 @@ sends all of its records to the server again.
 | `PORT` | `3000` | The HTTP port. |
 | `DATA_DIR` | `./data` | The directory for `catechize.db`. |
 | `STATIC_DIR` | `./dist` | The built app. |
-| `CATECHIZE_TOKEN` | none | When set, sync needs this token. Enter it once on each device, in Settings. |
+| `HEARERS_TOKEN` | none | When set, sync needs this token. Enter it once on each device, in Settings. |
 
 ## Docker
 
-GitHub Actions builds the image `ghcr.io/3stacks/catechize` for
+GitHub Actions builds the image `ghcr.io/3stacks/hearers` for
 `linux/amd64` and `linux/arm64`. A push to `main` publishes the tag `latest`.
 A tag `v1.2.3` publishes the tag `1.2.3`.
 
 ```bash
-docker run -d -p 3000:3000 -v ./data:/data ghcr.io/3stacks/catechize:latest
+docker run -d -p 3000:3000 -v ./data:/data ghcr.io/3stacks/hearers:latest
 ```
 
 To make a backup while the server runs, use the backup script in the

@@ -1,3 +1,4 @@
+import { track } from '../lib/track.ts'
 import { createEmptyCard, fsrs, State, type Card, type Grade as FsrsGrade } from 'ts-fsrs'
 import type { Unit } from '../data/types.ts'
 import { AGAIN, type Grade } from '../lib/grade.ts'
@@ -32,6 +33,7 @@ export interface ChunkResult {
 export async function recordDrill(unit: Unit, docId: string, results: ChunkResult[], mode: ReviewRow['mode'], now = new Date()) {
   const f = await scheduler()
   const at = now.getTime()
+  let first = false
 
   await db.transaction('rw', db.cards, db.log, db.learned, async () => {
     for (const r of results) {
@@ -50,7 +52,8 @@ export async function recordDrill(unit: Unit, docId: string, results: ChunkResul
       })
       await db.log.add({ id: newId(), cardId: id, unitId: unit.id, at, rating: r.grade, errors: r.errors, words: r.words, mode })
     }
-    if (!(await db.learned.get(unit.id))) await db.learned.put({ unitId: unit.id, docId, at })
+    first = !(await db.learned.get(unit.id))
+    if (first) await db.learned.put({ unitId: unit.id, docId, at })
 
     // Unlock the whole card when every chunk is stable enough.
     const chunks = await db.cards.where('unitId').equals(unit.id).and((c) => c.kind === 'chunk').toArray()
@@ -64,6 +67,7 @@ export async function recordDrill(unit: Unit, docId: string, results: ChunkResul
       await db.cards.put({ id: `${unit.id}#whole`, unitId: unit.id, docId, kind: 'whole', index: -1, due: at, card })
     }
   })
+  if (first) track('Unit learned', { doc: docId })
 }
 
 export interface DueUnit {

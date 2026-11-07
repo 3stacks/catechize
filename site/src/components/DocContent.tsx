@@ -9,7 +9,7 @@ import { SITE_URL, appDoc } from '@/lib/site'
 import { VERSES } from '@/lib/verses'
 
 export const crumbsFor = (section: Section, page?: { name: string; href: string }): Crumb[] => [
-  { name: 'Catechize', href: '/?home' },
+  { name: 'Hearers', href: '/?home' },
   { name: SECTIONS[section].heading, href: `/${section}/` },
   ...(page ? [page] : []),
 ]
@@ -22,7 +22,7 @@ export function docMetadata(d: DocPage): Metadata {
     title: d.title,
     description: d.description,
     alternates: { canonical: url },
-    openGraph: { title: d.title, description: d.description, url, type: 'article', siteName: 'Catechize' },
+    openGraph: { title: d.title, description: d.description, url, type: 'article', siteName: 'Hearers' },
   }
 }
 
@@ -105,7 +105,7 @@ export function DocContent({ d }: { d: DocPage }) {
         data={{
           '@context': 'https://schema.org',
           '@graph': [
-            { '@type': 'Article', headline: d.title, description: d.description, url: SITE_URL + pagePath(d), publisher: { '@type': 'Organization', name: 'Catechize' } },
+            { '@type': 'Article', headline: d.title, description: d.description, url: SITE_URL + pagePath(d), publisher: { '@type': 'Organization', name: 'Hearers' } },
             breadcrumbLd(crumbs),
             faqLd(d.faq),
           ],
@@ -146,7 +146,7 @@ export function DocContent({ d }: { d: DocPage }) {
           </ul>
 
           <H2 id="memorise">How to memorise {d.short ?? d.name}</H2>
-          <P>Catechize breaks each answer into clauses and teaches each clause in four steps.</P>
+          <P>Hearers breaks each answer into clauses and teaches each clause in four steps.</P>
           <Method name="the text" />
 
           <H2 id="text">The full text</H2>

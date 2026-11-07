@@ -15,7 +15,7 @@ export function App() {
     <div className="app">
       <header className="top">
         <a href={href()} className="brand">
-          Catechize
+          Hearers
         </a>
         <nav>
           <a href={href()} className={!page ? 'active' : ''}>
@@ -35,7 +35,7 @@ export function App() {
       <main>{route(page, args)}</main>
       {HOSTED && (
         <footer className="app-foot">
-          <a href="../?home">About Catechize</a>
+          <a href="../?home">About Hearers</a>
           <span aria-hidden="true">·</span>
           <a href="https://ko-fi.com/lukeboyle" target="_blank" rel="noopener noreferrer">
             Support on Ko-fi
