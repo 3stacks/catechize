@@ -59,10 +59,10 @@ export function Hero() {
               clause comes back just before you forget it.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button href={APP_URL} color="blue">
+              <Button href={APP_URL} color="blue" data-event="Open app" data-event-label="hero">
                 Open the app
               </Button>
-              <Button href={SELF_HOST_URL} variant="outline" color="blue">
+              <Button href={SELF_HOST_URL} variant="outline" color="blue" data-event="Self-host" data-event-label="hero">
                 Self-host it
               </Button>
             </div>

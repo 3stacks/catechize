@@ -53,7 +53,7 @@ export function Cta({ href, label, compact = false }: { href: string; label: str
           </p>
         )}
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Button href={href} color="white">
+          <Button href={href} color="white" data-event="Memorise CTA" data-event-label={compact ? 'start' : 'end'}>
             {label}
           </Button>
           <span className="text-base tracking-tight text-white/80">Free. No account. Works offline.</span>

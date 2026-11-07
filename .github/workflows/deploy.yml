@@ -48,6 +48,10 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: ./repo/.github/scripts/pages-project.sh "$PROJECT" >> "$GITHUB_OUTPUT"
 
+      # Wrangler takes Pages Functions from ./functions (the analytics proxy).
+      - name: Add the Pages Functions
+        run: cp -r repo/functions functions
+
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
@@ -79,3 +83,4 @@ jobs:
           check /app/ 'Catechize'
           check /app/data/index.json '"lsc"'
           check /docs/self-hosting/ 'Self-hosting'
+          check /a/boot.js 'analytics off\|data-website-id'

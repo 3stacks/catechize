@@ -6,3 +6,5 @@ sources/cache
 /site/out
 /site/.next
 /site/node_modules
+.dev.vars
+.wrangler/

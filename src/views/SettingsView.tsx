@@ -1,3 +1,4 @@
+import { track } from '../lib/track.ts'
 import { useState } from 'react'
 import { loadIndex } from '../data/load.ts'
 import { db, getSettings, saveSettings, type Settings } from '../store/db.ts'
@@ -98,7 +99,7 @@ export function SettingsView() {
 
       <section className="card">
         <h3>Support Catechize</h3>
-        <p className="muted small">Catechize is free, with no ads and no tracking. If it helps you, you can buy me a coffee.</p>
+        <p className="muted small">Catechize is free, with no ads. It counts visits without cookies, and your answers and progress stay on your device. If it helps you, you can buy me a coffee.</p>
         <a className="button" href={KOFI} target="_blank" rel="noopener noreferrer">
           Support on Ko-fi
         </a>
@@ -273,6 +274,7 @@ function DataCard({ onImported }: { onImported: () => void }) {
         <button
           onClick={async () => {
             download(`catechize-${day()}.json`, 'application/json', JSON.stringify(await takeout()))
+            track('Data downloaded', { kind: 'json' })
             setMsg({ text: 'Downloaded.' })
           }}
         >
@@ -282,6 +284,7 @@ function DataCard({ onImported }: { onImported: () => void }) {
           className="ghost"
           onClick={async () => {
             download(`catechize-reviews-${day()}.csv`, 'text/csv', reviewsCsv(await db.log.toArray()))
+            track('Data downloaded', { kind: 'csv' })
             setMsg({ text: 'Downloaded.' })
           }}
         >
@@ -304,6 +307,7 @@ function DataCard({ onImported }: { onImported: () => void }) {
                 const when = n.at ? ` from ${new Date(n.at).toLocaleDateString()}` : ''
                 if (!confirm(`Replace all data on this device with the backup${when}? It has ${n.learned} answers learned, ${n.reviews} reviews and ${n.verses} verses.`)) return
                 await restore(backup)
+                track('Data imported')
                 setMsg({ text: 'Imported.' })
                 onImported()
               } catch (err) {

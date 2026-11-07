@@ -30,7 +30,7 @@ export function Introduction() {
             'Tap a phrase to read its proof texts in the King James Version',
             'Reformed and Lutheran catechisms, with the creeds of the early church',
             'Works offline, and installs on your phone like an app',
-            'No account, no advertisements, no tracking',
+            'No account, no advertisements, no cookies',
           ].map((feature) => (
             <li key={feature} className="flex">
               <CheckIcon className="h-8 w-8 flex-none fill-brand-500" />

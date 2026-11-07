@@ -2,6 +2,7 @@ import { type Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import clsx from 'clsx'
 
+import { ANALYTICS_LOADER } from '@/lib/analytics'
 import { SITE_URL } from '@/lib/site'
 import '@/styles/tailwind.css'
 
@@ -41,6 +42,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: openApp }} />
+        <script dangerouslySetInnerHTML={{ __html: ANALYTICS_LOADER }} />
         <link
           rel="preconnect"
           href="https://cdn.fontshare.com"

@@ -142,6 +142,33 @@ To turn on reminders:
 
 A new key pair stops all current reminders.
 
+## Analytics
+
+The website and the hosted app count visits with Umami, as lector.dev does. Umami uses no cookies.
+The app sends no answers, no notes and no text that the learner types.
+
+- A Pages Function, `functions/a/[[path]].ts`, serves `/a/`. It forwards the tracker and the events
+  to Umami, so the Umami address stays secret. The code is in `functions/_lib/analytics.ts`.
+- The loader is in `site/src/lib/analytics.ts`. The `<head>` of the app (`index.html`) has a copy.
+  A test makes sure that the two copies are the same.
+- The loader loads the tracker after the first input of the visitor.
+- An element with `data-event="Name"` sends that event when the visitor clicks it. In the app,
+  `track()` in `src/lib/track.ts` sends an event.
+
+To turn on analytics, set these secrets on the Pages project `catechize`:
+
+```bash
+npx wrangler pages secret put ANALYTICS_FORWARDING_URL --project-name=catechize
+npx wrangler pages secret put ANALYTICS_WEBSITE_ID --project-name=catechize
+```
+
+`ANALYTICS_FORWARDING_URL` is the Umami origin, with no path. `ANALYTICS_WEBSITE_ID` is the UUID
+of the Umami website for Catechize. Leave either one empty to keep analytics off.
+
+Analytics counts only `catechize.pages.dev`. To count a custom domain, set `ANALYTICS_HOSTS` to a
+list of hosts with commas between them, for example `catechize.app,www.catechize.app`. Branch
+previews, `localhost` and self-hosted servers send nothing.
+
 ## Sync
 
 The server keeps one SQLite file, `DATA_DIR/catechize.db`. Each learner

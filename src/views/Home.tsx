@@ -1,3 +1,4 @@
+import { track } from '../lib/track.ts'
 import { loadDoc, loadIndex } from '../data/load.ts'
 import { href } from '../router.ts'
 import { db, getSettings, inTradition, saveSettings, type TraditionChoice } from '../store/db.ts'
@@ -168,6 +169,7 @@ const starters = (t: TraditionChoice | undefined): [string, string][] =>
 function TraditionPicker({ onPick }: { onPick: () => void }) {
   const pick = async (tradition: TraditionChoice) => {
     await saveSettings({ tradition })
+    track('Tradition chosen', { tradition })
     onPick()
   }
   return (
