@@ -5,6 +5,9 @@ import {
   ExpandableItems,
 } from '@/components/Expandable'
 import { SectionHeading } from '@/components/SectionHeading'
+import Link from 'next/link'
+
+import { pageForDoc, pagePath } from '@/lib/content'
 import { countLabel, docs, type Tradition } from '@/lib/site'
 
 const groups: { tradition: Tradition; title: string; note: string }[] = [
@@ -69,7 +72,13 @@ export function Contents() {
                             className="flex justify-between gap-4 py-3"
                           >
                             <span className="font-medium text-slate-900">
-                              {d.title}
+                              {pageForDoc(d.id) ? (
+                                <Link href={pagePath(pageForDoc(d.id)!)} className="underline decoration-brand-300 underline-offset-4 hover:text-brand-600">
+                                  {d.title}
+                                </Link>
+                              ) : (
+                                d.title
+                              )}
                               {d.year && (
                                 <span className="ml-2 font-normal text-slate-500">
                                   {d.year}
@@ -92,6 +101,9 @@ export function Contents() {
                     Add any verse or passage from a proof text, and learn it
                     with the same method. The text is the King James Version.
                   </p>
+                  <Link href="/scripture/" className="mt-4 inline-block font-medium text-brand-600 hover:text-brand-800">
+                    See the verses that people memorise most <span aria-hidden="true">&rarr;</span>
+                  </Link>
                 </li>,
               ]}
             </ExpandableItems>

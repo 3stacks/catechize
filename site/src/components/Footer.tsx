@@ -13,6 +13,10 @@ export function Footer() {
         <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-medium text-slate-900">
           <Link href="/?home">Home</Link>
           <a href={APP_URL}>Open the app</a>
+          <Link href="/creeds/">Creeds</Link>
+          <Link href="/reformed/">Reformed</Link>
+          <Link href="/lutheran/">Lutheran</Link>
+          <Link href="/scripture/">Scripture</Link>
           <Link href={SELF_HOST_URL}>Self-hosting</Link>
           <Link href={KOFI_URL}>Ko-fi</Link>
         </nav>

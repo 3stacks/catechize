@@ -33,3 +33,12 @@ export function countLabel(d: DocSummary) {
   const [one, many] = unitWord[d.kind] ?? ['part', 'parts']
   return `${d.unitCount} ${d.unitCount === 1 ? one : many}`
 }
+
+/** The public address of the site, for canonical URLs and the sitemap. */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://catechize.pages.dev').replace(/\/+$/, '')
+
+/** Open a document, or one unit of it, in the app. */
+export const appDoc = (docId: string, unitId?: string) => (unitId ? `${APP_URL}#/unit/${docId}/${unitId}` : `${APP_URL}#/doc/${docId}`)
+
+/** Add a passage to "My verses" in the app, then open it. */
+export const appAddVerse = (passageId: string) => `${APP_URL}#/add/${passageId}`
