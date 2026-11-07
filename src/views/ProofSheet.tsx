@@ -4,6 +4,7 @@ import type { Note } from '../data/types.ts'
 import { formatPassage, passageFromId } from '../lib/refs.ts'
 import { href } from '../router.ts'
 import { useAsync } from '../useAsync.ts'
+import { useEscape } from '../useEscape.ts'
 
 export interface SheetContent {
   phrase: string
@@ -14,6 +15,7 @@ export interface SheetContent {
 
 /** Bottom sheet listing the proof texts for a tapped phrase, with the KJV text. */
 export function ProofSheet({ content, onClose }: { content: SheetContent; onClose: () => void }) {
+  useEscape(onClose)
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div className="sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Proof texts">
