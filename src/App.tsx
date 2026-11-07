@@ -7,6 +7,7 @@ import { HarmonyView } from './views/HarmonyView.tsx'
 import { ReviewSession, LearnSession, TroubleSession } from './views/Sessions.tsx'
 import { SettingsView } from './views/SettingsView.tsx'
 import { StatsView } from './views/StatsView.tsx'
+import { AddPassage } from './views/AddPassage.tsx'
 
 export function App() {
   const [page, ...args] = useRoute()
@@ -75,6 +76,8 @@ function route(page: string | undefined, args: string[]) {
       return <StatsView />
     case 'settings':
       return <SettingsView />
+    case 'add':
+      return <AddPassage key={args[0]} id={args[0]} />
     default:
       return <p className="empty">Not found.</p>
   }
