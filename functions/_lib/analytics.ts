@@ -17,8 +17,8 @@ const MAX_SCRIPT = 1_000_000
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const OFF = '/* analytics off */\n'
 
-/** The production host. Add a custom domain with ANALYTICS_HOSTS. */
-const PRODUCTION = ['catechize.pages.dev']
+/** The production hosts. Add another domain with ANALYTICS_HOSTS. */
+const PRODUCTION = ['hearers.app', 'www.hearers.app', 'catechize.pages.dev']
 
 export interface AnalyticsEnv {
   /** The Umami origin, for example https://umami.example.com. Empty: analytics off. */

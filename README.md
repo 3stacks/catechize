@@ -165,8 +165,8 @@ npx wrangler pages secret put ANALYTICS_WEBSITE_ID --project-name=catechize
 `ANALYTICS_FORWARDING_URL` is the Umami origin, with no path. `ANALYTICS_WEBSITE_ID` is the UUID
 of the Umami website for Catechize. Leave either one empty to keep analytics off.
 
-Analytics counts only `catechize.pages.dev`. To count a custom domain, set `ANALYTICS_HOSTS` to a
-list of hosts with commas between them, for example `catechize.app,www.catechize.app`. Branch
+Analytics counts only `hearers.app`, `www.hearers.app` and `catechize.pages.dev`. To count another domain, set `ANALYTICS_HOSTS` to a
+list of hosts with commas between them, for example `example.org,www.example.org`. Branch
 previews, `localhost` and self-hosted servers send nothing.
 
 ## Sync

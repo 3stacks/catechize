@@ -19,6 +19,8 @@ describe('settings', () => {
 
   it('counts production and the extra hosts only', () => {
     expect(countedHost('catechize.pages.dev', {})).toBe(true)
+    expect(countedHost('hearers.app', {})).toBe(true)
+    expect(countedHost('www.hearers.app', {})).toBe(true)
     expect(countedHost('feat-x.catechize.pages.dev', {})).toBe(false)
     expect(countedHost('localhost', {})).toBe(false)
     expect(countedHost('catechize.org', {})).toBe(false)
