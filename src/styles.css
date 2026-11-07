@@ -1,37 +1,68 @@
+/* The look of the website (site/): Inter for text, Cabinet Grotesk for
+   headings, slate greys and the oxblood brand colour. Both fonts are in the
+   bundle, so the app looks the same offline. */
+@font-face {
+  font-family: 'Inter Variable';
+  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('./fonts/cabinet-grotesk-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('./fonts/cabinet-grotesk-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+
 :root {
-  --bg: #f7f4ee;
-  --surface: #fffdf8;
-  --surface-2: #efe9dd;
-  --text: #2a2622;
-  --muted: #776e63;
-  --line: #e2dacb;
-  --accent: #7a2e2e;
+  --bg: #f8fafc;
+  --surface: #fff;
+  --surface-2: #f1f5f9;
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --accent: oklch(44% 0.118 24);
+  --accent-hover: oklch(55% 0.125 25);
   --accent-ink: #fff;
-  --accent-soft: #f2e4e0;
-  --ok: #3f7a4a;
-  --hard: #a46a12;
-  --again: #b03a2e;
-  --mark: #c9a96b;
-  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
-  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --accent-soft: oklch(94.5% 0.022 25);
+  /* The brand panel with the grid, as in the website's hero. */
+  --panel: oklch(44% 0.118 24);
+  --ok: #15803d;
+  --hard: #b45309;
+  --again: #b91c1c;
+  --mark: oklch(79% 0.075 25);
+  --shadow-sm: 0 2px 6px rgb(15 23 42 / 0.08);
+  --shadow-lg: 0 8px 15px rgb(15 23 42 / 0.08), 0 3px 6px rgb(15 23 42 / 0.08);
+  --sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --display: 'Cabinet Grotesk', var(--sans);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #181614;
-    --surface: #211e1b;
-    --surface-2: #2b2723;
-    --text: #ece6dc;
-    --muted: #a39a8e;
-    --line: #3a352f;
-    --accent: #d68b7c;
-    --accent-ink: #1a1210;
-    --accent-soft: #3a2723;
-    --ok: #7cbf87;
-    --hard: #e0a948;
-    --again: #ef8173;
-    --mark: #8d7444;
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-2: #273449;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --line: #334155;
+    --accent: oklch(79% 0.075 25);
+    --accent-hover: oklch(88% 0.045 25);
+    --accent-ink: #0f172a;
+    --accent-soft: oklch(31% 0.085 24 / 0.6);
+    --panel: oklch(38% 0.105 24);
+    --ok: #4ade80;
+    --hard: #fbbf24;
+    --again: #f87171;
+    --mark: oklch(55% 0.125 25);
+    --shadow-sm: 0 2px 6px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 8px 15px rgb(0 0 0 / 0.35);
     color-scheme: dark;
   }
 }
@@ -47,6 +78,8 @@ body {
   color: var(--text);
   font: 16px/1.5 var(--sans);
   -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -57,23 +90,21 @@ a {
 h1,
 h2,
 h3 {
-  font-family: var(--serif);
-  font-weight: 600;
-  line-height: 1.2;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 1.15;
   margin: 0 0 0.4em;
+  color: var(--text);
 }
 h1 {
-  font-size: 1.6rem;
+  font-size: 2rem;
 }
 h2 {
-  font-size: 1.15rem;
-  color: var(--muted);
-  font-family: var(--sans);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: 1.375rem;
 }
 h3 {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .app {
@@ -91,13 +122,15 @@ h3 {
   margin-bottom: 20px;
   position: sticky;
   top: 0;
-  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 5;
 }
 .brand {
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 1.15rem;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.375rem;
   color: var(--text);
 }
 .top nav {
@@ -108,12 +141,17 @@ h3 {
 .top nav a {
   color: var(--muted);
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.top nav a:hover {
+  color: var(--text);
 }
 .top nav a.active {
-  color: var(--text);
-  background: var(--surface-2);
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .stack > * + * {
@@ -123,14 +161,50 @@ h3 {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 16px;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
 }
 .card + .card {
   margin-top: 10px;
 }
 .hero p {
   margin: 0 0 14px;
+}
+/* Today's summary: the brand panel with the grid pattern of the website. */
+.card.hero {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-bottom-right-radius: 48px;
+  background-color: var(--panel);
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.1) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: -1px -1px;
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  padding: 22px 20px;
+}
+.card.hero h1,
+.card.hero a {
+  color: #fff;
+}
+.card.hero a:not(.button) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.card.hero .muted {
+  color: rgb(255 255 255 / 0.75);
+}
+.card.hero .button.primary {
+  background: #fff;
+  border-color: #fff;
+  color: oklch(44% 0.118 24);
+}
+.card.hero .button.primary:hover {
+  background: oklch(97.5% 0.01 25);
 }
 
 .row {
@@ -159,7 +233,19 @@ h3 {
 .note {
   background: var(--accent-soft);
   padding: 8px 12px;
-  border-radius: 10px;
+  border-radius: 8px;
+}
+.error-text {
+  color: var(--again);
+  margin: 8px 0 0;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .empty {
   color: var(--muted);
@@ -174,14 +260,26 @@ button,
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--text);
-  padding: 9px 14px;
-  border-radius: 10px;
+  padding: 9px 16px;
+  border-radius: 6px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   min-height: 40px;
   white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+button:hover:not(:disabled),
+.button:hover {
+  background: var(--surface-2);
+}
+button:focus-visible,
+.button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 button:disabled {
   opacity: 0.6;
@@ -191,10 +289,18 @@ button:disabled {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
-  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+.primary:hover:not(:disabled),
+.button.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 .ghost {
   background: transparent;
+}
+.ghost:hover:not(:disabled) {
+  background: var(--surface-2);
 }
 button.small,
 .button.small {
@@ -216,7 +322,7 @@ button.link {
 .segmented {
   display: inline-flex;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 6px;
   overflow: hidden;
   flex-wrap: wrap;
 }
@@ -235,7 +341,7 @@ button.link {
   width: 100%;
   font: inherit;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--text);
@@ -245,8 +351,9 @@ button.link {
 .list {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 .list-item {
   display: flex;
@@ -275,7 +382,7 @@ button.link {
 .ref {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--accent);
   min-width: 52px;
   font-variant-numeric: tabular-nums;
 }
@@ -287,7 +394,7 @@ details summary {
   cursor: pointer;
   padding: 8px 2px;
   font-weight: 600;
-  color: var(--muted);
+  letter-spacing: -0.01em;
 }
 details .list {
   margin-top: 4px;
@@ -349,7 +456,8 @@ details .list {
 .tile {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  border-radius: 16px;
   padding: 14px;
   color: var(--text);
   display: flex;
@@ -357,7 +465,12 @@ details .list {
   gap: 4px;
 }
 .tile strong {
-  font-family: var(--serif);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.tile:hover {
+  border-color: var(--mark);
 }
 .tile span {
   color: var(--muted);
@@ -376,12 +489,14 @@ details .list {
   margin-bottom: 12px;
 }
 .prompt.big {
-  font-family: var(--serif);
-  font-size: 1.25rem;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1.25;
 }
 .unit-text,
 .drill-text {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 1.2rem;
   line-height: 1.75;
   margin: 0 0 10px;
@@ -420,11 +535,12 @@ details .list {
 }
 .sheet {
   background: var(--surface);
+  border-top: 4px solid var(--accent);
   width: 100%;
   max-width: 760px;
   max-height: 80vh;
   overflow: auto;
-  border-radius: 16px 16px 0 0;
+  border-radius: 20px 20px 0 0;
   padding: 16px 16px 28px;
   box-shadow: 0 -8px 30px rgb(0 0 0 / 0.2);
 }
@@ -435,9 +551,9 @@ details .list {
 }
 .sheet-head q {
   flex: 1;
-  font-family: var(--serif);
-  font-size: 1.1rem;
-  font-style: italic;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.25rem;
 }
 .parallel,
 .hymn {
@@ -459,7 +575,7 @@ details .list {
   flex-wrap: wrap;
 }
 .verses {
-  font-family: var(--serif);
+  font-family: var(--sans);
   margin: 6px 0 0;
 }
 .verses sup {
@@ -477,7 +593,8 @@ details .list {
 .harmony {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  border-radius: 16px;
   overflow: hidden;
 }
 .h-row {
@@ -498,7 +615,7 @@ details .list {
 .h-cell {
   display: block;
   color: var(--text);
-  font-family: var(--serif);
+  font-family: var(--sans);
 }
 .h-chip {
   display: inline-block;
@@ -552,7 +669,8 @@ details .list {
 .drill {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  border-radius: 16px;
   padding: 18px 16px;
   position: relative;
 }
@@ -650,7 +768,7 @@ details .list {
 }
 .result-text {
   flex: 1;
-  font-family: var(--serif);
+  font-family: var(--sans);
 }
 .result-grade {
   font-size: 0.8rem;
@@ -698,21 +816,38 @@ code {
   gap: 12px;
 }
 .streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.85rem;
   font-weight: 600;
-  padding: 2px 10px;
+  padding: 3px 10px 3px 8px;
   border-radius: 999px;
-  border: 1px solid var(--line);
-  color: var(--muted);
+  border: 1px solid rgb(255 255 255 / 0.35);
   white-space: nowrap;
 }
+.card.hero a.streak {
+  text-decoration: none;
+}
+.streak .flame {
+  opacity: 0.7;
+  width: 15px;
+  height: 15px;
+}
+/* Reviewed today: the flame is lit. */
 .streak.done {
-  background: var(--accent-soft);
-  border-color: transparent;
-  color: var(--accent);
+  background: #fff;
+  border-color: #fff;
+}
+.card.hero .streak.done {
+  color: oklch(44% 0.118 24);
+}
+.streak.done .flame {
+  opacity: 1;
+  color: #ea580c;
 }
 .memory-aid {
-  font-family: var(--serif);
+  font-family: var(--sans);
   background: var(--surface-2);
   border-radius: 8px;
   padding: 8px 12px;
@@ -725,7 +860,7 @@ code {
 }
 .memory-input {
   width: 100%;
-  font: 1rem/1.4 var(--serif);
+  font: 1rem/1.4 var(--sans);
   color: var(--text);
   background: var(--bg);
   border: 1px solid var(--line);
@@ -734,7 +869,7 @@ code {
   resize: vertical;
 }
 .heard {
-  font-family: var(--serif);
+  font-family: var(--sans);
   border-left: 3px solid var(--accent);
   padding: 4px 10px;
   margin: 0 0 12px;
@@ -766,11 +901,12 @@ button.result-grade:focus-visible {
 .stat-tile {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  border-radius: 16px;
   padding: 12px 14px;
 }
 .stat-value {
-  font: 600 1.8rem/1.1 var(--serif);
+  font: 800 2rem/1.1 var(--display);
   font-variant-numeric: tabular-nums;
 }
 .stat-label {
@@ -908,6 +1044,38 @@ select {
   background: var(--surface);
   color: var(--text);
   padding: 9px 12px;
-  border-radius: 10px;
+  border-radius: 6px;
   min-height: 40px;
+}
+
+/* My verses: add a passage */
+.stack-sm > * + * {
+  margin-top: 10px;
+}
+.stack-sm h3 {
+  margin: 0;
+}
+.grow-input {
+  flex: 1;
+  min-width: 0;
+}
+.suggestions {
+  display: grid;
+  gap: 6px;
+}
+button.suggestion {
+  justify-content: space-between;
+  white-space: normal;
+  text-align: left;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.suggestion strong {
+  font-weight: 600;
+}
+.suggestion .plus {
+  color: var(--accent);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1;
 }

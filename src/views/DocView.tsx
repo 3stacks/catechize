@@ -5,6 +5,7 @@ import { db, removeRows } from '../store/db.ts'
 import { useDataVersion } from '../store/sync.ts'
 import { unitProgress, type UnitProgress } from '../store/srs.ts'
 import { useAsync } from '../useAsync.ts'
+import { AddVerses } from './AddVerses.tsx'
 
 const HARMONY_FOR: Record<string, { id: string; label: string }> = {
   apostles: { id: 'creeds', label: "Compare with the Nicene Creed, with proof texts and hymns" },
@@ -71,8 +72,10 @@ export function DocView({ docId }: { docId: string }) {
         <input className="search" placeholder="Filter…" value={filter} onChange={(e) => setFilter(e.target.value)} />
       )}
 
+      {docId === 'verses' && <AddVerses have={new Set(doc.units.map((u) => u.id))} onAdded={reload} />}
+
       {doc.units.length === 0 && docId === 'verses' && (
-        <p className="empty">No verses yet. Open any proof text and choose "Memorise this passage".</p>
+        <p className="empty">No verses yet. Add a passage above. You can also open any proof text and choose "Memorise this passage".</p>
       )}
 
       {doc.groups.map((g) => {
@@ -87,7 +90,8 @@ export function DocView({ docId }: { docId: string }) {
               {items.map((u) => (
                 <a key={u.id} className="list-item" href={href('unit', docId, u.id)}>
                   <span className="ref">{u.ref}</span>
-                  <span className="grow">{u.prompt.replace(/^WCF [\d.]+: /, '')}</span>
+                  {/* A verse's prompt is its reference: show its opening words. */}
+                  <span className="grow">{u.prompt === u.ref ? opening(u.text) : u.prompt.replace(/^WCF [\d.]+: /, '')}</span>
                   <Pips p={progress.get(u.id)!} />
                 </a>
               ))}
@@ -97,6 +101,11 @@ export function DocView({ docId }: { docId: string }) {
       })}
     </div>
   )
+}
+
+const opening = (text: string) => {
+  const words = text.split(/\s+/)
+  return words.length > 12 ? `${words.slice(0, 12).join(' ')}…` : text
 }
 
 export function Pips({ p }: { p: UnitProgress }) {

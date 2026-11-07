@@ -41,7 +41,9 @@ export function Home() {
           <h1>{greeting()}</h1>
           {streak.days > 0 && (
             <a className={streak.today ? 'streak done' : 'streak'} href={href('progress')} title={streak.today ? 'Reviewed today' : 'Review today to keep your streak'}>
+              <Flame />
               {streak.days} {streak.days === 1 ? 'day' : 'days'}
+              <span className="visually-hidden"> streak</span>
             </a>
           )}
         </div>
@@ -199,3 +201,15 @@ function greeting() {
 }
 
 export const truncate = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s)
+
+/** The usual streak icon. */
+function Flame() {
+  return (
+    <svg className="flame" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M12 2c.5 3-1.4 4.9-3 6.6C7.4 10.3 6 12 6 14.5A6 6 0 0 0 12 21a6 6 0 0 0 6-6.3c0-2.3-1-4.3-2.4-5.8-.3 1.4-1 2.5-2.1 3.1.4-3.6-.6-7.3-1.5-10Zm.2 11.4c1.6 1.2 2.3 2.4 2.3 3.6A2.5 2.5 0 0 1 12 19.5 2.5 2.5 0 0 1 9.5 17c0-1.3.9-2.3 2.7-3.6Z"
+      />
+    </svg>
+  )
+}
