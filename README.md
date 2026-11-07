@@ -123,22 +123,24 @@ dashboard. Then open Custom domains.
 
 ## Reminders
 
-In Settings, each device can turn on a daily reminder at a local hour. At that hour, on a day with
-answers due, the device gets a notification. On iPhone and iPad, the learner must first add the app
-to the Home Screen.
+Reminders are for the self-hosted server only. The hosted app keeps all data in the browser, so it
+has no server to send reminders, and Settings does not show the reminder card.
+
+On a self-hosted server, each device can turn on a daily reminder at a local hour. At that hour, on
+a day with answers due, the device gets a notification. On iPhone and iPad, the learner must first
+add the app to the Home Screen.
 
 A push carries no data. When a push arrives, the service worker (`public/push-sw.js`) counts the due
-answers in IndexedDB on the device. The sender stores only the push subscription, the hour, the time
-zone and the next due time. The code that both senders share is in `shared/push.ts`.
+answers in IndexedDB on the device. The server stores only the push subscription, the hour, the time
+zone and the next due time. The push code is in `shared/push.ts`.
 
-- **Self-hosted:** the server sends the reminders. To make a key pair, run `node server/vapid.ts`.
-  Set `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`. Optionally, set `VAPID_SUBJECT` to a `mailto:`
-  address. A new key pair stops all current reminders.
-- **Hosted:** a Cloudflare Worker in `worker/` sends the reminders. It keeps them in a D1
-  database. A cron trigger runs it every 30 minutes. `.github/workflows/push-worker.yml` deploys
-  it. It needs the secret `VAPID_PRIVATE_KEY` and the variable `VAPID_PUBLIC_KEY`. The API token
-  needs the permissions Workers Scripts: Edit and D1: Edit. Put the Worker URL in the repository
-  variable `PUSH_URL`. The site build gives that URL to the app.
+To turn on reminders:
+
+1. Run `node server/vapid.ts` to make a key pair.
+2. Set `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`.
+3. Optionally, set `VAPID_SUBJECT` to a `mailto:` address.
+
+A new key pair stops all current reminders.
 
 ## Sync
 

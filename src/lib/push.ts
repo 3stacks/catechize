@@ -1,9 +1,9 @@
 import { db } from '../store/db.ts'
 import { headers } from '../store/sync.ts'
 
-// Daily review reminders by Web Push. The sender is the self-hosted server
-// when there is one (/api/push), or else the Cloudflare Worker for the hosted
-// app (VITE_PUSH_URL at build time). It stores only this device's push
+// Daily review reminders by Web Push, sent by the self-hosted server
+// (/api/push). The hosted app keeps all data in the browser, so it has no
+// sender and no reminders. The server stores only this device's push
 // subscription, the reminder hour, the time zone and the next due time. The
 // service worker (public/push-sw.js) counts what is due when a push arrives.
 //
@@ -11,8 +11,7 @@ import { headers } from '../store/sync.ts'
 // its own subscription.
 
 const KEY = 'catechize.reminder'
-const SAME_ORIGIN = import.meta.env.BASE_URL + 'api/push'
-const HOSTED = (import.meta.env.VITE_PUSH_URL as string | undefined)?.replace(/\/+$/, '')
+const API = import.meta.env.BASE_URL + 'api/push'
 
 interface Saved {
   base: string
@@ -42,28 +41,27 @@ export type PushSupport = { ok: true } | { ok: false; reason: 'browser' | 'insta
 const isIos = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
 const standalone = () => matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone === true
 
-/** The push API to use, with its public key: this server first, then the hosted Worker. */
+/** The server's push API and public key, or undefined when there is no server or reminders are off. */
 async function sender(): Promise<{ base: string; key: string } | undefined> {
-  for (const base of [SAME_ORIGIN, HOSTED]) {
-    if (!base) continue
-    try {
-      const r = await fetch(`${base}/key`)
-      if (!r.ok || !r.headers.get('content-type')?.includes('json')) continue
-      const { publicKey } = (await r.json()) as { publicKey?: string }
-      if (publicKey) return { base, key: publicKey }
-    } catch {
-      // not reachable: try the next one
-    }
+  try {
+    const r = await fetch(`${API}/key`)
+    // A static host answers with the app's HTML, not JSON.
+    if (!r.ok || !r.headers.get('content-type')?.includes('json')) return undefined
+    const { publicKey } = (await r.json()) as { publicKey?: string }
+    return publicKey ? { base: API, key: publicKey } : undefined
+  } catch {
+    return undefined
   }
-  return undefined
 }
 
 export async function pushSupport(): Promise<PushSupport> {
+  // Check for a server first, so the hosted app never asks for an install it cannot use.
+  if (!(await sender())) return { ok: false, reason: 'server' }
   if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
     // iPhone and iPad have Web Push only for apps added to the home screen.
     return { ok: false, reason: isIos() && !standalone() ? 'install' : 'browser' }
   }
-  return (await sender()) ? { ok: true } : { ok: false, reason: 'server' }
+  return { ok: true }
 }
 
 export const reminderHour = (): number | undefined => load()?.hour
@@ -80,8 +78,7 @@ async function subscription(key?: string) {
   return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toKey(key) })
 }
 
-const post = (base: string, path: string, body: unknown) =>
-  fetch(base + path, { method: 'POST', headers: base === SAME_ORIGIN ? headers() : { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+const post = (base: string, path: string, body: unknown) => fetch(base + path, { method: 'POST', headers: headers(), body: JSON.stringify(body) })
 
 const nextDue = async () => (await db.cards.orderBy('due').first())?.due ?? null
 

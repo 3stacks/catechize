@@ -171,6 +171,9 @@ function ReminderCard() {
     else setHour(h)
   }
 
+  // No server to send reminders (the hosted app, or a server without VAPID keys): show nothing.
+  if (support && !support.ok && support.reason === 'server') return null
+
   return (
     <section className="card">
       <h3>Daily reminder</h3>
@@ -180,9 +183,7 @@ function ReminderCard() {
         <p className="muted small">
           {support.reason === 'install'
             ? 'On iPhone and iPad, add Catechize to the Home Screen first: tap Share, then Add to Home Screen. Then open it from there to turn on reminders.'
-            : support.reason === 'browser'
-              ? 'This browser cannot show reminders.'
-              : 'Reminders are not available on this server. Its administrator can turn them on.'}
+            : 'This browser cannot show reminders.'}
         </p>
       ) : (
         <>

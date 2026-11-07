@@ -1,12 +1,10 @@
-// Daily review reminders by Web Push, shared by the self-hosted server
-// (server/) and the Cloudflare Worker for the hosted app (worker/).
+// Daily review reminders by Web Push, sent by the self-hosted server (server/).
 //
 // A push carries no payload. The service worker counts what is due from the
 // device's own IndexedDB when the push arrives, so the sender stores only the
 // push subscription, a reminder hour, a time zone and the next due time.
 // With no payload there is nothing to encrypt: a push is an empty POST signed
-// with a VAPID key (RFC 8292). Uses Web Crypto only, so it runs in Node and in
-// Workers.
+// with a VAPID key (RFC 8292). Uses Web Crypto only, with no dependencies.
 
 export interface Reminder {
   /** The push service URL from PushSubscription.endpoint. */
