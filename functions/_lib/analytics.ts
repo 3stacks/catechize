@@ -23,9 +23,9 @@ const PRODUCTION = ['hearers.app', 'www.hearers.app', 'catechize.pages.dev']
 export interface AnalyticsEnv {
   /** The Umami origin, for example https://umami.example.com. Empty: analytics off. */
   ANALYTICS_FORWARDING_URL?: string
-  /** The Umami website UUID for Catechize. */
+  /** The Umami website UUID for Hearers. */
   ANALYTICS_WEBSITE_ID?: string
-  /** More hosts to count, comma-separated: for example "catechize.org,www.catechize.org". */
+  /** More hosts to count, comma-separated: for example "example.org,www.example.org". */
   ANALYTICS_HOSTS?: string
 }
 

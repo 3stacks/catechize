@@ -27,7 +27,7 @@ export function verseMetadata(v: VersePage): Metadata {
   const title = `${label} (KJV): meaning and how to memorise it`
   const quote = text.length > 110 ? `${text.slice(0, 107).replace(/\s+\S*$/, '')}…` : text
   const description = `${label} KJV: “${quote}” Read it in context, and learn it by heart, free.`
-  return { title, description, alternates: { canonical: url }, openGraph: { title, description, url, type: 'article', siteName: 'Catechize' } }
+  return { title, description, alternates: { canonical: url }, openGraph: { title, description, url, type: 'article', siteName: 'Hearers' } }
 }
 
 /** The Self-Interpreting Bible chapter page, when that chapter is online. */
@@ -68,7 +68,7 @@ export function VerseContent({ v }: { v: VersePage }) {
               headline: `${label} (KJV)`,
               url: SITE_URL + url,
               about: { '@type': 'CreativeWork', name: `${label}, King James Version`, text: plain(r) },
-              publisher: { '@type': 'Organization', name: 'Catechize' },
+              publisher: { '@type': 'Organization', name: 'Hearers' },
             },
             breadcrumbLd(crumbs),
           ],
@@ -147,7 +147,7 @@ export function VerseContent({ v }: { v: VersePage }) {
           )}
 
           <H2 id="memorise">How to memorise {label}</H2>
-          <P>Catechize breaks the verse into clauses and teaches each clause in four steps. Then it brings each clause back just before you forget it.</P>
+          <P>Hearers breaks the verse into clauses and teaches each clause in four steps. Then it brings each clause back just before you forget it.</P>
           <Method name="the verse" />
 
           <div className="mt-16">

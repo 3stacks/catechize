@@ -1,4 +1,4 @@
-# Catechize: spec
+# Hearers: spec
 
 An offline-first app for memorising and studying the Reformed and Lutheran
 confessions and catechisms, the creeds and Scripture.
@@ -7,7 +7,7 @@ confessions and catechisms, the creeds and Scripture.
 
 Flashcards that test a whole catechism answer fail as the answers get
 longer: one missed phrase fails the card, so the schedule is always wrong
-and long answers never stick. Catechize schedules **chunks** (clauses of
+and long answers never stick. Hearers schedules **chunks** (clauses of
 about 4–12 words) independently and only asks for the whole answer once
 every chunk is stable.
 
@@ -113,7 +113,7 @@ When served by `server/main.ts`, the app also syncs to SQLite:
   wins on `_u`, then returns server changes with `seq > since` (paged).
 - A new or restored server database (different epoch, or `since` ahead of
   the server) makes the client pull from 0 and push every row again.
-- Optional bearer token (`CATECHIZE_TOKEN`), entered once per device.
+- Optional bearer token (`HEARERS_TOKEN`), entered once per device.
 
 ## Content (built)
 

@@ -6,9 +6,9 @@ import { Footer } from '@/components/Footer'
 import { APP_URL, REPO_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Self-host Catechize',
+  title: 'Self-host Hearers',
   description:
-    'Run Catechize on your own server with Docker. Progress is kept in SQLite, and every device syncs with it.',
+    'Run Hearers on your own server with Docker. Progress is kept in SQLite, and every device syncs with it.',
 }
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
@@ -42,7 +42,7 @@ export default function SelfHosting() {
         <Container>
           <p className="text-base font-medium text-slate-500">
             <Link href="/?home" className="hover:text-slate-900">
-              Catechize
+              Hearers
             </Link>{' '}
             / Docs
           </p>
@@ -50,7 +50,7 @@ export default function SelfHosting() {
             Self-hosting
           </h1>
           <p className="mt-4 text-xl tracking-tight text-slate-600">
-            Run Catechize on your own server. The server keeps your progress in
+            Run Hearers on your own server. The server keeps your progress in
             one SQLite file, and each of your devices syncs with it.
           </p>
         </Container>
@@ -59,12 +59,12 @@ export default function SelfHosting() {
       <main className="py-16">
         <Container>
           <div className="rounded-2xl bg-brand-50 px-6 py-5 text-base tracking-tight text-brand-900 ring-1 ring-brand-200">
-            <strong className="font-semibold">Open source soon.</strong> The
-            source code and the Docker image become public at{' '}
+            <strong className="font-semibold">Source code.</strong> The
+            source code and the Docker image are at{' '}
             <Link href={REPO_URL} className="font-medium underline">
-              github.com/3stacks/catechize
+              github.com/3stacks/hearers
             </Link>
-            . Until then, use the{' '}
+            . To try Hearers first, use the{' '}
             <a href={APP_URL} className="font-medium underline">
               free app in your browser
             </a>
@@ -90,7 +90,7 @@ export default function SelfHosting() {
   -p 3000:3000 \\
   -v ./catechize-data:/data \\
   --restart unless-stopped \\
-  ghcr.io/3stacks/catechize:latest`}</Code>
+  ghcr.io/3stacks/hearers:latest`}</Code>
           <P>
             Open <C>http://your-server:3000</C>. On the server, the app opens at
             the root, without this homepage.
@@ -99,19 +99,19 @@ export default function SelfHosting() {
           <H2 id="compose">Docker Compose</H2>
           <Code>{`services:
   catechize:
-    image: ghcr.io/3stacks/catechize:latest
+    image: ghcr.io/3stacks/hearers:latest
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - CATECHIZE_TOKEN=\${CATECHIZE_TOKEN:-}
+      - HEARERS_TOKEN=\${HEARERS_TOKEN:-}
     volumes:
       - ./catechize-data:/data`}</Code>
 
           <H2 id="token">Access token</H2>
           <P>
             To keep other people out of your progress, set{' '}
-            <C>CATECHIZE_TOKEN</C>. Make a token with this command:
+            <C>HEARERS_TOKEN</C>. Make a token with this command:
           </P>
           <Code>{`openssl rand -hex 24`}</Code>
           <P>
@@ -142,7 +142,7 @@ export default function SelfHosting() {
                   <td className="py-3">The directory for <C>catechize.db</C>.</td>
                 </tr>
                 <tr>
-                  <td className="py-3 pr-6"><C>CATECHIZE_TOKEN</C></td>
+                  <td className="py-3 pr-6"><C>HEARERS_TOKEN</C></td>
                   <td className="py-3 pr-6">none</td>
                   <td className="py-3">When set, sync needs this token.</td>
                 </tr>

@@ -130,7 +130,7 @@ export function Pricing() {
           />
           <Plan
             name="Self-hosted"
-            description="Run Catechize on your own server, and keep every device in step."
+            description="Run Hearers on your own server, and keep every device in step."
             href={SELF_HOST_URL}
             action="Read the guide"
             features={[

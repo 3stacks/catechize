@@ -80,7 +80,7 @@ jobs:
             return 1
           }
           check / 'Learn the catechism by heart'
-          check /app/ 'Catechize'
+          check /app/ 'Hearers'
           check /app/data/index.json '"lsc"'
           check /docs/self-hosting/ 'Self-hosting'
           check /a/boot.js 'analytics off\|data-website-id'

@@ -39,7 +39,7 @@ export function Hero() {
             <Image
               className="w-full"
               src={heroImage}
-              alt="Catechize on a phone: Question 1 of the Shorter Catechism, half recalled"
+              alt="Hearers on a phone: Question 1 of the Shorter Catechism, half recalled"
               priority
             />
           </div>
@@ -54,7 +54,7 @@ export function Hero() {
               Learn the catechism by heart.
             </h1>
             <p className="mt-4 text-3xl text-slate-600">
-              Catechize helps you memorise the catechisms, the confessions, the
+              Hearers helps you memorise the catechisms, the confessions, the
               creeds and Scripture. You learn one clause at a time, and each
               clause comes back just before you forget it.
             </p>

@@ -10,7 +10,7 @@ const features: { title: string; description: string; image: StaticImageData; al
   {
     title: 'Proof texts in place',
     description:
-      'Catechize attaches each proof text to the phrase that it supports. Tap the phrase to read the passage. Add any verse to your own list.',
+      'Hearers attaches each proof text to the phrase that it supports. Tap the phrase to read the passage. Add any verse to your own list.',
     image: proofsImage,
     alt: 'A phrase of an answer with its proof texts open below it',
   },
@@ -24,7 +24,7 @@ const features: { title: string; description: string; image: StaticImageData; al
   {
     title: 'Help where you slip',
     description:
-      'Catechize finds the clauses that you forget again and again. Practise them on their own, and add a memory aid to the answer.',
+      'Hearers finds the clauses that you forget again and again. Practise them on their own, and add a memory aid to the answer.',
     image: troubleImage,
     alt: 'An answer with a memory aid and a trouble spot',
   },

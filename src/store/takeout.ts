@@ -42,11 +42,11 @@ export function parseBackup(json: string): Backup {
   try {
     data = JSON.parse(json)
   } catch {
-    throw new Error('This file is not a Catechize backup. It is not JSON.')
+    throw new Error('This file is not a Hearers backup. It is not JSON.')
   }
   const b = data as Record<string, unknown> | null
-  if (!b || typeof b !== 'object' || b.app !== 'catechize') throw new Error('This file is not a Catechize backup.')
-  if (typeof b.version !== 'number' || b.version > 2) throw new Error('This backup comes from a newer version of Catechize. Update the app, then try again.')
+  if (!b || typeof b !== 'object' || b.app !== 'catechize') throw new Error('This file is not a Hearers backup.')
+  if (typeof b.version !== 'number' || b.version > 2) throw new Error('This backup comes from a newer version of Hearers. Update the app, then try again.')
   for (const t of [...TABLES, 'reviews']) {
     if (b[t] !== undefined && !Array.isArray(b[t])) throw new Error(`This backup is damaged: "${t}" is not a list.`)
   }

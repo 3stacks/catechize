@@ -85,7 +85,7 @@ export const DOC_PAGES: DocPage[] = [
     ],
     faq: [
       ['Did the apostles write the Apostles’ Creed?', 'No. The creed grew from the baptismal creed of the church in Rome. Its name says that it agrees with the teaching of the apostles.'],
-      ['How long does it take to memorise the Apostles’ Creed?', 'Most people can say it from memory after a few days of short practice. Catechize teaches one phrase at a time, then brings each phrase back before you forget it.'],
+      ['How long does it take to memorise the Apostles’ Creed?', 'Most people can say it from memory after a few days of short practice. Hearers teaches one phrase at a time, then brings each phrase back before you forget it.'],
       ['What does "he descended into hell" mean?', 'Churches explain the phrase in different ways. The Heidelberg Catechism (Question 44) says that Christ suffered the anguish of hell for us on the cross. Luther saw it as Christ’s victory over hell.'],
     ],
   },
@@ -119,7 +119,7 @@ export const DOC_PAGES: DocPage[] = [
     ],
     faq: [
       ['What is the difference between the Nicene Creed and the Apostles’ Creed?', 'The Nicene Creed is longer. It says clearly that the Son is fully God, of one substance with the Father, and that the Holy Spirit is Lord. It answers the teaching of Arius.'],
-      ['Which version of the Nicene Creed does Catechize use?', 'Catechize uses the traditional English text of the creed of AD 381, as Reformed and Lutheran churches say it. Each phrase links to its proof texts and to the matching phrase of the Apostles’ Creed.'],
+      ['Which version of the Nicene Creed does Hearers use?', 'Hearers uses the traditional English text of the creed of AD 381, as Reformed and Lutheran churches say it. Each phrase links to its proof texts and to the matching phrase of the Apostles’ Creed.'],
       ['What does "of one substance with the Father" mean?', 'It means that the Son has the same divine being as the Father. He is not a lesser god or a creature. The Greek word is homoousios.'],
     ],
   },
@@ -151,7 +151,7 @@ export const DOC_PAGES: DocPage[] = [
     ],
     faq: [
       ['Did Athanasius write the Athanasian Creed?', 'No. It is a Latin text from about a century after his death. It has his name because it teaches the doctrine that he defended.'],
-      ['Why is the Athanasian Creed hard to memorise?', 'It is long, and many lines are almost the same. Catechize teaches it in small parts, and it gives each part its own review schedule.'],
+      ['Why is the Athanasian Creed hard to memorise?', 'It is long, and many lines are almost the same. Hearers teaches it in small parts, and it gives each part its own review schedule.'],
     ],
   },
   {
@@ -209,9 +209,9 @@ export const DOC_PAGES: DocPage[] = [
       ['The means of grace (Questions 85–107)', 'Faith, repentance, the Word, the sacraments and prayer, with the Lord’s Prayer.'],
     ],
     faq: [
-      ['How long does it take to memorise the Shorter Catechism?', 'With one new question each day, you learn all 107 in about four months. Catechize schedules the new questions and the reviews for you.'],
+      ['How long does it take to memorise the Shorter Catechism?', 'With one new question each day, you learn all 107 in about four months. Hearers schedules the new questions and the reviews for you.'],
       ['What is the difference between the Shorter and Larger Catechisms?', 'The Shorter Catechism has 107 short answers for learners. The Larger Catechism has 196 longer answers, written to guide ministers when they teach.'],
-      ['Which text does Catechize use?', 'Catechize uses the original text of 1647 with the proof texts of the Assembly. The proof texts show in the King James Version.'],
+      ['Which text does Hearers use?', 'Hearers uses the original text of 1647 with the proof texts of the Assembly. The proof texts show in the King James Version.'],
     ],
   },
   {
@@ -271,7 +271,7 @@ export const DOC_PAGES: DocPage[] = [
       ['The Christian life and the church (Chapters 19–31)', 'The law, Christian liberty, worship and the Sabbath, oaths, the civil magistrate, marriage, the church, the sacraments and church councils.'],
       ['The last things (Chapters 32–33)', 'The state of men after death, the resurrection and the Last Judgement.'],
     ],
-    faq: [['Can I memorise the whole Westminster Confession?', 'Some people do. Most people choose the sections they use most. In Catechize, you can learn any section on its own, in any order.']],
+    faq: [['Can I memorise the whole Westminster Confession?', 'Some people do. Most people choose the sections they use most. In Hearers, you can learn any section on its own, in any order.']],
   },
   {
     docId: 'hc',
@@ -451,7 +451,7 @@ export const DOC_PAGES: DocPage[] = [
       ['The Lord’s Prayer', 'Why we pray, and each petition.'],
       ['Baptism and the Sacrament of the Altar', 'What the sacraments are, what they give, and who receives them with benefit.'],
     ],
-    faq: [['Can I memorise the Large Catechism?', 'It is long, so most people learn chosen paragraphs. In Catechize, you can learn any paragraph on its own.']],
+    faq: [['Can I memorise the Large Catechism?', 'It is long, so most people learn chosen paragraphs. In Hearers, you can learn any paragraph on its own.']],
   },
 ]
 

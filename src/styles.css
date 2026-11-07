@@ -1,22 +1,12 @@
 /* The look of the website (site/): Inter for text, Cabinet Grotesk for
-   headings, slate greys and the oxblood brand colour. Both fonts are in the
-   bundle, so the app looks the same offline. */
+   headings, slate greys and the oxblood brand colour. Inter is in the bundle.
+   Cabinet Grotesk loads from Fontshare (index.html), because its licence does
+   not allow the font files in a public repository. The service worker caches
+   it for offline use. */
 @font-face {
   font-family: 'Inter Variable';
   src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
   font-weight: 100 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Cabinet Grotesk';
-  src: url('./fonts/cabinet-grotesk-700.woff2') format('woff2');
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Cabinet Grotesk';
-  src: url('./fonts/cabinet-grotesk-800.woff2') format('woff2');
-  font-weight: 800;
   font-display: swap;
 }
 

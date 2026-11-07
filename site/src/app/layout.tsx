@@ -15,8 +15,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Catechize: learn the catechism by heart',
-    template: '%s | Catechize',
+    default: 'Hearers: learn the catechism by heart',
+    template: '%s | Hearers',
   },
   description:
     'Memorise the Reformed and Lutheran catechisms, the creeds and Scripture, one clause at a time. Free in your browser. Self-host it to sync your devices.',

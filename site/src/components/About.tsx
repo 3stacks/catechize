@@ -31,18 +31,23 @@ export function About() {
             </SectionHeading>
             <p className="mt-8 font-display text-4xl font-extrabold tracking-tight text-pretty text-slate-900 sm:text-6xl">
               <span className="block text-brand-600">Free, and it stays free.</span>{' '}
-              No advertisements, no accounts, no tracking.
+              No advertisements, no accounts, no cookies.
             </p>
             <p className="mt-4 text-lg tracking-tight text-slate-700">
-              Luke Boyle makes Catechize. It is free for anyone to use. The
-              source code becomes open source soon, at{' '}
+              The early church called its new learners “hearers”. They heard
+              the faith taught aloud, and they said it back until they knew it
+              by heart. That is how this app teaches.
+            </p>
+            <p className="mt-4 text-lg tracking-tight text-slate-700">
+              Luke Boyle makes Hearers. It is free for anyone to use. The source
+              code is on GitHub, at{' '}
               <Link href={REPO_URL} className="font-medium text-brand-600 hover:text-brand-800">
-                github.com/3stacks/catechize
+                github.com/3stacks/hearers
               </Link>
               .
             </p>
             <p className="mt-4 text-lg tracking-tight text-slate-700">
-              If Catechize helps you, you can support it on Ko-fi. The support
+              If Hearers helps you, you can support it on Ko-fi. The support
               pays for the server and for the time to add more texts.
             </p>
             <p className="mt-8">
@@ -51,7 +56,7 @@ export function About() {
                 className="inline-flex items-center text-base font-medium tracking-tight text-slate-900"
               >
                 <CupIcon className="h-10 w-10" />
-                <span className="ml-4">Support Catechize on Ko-fi</span>
+                <span className="ml-4">Support Hearers on Ko-fi</span>
               </Link>
             </p>
           </div>
