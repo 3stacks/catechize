@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { loadDoc, loadUnit } from '../data/load.ts'
+import { loadDoc, loadReading, loadUnit } from '../data/load.ts'
 import type { Span, Unit } from '../data/types.ts'
 import { href } from '../router.ts'
 import { db, getNote, removeRows, saveNote } from '../store/db.ts'
@@ -95,6 +95,8 @@ export function UnitView({ docId, unitId }: { docId: string; unitId: string }) {
         </a>
       </div>
 
+      <FurtherReading unitId={unitId} />
+
       <nav className="pager">
         {prev ? <a href={href('unit', docId, prev.id)}>← {prev.ref}</a> : <span />}
         {next ? <a href={href('unit', docId, next.id)}>{next.ref} →</a> : <span />}
@@ -102,6 +104,37 @@ export function UnitView({ docId, unitId }: { docId: string; unitId: string }) {
 
       {sheet && <ProofSheet content={sheet} onClose={() => setSheet(undefined)} />}
     </div>
+  )
+}
+
+/** Links to public-domain expositions of this answer: a chapter where one exists, then whole books. */
+function FurtherReading({ unitId }: { unitId: string }) {
+  const [reading] = useAsync(() => loadReading().catch(() => undefined), [])
+  const list = reading?.units[unitId]
+  if (!reading || !list?.length) return null
+  return (
+    <section className="card reading">
+      <h3>Further reading</h3>
+      <ul>
+        {list.map(([work, title, url, kind]) => {
+          const [book, author, year] = reading.works[work]
+          const host = new URL(url).hostname.replace(/^www\./, '')
+          return (
+            <li key={url}>
+              <a href={url} target="_blank" rel="noopener">
+                {kind === 'book' ? `${book} (whole book)` : title} ↗
+              </a>
+              <span className="muted small">
+                {' '}
+                {author}
+                {kind === 'book' ? `, ${year}` : `, ${book}, ${year}`}
+                {kind === 'excerpt' ? ' (extract)' : ''} · {host}
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 }
 

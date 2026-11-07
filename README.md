@@ -52,6 +52,23 @@ the other tradition stays in the reviews.
 `scripts/build-data.ts` gives each document a `tradition`. Add a new document
 to the `TRADITION` map there.
 
+## Links to other sites
+
+Each proof text links to its verse in the
+[Self-Interpreting Bible](https://self-interpreting-bible.pages.dev) of John Brown of Haddington. If that chapter is not
+online yet, the link does not show.
+
+- `scripts/fetch-sib.mjs` writes the list of online chapters to `public/sib.json`. CI runs it
+  before each build. If the site is not reachable, the build uses the copy in git.
+- `npm run data` writes `public/data/cited.json`. This file maps each verse to the answers that
+  cite it. The Self-Interpreting Bible reads it to link each verse back to those answers. The file
+  puts a proof of more than five verses under its first verse only.
+- Each answer can show a list of further reading. The list has public-domain expositions on
+  [Monergism](https://www.monergism.com) and [CCEL](https://ccel.org), for example Watson, Fisher,
+  Vincent, Ursinus, Ridgley and Shaw. `sources/reading.json` holds the links. `npm run data` writes
+  them to `public/data/reading.json`. Monergism blocks plain HTTP clients, so check its links in a
+  browser.
+
 ## Website
 
 `site/` holds the homepage, a Next.js static export from the Tailwind Plus
@@ -103,6 +120,27 @@ The workflows need two repository secrets:
 
 To add a custom domain, open the `catechize` project in the Cloudflare
 dashboard. Then open Custom domains.
+
+## Reminders
+
+Reminders are for the self-hosted server only. The hosted app keeps all data in the browser, so it
+has no server to send reminders, and Settings does not show the reminder card.
+
+On a self-hosted server, each device can turn on a daily reminder at a local hour. At that hour, on
+a day with answers due, the device gets a notification. On iPhone and iPad, the learner must first
+add the app to the Home Screen.
+
+A push carries no data. When a push arrives, the service worker (`public/push-sw.js`) counts the due
+answers in IndexedDB on the device. The server stores only the push subscription, the hour, the time
+zone and the next due time. The push code is in `shared/push.ts`.
+
+To turn on reminders:
+
+1. Run `node server/vapid.ts` to make a key pair.
+2. Set `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`.
+3. Optionally, set `VAPID_SUBJECT` to a `mailto:` address.
+
+A new key pair stops all current reminders.
 
 ## Sync
 

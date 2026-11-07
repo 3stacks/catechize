@@ -887,3 +887,27 @@ label.row + label.row {
 .app-foot a {
   color: var(--muted);
 }
+.passage .brown {
+  display: inline-block;
+  margin-top: 4px;
+}
+.reading ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+.reading li {
+  margin: 0 0 6px;
+}
+.reminder-error {
+  color: var(--again);
+}
+select {
+  font: inherit;
+  font-size: 0.95rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  padding: 9px 12px;
+  border-radius: 10px;
+  min-height: 40px;
+}

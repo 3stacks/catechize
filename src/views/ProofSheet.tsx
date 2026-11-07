@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { addVerse, loadPassageById } from '../data/load.ts'
+import { addVerse, loadPassageById, sibHref } from '../data/load.ts'
 import type { Note } from '../data/types.ts'
 import { formatPassage, passageFromId } from '../lib/refs.ts'
 import { href } from '../router.ts'
@@ -41,8 +41,9 @@ export function ProofSheet({ content, onClose }: { content: SheetContent; onClos
 
 function Passage({ id }: { id: string }) {
   const [verses] = useAsync(() => loadPassageById(id), [id])
-  const [added, setAdded] = useState(false)
   const p = passageFromId(id)
+  const [brown] = useAsync(async () => (p ? sibHref(p) : undefined), [id])
+  const [added, setAdded] = useState(false)
   if (!p) return null
   const long = (verses?.length ?? 0) > 12
   return (
@@ -71,6 +72,11 @@ function Passage({ id }: { id: string }) {
         </p>
       ) : (
         <p className="muted small">Loading…</p>
+      )}
+      {brown && (
+        <a className="small brown" href={brown} target="_blank" rel="noopener">
+          Open {formatPassage({ ...p, c2: p.c1, v2: p.v1 })} in the Self-Interpreting Bible ↗
+        </a>
       )}
     </div>
   )

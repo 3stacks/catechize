@@ -52,7 +52,7 @@ export function setToken(token: string) {
 }
 let sessionToken = ''
 
-const headers = (): HeadersInit => {
+export const headers = (): HeadersInit => {
   const t = getToken() || sessionToken
   return { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) }
 }

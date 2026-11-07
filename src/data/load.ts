@@ -25,6 +25,29 @@ function get<T>(path: string): Promise<T> {
 export const loadIndex = () => get<DataIndex>('index.json')
 export const loadHarmony = (id: string) => get<Harmony>(`harmonies/${id}.json`)
 
+/** Public-domain expositions per unit (scripts/build-data.ts, from sources/reading.json). */
+export interface ReadingIndex {
+  works: Record<string, [title: string, author: string, year: number]>
+  units: Record<string, [work: string, title: string, url: string, kind?: 'excerpt' | 'book'][]>
+}
+export const loadReading = () => get<ReadingIndex>('reading.json')
+
+/** Chapters of the Self-Interpreting Bible that are online (scripts/fetch-sib.mjs). */
+interface SibIndex {
+  base: string
+  books: Record<string, [slug: string, chapters: number[]]>
+}
+const sib = fetch(import.meta.env.BASE_URL + 'sib.json')
+  .then((r) => (r.ok ? (r.json() as Promise<SibIndex>) : undefined))
+  .catch(() => undefined)
+
+/** Link to the first verse of a passage in the Self-Interpreting Bible, if that chapter is online. */
+export async function sibHref(p: Passage): Promise<string | undefined> {
+  const book = (await sib)?.books[p.book]
+  if (!book || !book[1].includes(p.c1)) return undefined
+  return `${(await sib)!.base}/${book[0]}-${p.c1}.html${p.v1 ? `#v${p.c1}-${p.v1}` : ''}`
+}
+
 export async function loadDoc(id: string): Promise<Doc> {
   if (id === 'verses') return versesDoc()
   return get<Doc>(`docs/${id}.json`)

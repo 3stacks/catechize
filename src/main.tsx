@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { App } from './App.tsx'
 import './styles.css'
 import { startSync } from './store/sync.ts'
+import { watchSchedule } from './lib/push.ts'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -11,6 +12,7 @@ createRoot(document.getElementById('root')!).render(
 )
 
 startSync()
+watchSchedule()
 
 // Tell the homepage that this browser uses the app, so it opens the app next time.
 try {

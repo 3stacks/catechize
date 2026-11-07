@@ -4,6 +4,7 @@ import { extname, join, resolve, sep } from 'node:path'
 import { timingSafeEqual } from 'node:crypto'
 import { MAX_PUSH, type Health, type SyncRequest } from '../shared/protocol.ts'
 import { Store, invalidChanges } from './store.ts'
+import { parseReminder, sendDueReminders, type VapidKeys } from '../shared/push.ts'
 
 // Serves the built PWA from dist/ and the sync API from /api. One process,
 // one SQLite file, no other dependencies.
@@ -11,13 +12,20 @@ import { Store, invalidChanges } from './store.ts'
 //   PORT              default 3000
 //   DATA_DIR          default ./data; the database is DATA_DIR/catechize.db
 //   STATIC_DIR        default ./dist
-//   CATECHIZE_TOKEN   optional; when set, /api/sync needs "Authorization: Bearer <token>"
+//   CATECHIZE_TOKEN   optional; when set, /api/sync and /api/push need "Authorization: Bearer <token>"
+//   VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY
+//                     optional; turn on daily review reminders. `node server/vapid.ts` prints a pair.
+//   VAPID_SUBJECT     contact for the push services, default mailto:admin@localhost
 
 const PORT = Number(process.env.PORT ?? 3000)
 const DATA_DIR = process.env.DATA_DIR ?? 'data'
 const STATIC_DIR = resolve(process.env.STATIC_DIR ?? 'dist')
 const TOKEN = process.env.CATECHIZE_TOKEN || ''
 const MAX_BODY = 4_000_000
+const VAPID: VapidKeys | undefined =
+  process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY
+    ? { publicKey: process.env.VAPID_PUBLIC_KEY, privateKey: process.env.VAPID_PRIVATE_KEY, subject: process.env.VAPID_SUBJECT || 'mailto:admin@localhost' }
+    : undefined
 const VERSION = (JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string }).version
 
 const TYPES: Record<string, string> = {
@@ -32,9 +40,10 @@ const TYPES: Record<string, string> = {
   '.txt': 'text/plain; charset=utf-8',
 }
 
-export function createApp(store: Store, opts: { token?: string; staticDir?: string } = {}) {
+export function createApp(store: Store, opts: { token?: string; staticDir?: string; vapid?: VapidKeys } = {}) {
   const token = opts.token ?? TOKEN
   const root = opts.staticDir ?? STATIC_DIR
+  const vapid = 'vapid' in opts ? opts.vapid : VAPID
 
   const authorised = (req: IncomingMessage) => {
     if (!token) return true
@@ -63,6 +72,31 @@ export function createApp(store: Store, opts: { token?: string; staticDir?: stri
       const since = Number.isInteger(body.since) && body.since >= 0 ? body.since : 0
       const epoch = typeof body.epoch === 'string' ? body.epoch : undefined
       return json(res, 200, store.sync(since, body.changes, epoch))
+    }
+    if (path === '/api/push/key' && req.method === 'GET') {
+      if (!vapid) return json(res, 404, { error: 'reminders are off on this server' })
+      return json(res, 200, { publicKey: vapid.publicKey })
+    }
+    if (path === '/api/push' || path === '/api/push/remove') {
+      if (!vapid) return json(res, 404, { error: 'reminders are off on this server' })
+      if (req.method !== 'POST') return json(res, 405, { error: 'POST only' })
+      if (!authorised(req)) return json(res, 401, { error: 'unauthorised' })
+      let body: unknown
+      try {
+        body = JSON.parse(await readBody(req))
+      } catch (e) {
+        return json(res, (e as { status?: number }).status ?? 400, { error: (e as Error).message })
+      }
+      if (path === '/api/push/remove') {
+        const endpoint = (body as { endpoint?: unknown } | null)?.endpoint
+        if (typeof endpoint !== 'string') return json(res, 400, { error: 'endpoint required' })
+        store.removeReminder(endpoint)
+        return json(res, 200, { ok: true })
+      }
+      const r = parseReminder(body)
+      if (typeof r === 'string') return json(res, 400, { error: r })
+      store.putReminder(r)
+      return json(res, 200, { ok: true })
     }
     return json(res, 404, { error: 'not found' })
   }
@@ -136,9 +170,19 @@ function readBody(req: IncomingMessage): Promise<string> {
 if (import.meta.main) {
   const store = new Store(join(DATA_DIR, 'catechize.db'))
   const server = createApp(store).listen(PORT, () => {
-    console.log(`catechize ${VERSION} on :${PORT}, data in ${resolve(DATA_DIR)}${TOKEN ? ', token required' : ''}`)
+    console.log(`catechize ${VERSION} on :${PORT}, data in ${resolve(DATA_DIR)}${TOKEN ? ', token required' : ''}${VAPID ? ', reminders on' : ''}`)
   })
+  // Check for due reminders every five minutes.
+  const timer = VAPID
+    ? setInterval(() => {
+        sendDueReminders(store.reminders(), VAPID, (r, result) => {
+          if (result === 'sent') store.markSent(r.endpoint, Date.now())
+          if (result === 'gone') store.removeReminder(r.endpoint)
+        }).catch((e) => console.error('reminders:', e))
+      }, 5 * 60_000)
+    : undefined
   const stop = () => {
+    clearInterval(timer)
     server.close()
     store.close()
     process.exit(0)

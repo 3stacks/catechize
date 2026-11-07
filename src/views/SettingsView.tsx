@@ -4,6 +4,7 @@ import { db, getSettings, newId, saveSettings, type Settings } from '../store/db
 import { getToken, reviveDates, setToken, syncNow, useDataVersion, useSyncState } from '../store/sync.ts'
 import { SYNCED_TABLES } from '../../shared/protocol.ts'
 import { useAsync } from '../useAsync.ts'
+import { disableReminders, enableReminders, pushSupport, reminderHour } from '../lib/push.ts'
 
 const KOFI = 'https://ko-fi.com/lukeboyle'
 
@@ -90,6 +91,8 @@ export function SettingsView() {
         <p className="muted small">The most answers to review in one day. After a break, a limit spreads the backlog over a few days. The most overdue come first.</p>
       </section>
 
+      <ReminderCard />
+
       <SyncCard />
 
       <section className="card">
@@ -141,6 +144,93 @@ export function SettingsView() {
         <p className="muted small">Data built {new Date(index.builtAt).toLocaleString()}.</p>
       </section>
     </div>
+  )
+}
+
+const HOURS = Array.from({ length: 24 }, (_, h) => h)
+const hourLabel = (h: number) =>
+  new Date(2000, 0, 1, h).toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+
+/** A daily notification when answers are due. Each device chooses for itself. */
+function ReminderCard() {
+  const [support] = useAsync(pushSupport, [])
+  const [hour, setHour] = useState(reminderHour)
+  const [pick, setPick] = useState(hour ?? 8)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string>()
+
+  const turnOn = async (h: number) => {
+    setBusy(true)
+    setError(undefined)
+    const e = await enableReminders(h)
+    setBusy(false)
+    if (e) setError(e)
+    else setHour(h)
+  }
+
+  // No server to send reminders (the hosted app, or a server without VAPID keys): show nothing.
+  if (support && !support.ok && support.reason === 'server') return null
+
+  return (
+    <section className="card">
+      <h3>Daily reminder</h3>
+      {!support ? (
+        <p className="muted small">Checking…</p>
+      ) : !support.ok ? (
+        <p className="muted small">
+          {support.reason === 'install'
+            ? 'On iPhone and iPad, add Catechize to the Home Screen first: tap Share, then Add to Home Screen. Then open it from there to turn on reminders.'
+            : 'This browser cannot show reminders.'}
+        </p>
+      ) : (
+        <>
+          <div className="row wrap">
+            <select
+              value={pick}
+              disabled={busy}
+              onChange={(e) => {
+                const h = +e.target.value
+                setPick(h)
+                if (hour !== undefined) void turnOn(h)
+              }}
+              aria-label="Reminder time"
+            >
+              {HOURS.map((h) => (
+                <option key={h} value={h}>
+                  {hourLabel(h)}
+                </option>
+              ))}
+            </select>
+            {hour === undefined ? (
+              <button className="primary" disabled={busy} onClick={() => turnOn(pick)}>
+                Turn on
+              </button>
+            ) : (
+              <button
+                className="ghost"
+                disabled={busy}
+                onClick={async () => {
+                  setBusy(true)
+                  await disableReminders()
+                  setBusy(false)
+                  setHour(undefined)
+                }}
+              >
+                Turn off
+              </button>
+            )}
+          </div>
+          <p className="muted small">
+            {hour === undefined ? 'Get a notification on this device at this time when answers are due.' : `On. You get a notification at ${hourLabel(hour)} on days with answers to review.`} The
+            reminder service stores only this device's notification address, the time, your time zone and when the next answer is due. Your answers and progress stay on the device.
+          </p>
+          {error && <p className="small reminder-error">{error}</p>}
+        </>
+      )}
+    </section>
   )
 }
 
