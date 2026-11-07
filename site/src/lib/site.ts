@@ -35,7 +35,7 @@ export function countLabel(d: DocSummary) {
 }
 
 /** The public address of the site, for canonical URLs and the sitemap. */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://catechize.pages.dev').replace(/\/+$/, '')
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://hearers.app').replace(/\/+$/, '')
 
 /** Open a document, or one unit of it, in the app. */
 export const appDoc = (docId: string, unitId?: string) => (unitId ? `${APP_URL}#/unit/${docId}/${unitId}` : `${APP_URL}#/doc/${docId}`)
