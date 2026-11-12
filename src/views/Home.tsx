@@ -6,7 +6,7 @@ import { learnedToday } from '../store/srs.ts'
 import { loadStats, troubleSpots } from '../store/stats.ts'
 import { useDataVersion } from '../store/sync.ts'
 import { useAsync } from '../useAsync.ts'
-import { reviewQueue } from './Sessions.tsx'
+import { reviewQueue } from '../store/queue.ts'
 
 export const isLordsDay = () => new Date().getDay() === 0
 

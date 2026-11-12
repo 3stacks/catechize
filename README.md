@@ -20,6 +20,7 @@ npm run dev        # the app on http://localhost:5173, without sync
 npm start          # the server on http://localhost:3000 (run `npm run build` first)
 npm test
 npm run build      # the static PWA in dist/
+npm run mobile     # the iOS and Android app, in Expo Go (install apps/mobile first)
 ```
 
 The repository includes the generated data in `public/data/`. The app runs
@@ -35,6 +36,19 @@ The app works in two ways:
 
 To get sync in development, run `npm start` in one terminal and `npm run dev`
 in a second terminal. Vite sends `/api` requests to port 3000.
+
+## Mobile app
+
+`apps/mobile/` holds the iOS and Android app, made with Expo. It has its own `package.json` and its
+own `node_modules`. It uses the code in `src/data/`, `src/lib/`, `src/store/` and `shared/` with no
+copy. It keeps the progress on the device, and it can sync with a self-hosted server. Read
+[apps/mobile/README.md](apps/mobile/README.md) to run it in Expo Go and to build it for the stores.
+
+The app gets two modules in place of the web modules. So the web app does not change:
+
+- `src/data/files.ts`: the web app fetches the data. The mobile app reads it from its bundle.
+- `src/store/host.ts`: the web app syncs with its own server. The mobile app syncs with the server
+  that the learner types in Settings.
 
 ## Traditions
 
@@ -239,6 +253,7 @@ src/data/       data types and loaders
 src/store/      IndexedDB (Dexie), FSRS scheduling, stats and sync
 src/views/      screens; Drill.tsx is the memorisation engine
 shared/         the sync protocol, used by the app and the server
+apps/mobile/    the iOS and Android app (Expo), with its own package.json
 server/         HTTP server, SQLite store, backup script
 site/           the homepage (Next.js), built into site/out/ with the app at /app/
 ```

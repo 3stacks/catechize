@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Hearers",
+    "slug": "hearers",
+    "scheme": "hearers",
+    "version": "1.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#f8fafc",
+    "ios": {
+      "bundleIdentifier": "com.lukeboyle.hearers",
+      "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.lukeboyle.hearers",
+      "adaptiveIcon": {
+        "backgroundColor": "#7a2e2e",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "softwareKeyboardLayoutMode": "resize",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-sqlite",
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "color": "#7a2e2e"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 120,
+          "backgroundColor": "#f8fafc",
+          "dark": {
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#0f172a"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": false
+    }
+  }
+}

@@ -5,6 +5,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 // Relative base so the build works from any path (GitHub Pages, a subfolder, file server).
 export default defineConfig({
   base: './',
+  // Use one tsconfig for every file. Otherwise the root tests read
+  // apps/mobile/tsconfig.json, which needs the packages of the mobile app.
+  tsconfig: './tsconfig.json',
   // `npm start` in another terminal gives the dev server sync.
   server: { proxy: { '/api': 'http://localhost:3000' } },
   plugins: [

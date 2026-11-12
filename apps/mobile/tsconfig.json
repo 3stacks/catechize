@@ -1,0 +1,20 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    // The shared code in ../../src imports these packages. Point TypeScript at
+    // this app's copies, so it does not need the root package installed.
+    // Metro does not read these paths (app.json: tsconfigPaths is false).
+    "paths": {
+      "dexie": ["./node_modules/dexie"],
+      "ts-fsrs": ["./node_modules/ts-fsrs"],
+      "react": ["./node_modules/@types/react"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  // The tests run with the root package (npm test at the repository root).
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

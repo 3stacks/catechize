@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { db, SYNC_MARK, type SyncMark } from './db.ts'
 import { MAX_PUSH, SYNCED_TABLES, type Change, type Health, type SyncRequest, type SyncResponse, type SyncedTable } from '../../shared/protocol.ts'
+import { apiBase, isOffline, isVisible, loadToken, onWake, storeToken } from './host.ts'
 
 // Copies learner state between IndexedDB and the server's SQLite database.
 //
@@ -11,10 +12,8 @@ import { MAX_PUSH, SYNCED_TABLES, type Change, type Health, type SyncRequest, ty
 // The app works the same with no server (a static host, or offline): sync
 // finds no API and stays idle. It runs at start, shortly after each change,
 // when the device comes back online or the app comes back into view, and
-// every few minutes.
+// every few minutes. host.ts says where the server is.
 
-const API = import.meta.env.BASE_URL + 'api/'
-const TOKEN_KEY = 'catechize.token'
 const EVERY = 5 * 60_000
 
 export type SyncState =
@@ -32,21 +31,10 @@ const setState = (s: SyncState) => {
   emit()
 }
 
-export const getToken = () => {
-  try {
-    return localStorage.getItem(TOKEN_KEY) ?? ''
-  } catch {
-    return ''
-  }
-}
+export const getToken = () => loadToken()
 
 export function setToken(token: string) {
-  try {
-    if (token) localStorage.setItem(TOKEN_KEY, token)
-    else localStorage.removeItem(TOKEN_KEY)
-  } catch {
-    // private mode: the token lasts for this session only
-  }
+  storeToken(token)
   sessionToken = token
   void syncNow()
 }
@@ -65,8 +53,10 @@ const meta = {
 let server: Health | null | undefined // undefined = not probed yet
 async function probe(): Promise<Health | null> {
   if (server !== undefined) return server
+  const api = apiBase()
+  if (!api) return (server = null)
   try {
-    const r = await fetch(API + 'health', { cache: 'no-store' })
+    const r = await fetch(api + 'health', { cache: 'no-store' })
     const ct = r.headers.get('content-type') ?? ''
     server = r.ok && ct.includes('json') ? ((await r.json()) as Health) : null
   } catch {
@@ -74,6 +64,12 @@ async function probe(): Promise<Health | null> {
     return null
   }
   return server
+}
+
+/** Look for the server again on the next sync, for example after the learner changes its address. */
+export function forgetServer() {
+  server = undefined
+  setState({ kind: 'idle' })
 }
 
 let running: Promise<void> | null = null
@@ -99,7 +95,7 @@ export function syncNow(): Promise<void> {
 }
 
 async function syncOnce() {
-  if (typeof navigator !== 'undefined' && navigator.onLine === false) return
+  if (isOffline()) return
   const health = await probe()
   if (!health) {
     if (server === null) setState({ kind: 'off' })
@@ -115,7 +111,7 @@ async function syncOnce() {
         since: await meta.get('seq', 0),
         changes,
       }
-      const r = await fetch(API + 'sync', { method: 'POST', headers: headers(), body: JSON.stringify(req) })
+      const r = await fetch(apiBase() + 'sync', { method: 'POST', headers: headers(), body: JSON.stringify(req) })
       if (r.status === 401) return setState({ kind: 'locked' })
       if (!r.ok) throw new Error(`server said ${r.status}`)
       const res = (await r.json()) as SyncResponse
@@ -253,9 +249,8 @@ export function syncSoon(delay = 1500) {
 
 export function startSync() {
   void syncNow()
-  addEventListener('online', () => void syncNow())
-  document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && void syncNow())
-  setInterval(() => document.visibilityState === 'visible' && void syncNow(), EVERY)
+  onWake(() => void syncNow())
+  setInterval(() => isVisible() && void syncNow(), EVERY)
   // Every local write to a synced table schedules a push.
   for (const t of SYNCED_TABLES) {
     const table = db.table(t)
