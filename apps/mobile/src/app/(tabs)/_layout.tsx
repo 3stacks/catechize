@@ -1,3 +1,4 @@
+import { Platform } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Tabs } from 'expo-router'
 import type { ComponentProps } from 'react'
@@ -23,8 +24,9 @@ export default function TabsLayout() {
         headerShadowVisible: false,
         tabBarActiveTintColor: c.accent,
         tabBarInactiveTintColor: c.muted,
-        tabBarStyle: { backgroundColor: c.surface, borderTopColor: c.line },
-        tabBarLabelStyle: { fontFamily: font.medium },
+        // On the web the default bar height clips the descenders of the labels.
+        tabBarStyle: { backgroundColor: c.surface, borderTopColor: c.line, ...(Platform.OS === 'web' && { height: 58 }) },
+        tabBarLabelStyle: { fontFamily: font.medium, fontSize: 11, lineHeight: 14 },
         sceneStyle: { backgroundColor: c.bg },
       }}>
       <Tabs.Screen name="index" options={{ title: 'Today', headerTitle: 'Hearers', tabBarIcon: icon('sunny-outline') }} />
