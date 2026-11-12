@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Unit } from '../data/types.ts'
-import { gradeChunk, normWord, scoreSpoken, tokenize, AGAIN, EASY, GOOD, HARD, type Grade, type Token } from '../lib/grade.ts'
+import { normWord, scoreSpoken, tokenize, type Token } from '../lib/grade.ts'
+import { chunkResults as gradeWords, cycleGrade, gradeLabel, toRecord, type WordStatus } from '../lib/drill.ts'
 import type { InputMode, ReviewRow } from '../store/db.ts'
 import { recordDrill, type ChunkResult } from '../store/srs.ts'
 import { canListen, listen, speak } from '../lib/speech.ts'
@@ -15,7 +16,7 @@ import { canListen, listen, speak } from '../lib/speech.ts'
 // the learner has had the chance to forgive a typo.
 
 type Stage = 'read' | 'trace' | 'fade' | 'recall' | 'done'
-type Status = 'pending' | 'ok' | 'slip' | 'revealed' | 'given'
+type Status = WordStatus
 
 interface Props {
   unit: Unit
@@ -119,21 +120,7 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, fade = t
   const finish = (final: Status[]) => {
     if (stage === 'trace') return restart(fade ? 'fade' : 'recall')
     if (stage === 'fade') return restart('recall')
-    const byChunk = new Map<number, { errors: number; words: number; revealed: boolean }>()
-    order.forEach((i) => {
-      const c = chunkOf[i]
-      const r = byChunk.get(c) ?? { errors: 0, words: 0, revealed: false }
-      r.words++
-      if (final[i] === 'slip' || final[i] === 'given') r.errors++
-      if (final[i] === 'revealed') r.revealed = true
-      byChunk.set(c, r)
-    })
-    const chunkResults: ChunkResult[] = [...byChunk].map(([index, r]) => ({
-      index,
-      grade: gradeChunk(r.errors, r.words, r.revealed),
-      errors: r.errors,
-      words: r.words,
-    }))
+    const chunkResults = gradeWords(order, chunkOf, final)
     pending.current = chunkResults
     setResults(chunkResults)
     setStage('done')
@@ -142,8 +129,7 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, fade = t
   /** The learner says a chunk was right after all (a typo, a misheard word). */
   const regrade = (index: number) => {
     if (!results) return
-    const cycle = (g: Grade): Grade => (g === AGAIN ? HARD : g === HARD ? GOOD : AGAIN)
-    const next = results.map((r) => (r.index === index ? { ...r, grade: cycle(r.grade) } : r))
+    const next = results.map((r) => (r.index === index ? { ...r, grade: cycleGrade(r.grade) } : r))
     pending.current = next
     setResults(next)
   }
@@ -342,21 +328,6 @@ export function Drill({ unit, docId, inputMode, kind, dueChunks, whole, fade = t
   )
 }
 
-/**
- * What to save. A whole recitation gets one overall grade; chunks that broke
- * down are also sent back through their own reviews.
- */
-function toRecord(chunkResults: ChunkResult[], whole?: boolean): ChunkResult[] {
-  if (!whole) return chunkResults
-  const errors = chunkResults.reduce((n, r) => n + r.errors, 0)
-  const words = chunkResults.reduce((n, r) => n + r.words, 0)
-  const grade = chunkResults.some((r) => r.grade === AGAIN) ? AGAIN : gradeChunk(errors, words, false)
-  // The learner may have forgiven every slip: then the whole recitation is Good.
-  const forgiven = chunkResults.every((r) => r.grade >= GOOD)
-  const wholeResult: ChunkResult = { index: -1, grade: forgiven ? GOOD : grade, errors, words }
-  return [wholeResult, ...chunkResults.filter((r) => r.grade === AGAIN)]
-}
-
 function Prompt({ unit }: { unit: Unit }) {
   return (
     <div className="prompt">
@@ -408,8 +379,4 @@ function TextView(props: {
   })
   if (at < unit.text.length) parts.push(unit.text.slice(at))
   return <p className="drill-text">{parts}</p>
-}
-
-export function gradeLabel(g: Grade) {
-  return { [AGAIN]: 'Again', [HARD]: 'Hard', [GOOD]: 'Good', [EASY]: 'Easy' }[g]
 }

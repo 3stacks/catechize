@@ -4,24 +4,9 @@ import type { BookText, DataIndex, Doc, Harmony, Unit } from './types.ts'
 import { passageFromId, type Passage } from '../lib/refs.ts'
 import { chunk } from '../lib/chunk.ts'
 import { formatPassage, passageId } from '../lib/refs.ts'
+import { get, sib } from './files.ts'
 
-// Static data is fetched once per session and kept in memory; the service
-// worker makes it available offline.
-
-const base = import.meta.env.BASE_URL + 'data/'
-const cache = new Map<string, Promise<unknown>>()
-
-function get<T>(path: string): Promise<T> {
-  if (!cache.has(path))
-    cache.set(
-      path,
-      fetch(base + path).then((r) => {
-        if (!r.ok) throw new Error(`${path}: ${r.status}`)
-        return r.json()
-      }),
-    )
-  return cache.get(path) as Promise<T>
-}
+// files.ts reads the static data: the web app fetches it, the mobile app has it in its bundle.
 
 export const loadIndex = () => get<DataIndex>('index.json')
 export const loadHarmony = (id: string) => get<Harmony>(`harmonies/${id}.json`)
@@ -32,15 +17,6 @@ export interface ReadingIndex {
   units: Record<string, [work: string, title: string, url: string, kind?: 'excerpt' | 'book'][]>
 }
 export const loadReading = () => get<ReadingIndex>('reading.json')
-
-/** Chapters of the Self-Interpreting Bible that are online (scripts/fetch-sib.mjs). */
-interface SibIndex {
-  base: string
-  books: Record<string, [slug: string, chapters: number[]]>
-}
-const sib = fetch(import.meta.env.BASE_URL + 'sib.json')
-  .then((r) => (r.ok ? (r.json() as Promise<SibIndex>) : undefined))
-  .catch(() => undefined)
 
 /** Link to the first verse of a passage in the Self-Interpreting Bible, if that chapter is online. */
 export async function sibHref(p: Passage): Promise<string | undefined> {

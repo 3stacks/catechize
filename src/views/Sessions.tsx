@@ -4,18 +4,11 @@ import { loadDoc, loadUnit } from '../data/load.ts'
 import type { Unit } from '../data/types.ts'
 import { href } from '../router.ts'
 import { db, getNote, getSettings, type Settings } from '../store/db.ts'
-import { dueUnits, learnedToday, type DueUnit } from '../store/srs.ts'
-import { troubleSpots, unitsReviewedToday, type TroubleUnit } from '../store/stats.ts'
+import { learnedToday } from '../store/srs.ts'
+import { reviewQueue } from '../store/queue.ts'
+import { troubleSpots, type TroubleUnit } from '../store/stats.ts'
 import { useAsync } from '../useAsync.ts'
 import { Drill } from './Drill.tsx'
-
-/** Units to review now, within the daily limit. */
-export async function reviewQueue(settings: Settings): Promise<{ due: DueUnit[]; held: number }> {
-  const all = await dueUnits()
-  if (!settings.dailyReviewLimit) return { due: all, held: 0 }
-  const left = Math.max(0, settings.dailyReviewLimit - (await unitsReviewedToday()))
-  return { due: all.slice(0, left), held: Math.max(0, all.length - left) }
-}
 
 /** Work through everything due, one unit at a time. */
 export function ReviewSession() {
