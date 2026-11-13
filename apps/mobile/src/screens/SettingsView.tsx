@@ -1,6 +1,6 @@
 import Constants from 'expo-constants'
-import { useState } from 'react'
-import { Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { useRef, useState, type ComponentRef } from 'react'
+import { Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View, type LayoutChangeEvent } from 'react-native'
 import { loadIndex } from '../../../../src/data/load.ts'
 import { track } from '../../../../src/lib/track.ts'
 import { db, getSettings, saveSettings, type Settings } from '../../../../src/store/db.ts'
@@ -128,6 +128,18 @@ function ReminderCard() {
   const [pick, setPick] = useState(hour ?? 8)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
+  // The row starts at midnight, so the chosen hour can be off the screen. Show it in the middle.
+  // A child can report its layout before the row does, so scroll when both are known.
+  const row = useRef<ComponentRef<typeof ScrollView>>(null)
+  const rowWidth = useRef(0)
+  const pickBox = useRef<{ x: number; width: number }>(undefined)
+  const shown = useRef(false)
+  const showPick = () => {
+    const box = pickBox.current
+    if (shown.current || !box || !rowWidth.current) return
+    shown.current = true
+    row.current?.scrollTo({ x: Math.max(0, box.x - (rowWidth.current - box.width) / 2), animated: false })
+  }
 
   const turnOn = async (h: number) => {
     setBusy(true)
@@ -141,7 +153,15 @@ function ReminderCard() {
   return (
     <Card>
       <T v="h3">Daily reminder</T>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={st.hours}>
+      <ScrollView
+        ref={row}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={st.hours}
+        onLayout={(e) => {
+          rowWidth.current = e.nativeEvent.layout.width
+          showPick()
+        }}>
         {Array.from({ length: 24 }, (_, h) => (
           <Pressable
             key={h}
@@ -150,6 +170,14 @@ function ReminderCard() {
               setPick(h)
               if (hour !== undefined) void turnOn(h)
             }}
+            onLayout={
+              h === pick
+                ? (e: LayoutChangeEvent) => {
+                    pickBox.current = e.nativeEvent.layout
+                    showPick()
+                  }
+                : undefined
+            }
             accessibilityRole="radio"
             accessibilityState={{ checked: pick === h }}
             style={[st.hour, { borderColor: pick === h ? c.accent : c.line, backgroundColor: pick === h ? c.accentSoft : c.surface }]}>
