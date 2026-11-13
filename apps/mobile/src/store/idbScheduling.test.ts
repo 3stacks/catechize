@@ -16,7 +16,7 @@ let n = 0
 
 // fake-indexeddb calls globalThis.setImmediate for each task. Vitest loads the
 // package outside Vite, so a mock cannot replace its scheduling.js. These tests
-// set setImmediate instead. The last test checks the swap in Metro.
+// set setImmediate instead. The last test checks the swap rule of Metro.
 async function transaction() {
   const { indexedDB, IDBKeyRange } = await import('fake-indexeddb')
   const { default: Dexie } = await import('dexie')
@@ -46,15 +46,8 @@ describe('fake-indexeddb in React Native', () => {
 
   it('uses the scheduler of the app in Metro, for each build of fake-indexeddb', () => {
     const require = createRequire(import.meta.url)
-    const config = require(path.join(app, 'metro.config.js')) as {
-      resolver: { resolveRequest: (context: unknown, moduleName: string, platform: string) => { type: string; filePath?: string } }
-    }
-    for (const build of ['esm', 'cjs']) {
-      const context = {
-        originModulePath: path.join(app, `node_modules/fake-indexeddb/build/${build}/lib/Database.js`),
-        resolveRequest: () => ({ type: 'sourceFile', filePath: scheduling(build) }),
-      }
-      expect(config.resolver.resolveRequest(context, './scheduling.js', 'ios').filePath).toBe(path.join(app, 'src/store/idbScheduling.ts'))
-    }
+    const { swapIdbScheduling } = require(path.join(app, 'idbSchedulingSwap.js')) as { swapIdbScheduling: (filePath: string) => string | undefined }
+    for (const build of ['esm', 'cjs']) expect(swapIdbScheduling(scheduling(build))).toBe(path.join(app, 'src/store/idbScheduling.ts'))
+    expect(swapIdbScheduling(path.join(app, 'node_modules/fake-indexeddb/build/esm/lib/Database.js'))).toBeUndefined()
   })
 })
