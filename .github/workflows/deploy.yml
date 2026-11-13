@@ -41,7 +41,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
           path: repo
 
-      - name: Check the token, and make the Pages project if it is missing
+      - name: Check the token and the Pages project
         id: project
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

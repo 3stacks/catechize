@@ -55,7 +55,7 @@ jobs:
           ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: echo "ready=$([ -n "$TOKEN" ] && [ -n "$ACCOUNT" ] && echo yes || echo no)" >> "$GITHUB_OUTPUT"
 
-      - name: Check the token, and make the Pages project if it is missing
+      - name: Check the token and the Pages project
         if: steps.secrets.outputs.ready == 'yes'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
