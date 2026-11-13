@@ -1,0 +1,13 @@
+{
+  "bg": ["#8a3434", "#3a1414"],
+  "accent": "#f4cdc9",
+  "ink": "#ffffff",
+  "sub": "#f4dcd9",
+  "motif": "rule",
+  "panels": [
+    { "title": "Learn the catechism\nby heart", "body": "Type the first letter of each word.\nHearers shows the rest.", "shot": "raw/trace.png" },
+    { "title": "The Scripture\nbehind each phrase", "body": "Tap a phrase to read its proof texts\nin the King James Version.", "shot": "raw/proof.png" },
+    { "title": "The confessions\nof the Reformation", "body": "The catechisms, the confessions\nand the creeds.", "shot": "raw/library.png" },
+    { "title": "One question\nat a time", "body": "Choose how many new answers\nto learn each day.", "shot": "raw/doc.png" }
+  ]
+}

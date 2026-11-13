@@ -107,10 +107,9 @@ No account is needed. Choose a tradition (Reformed or Lutheran), then open a cat
 | Play feature graphic | 1024 × 500 | Required. `store/feature-graphic.png` |
 | Play icon | 512 × 512 | Required. `store/play-icon.png` |
 
-Take the screenshots on the iPhone 16 Pro Max simulator. Suggested screens:
+The screenshots are in `store/screenshots/`. They show these screens:
 
-1. Home: the documents of your tradition, with progress
-2. A question, with the answer hidden clause by clause
-3. A review, with the answer shown
-4. A proof text in the King James Version
-5. Settings: reminders and backup
+1. Q. 1 of the Shorter Catechism while you type the answer
+2. The proof texts of a phrase, in the King James Version
+3. The library
+4. The questions of the Shorter Catechism
