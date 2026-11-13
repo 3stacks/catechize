@@ -147,10 +147,10 @@ each commandment ↔ WSC / WLC / Heidelberg questions.
 
 Private use only for now. Before any public release:
 
-- **Heidelberg**: upstream text appears to be the Canadian Reformed *Book of
-  Praise* translation (copyright). Swap for Schaff (1877).
-- **Belgic**: upstream text appears to be the CRC 1985 translation
-  (copyright). Swap for a public-domain translation.
+- **Heidelberg** and **Belgic**: the English text is from Schaff, *The Creeds
+  of Christendom*, vol. 3 (1877). It is in the public domain. The Belgic text
+  is the translation of the Reformed (Dutch) Church in America. The proof
+  texts of the Heidelberg Catechism come from Creeds.json.
 - **WSC proof texts**: the OPC's footnote selection. References are facts,
   but confirm before publishing or switch to the 1648 Assembly proofs.
 - **Nicene wording**: from the annotated docx (LSB-style); confirm the

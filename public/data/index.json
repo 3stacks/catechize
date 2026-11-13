@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-05T23:42:03.586Z",
+ "builtAt": "2026-11-13T01:48:34.532Z",
  "docs": [
   {
    "id": "wsc",
@@ -65,10 +65,10 @@
    "kind": "catechism",
    "year": "1563",
    "source": {
-    "name": "Creeds.json (NonlinearFruit)",
-    "url": "https://github.com/NonlinearFruit/Creeds.json",
-    "license": "Labelled public domain upstream; see note",
-    "note": "This English text appears to be the Canadian Reformed Book of Praise translation, which is under copyright. Fine for private use; swap for Schaff (1877) before any public release."
+    "name": "Philip Schaff, The Creeds of Christendom, vol. 3 (1877)",
+    "url": "https://ccel.org/ccel/schaff/creeds3",
+    "license": "Public domain",
+    "note": "English text from Schaff (1877). The proof texts come from Creeds.json, at github.com/NonlinearFruit/Creeds.json. A script aligns them to this text."
    },
    "tradition": "reformed",
    "unitCount": 129
@@ -80,10 +80,10 @@
    "kind": "confession",
    "year": "1561",
    "source": {
-    "name": "Creeds.json (NonlinearFruit)",
-    "url": "https://github.com/NonlinearFruit/Creeds.json",
-    "license": "Labelled public domain upstream; see note",
-    "note": "This English text appears to be the CRC 1985 translation, which is under copyright. Fine for private use; swap for a public-domain translation before any public release."
+    "name": "Philip Schaff, The Creeds of Christendom, vol. 3 (1877)",
+    "url": "https://ccel.org/ccel/schaff/creeds3",
+    "license": "Public domain",
+    "note": "English text from Schaff (1877). It is the translation of the Reformed (Dutch) Church in America, made from the Latin."
    },
    "tradition": "reformed",
    "unitCount": 37
