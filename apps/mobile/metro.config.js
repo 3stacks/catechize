@@ -14,6 +14,12 @@ const swaps = new Map([
   [path.join(root, 'src/store/host.ts'), path.join(__dirname, 'src/shims/sync-host.ts')],
 ])
 
+// fake-indexeddb schedules its tasks with setImmediate. In React Native that is
+// a microtask, and transactions then commit too early. src/store/idbScheduling.ts
+// uses setTimeout.
+const IDB_SCHEDULING = /[\\/]fake-indexeddb[\\/]build[\\/](esm|cjs)[\\/]lib[\\/]scheduling\.js$/
+const idbScheduling = path.join(__dirname, 'src/store/idbScheduling.ts')
+
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // A package that the shared code imports (react, dexie, ts-fsrs) comes from
   // this app's node_modules, so there is one copy of each.
@@ -22,6 +28,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   const from = shared && bare ? { ...context, originModulePath: path.join(__dirname, 'index.ts') } : context
   const result = from.resolveRequest(from, moduleName, platform)
   if (result.type === 'sourceFile' && swaps.has(result.filePath)) return { type: 'sourceFile', filePath: swaps.get(result.filePath) }
+  if (result.type === 'sourceFile' && IDB_SCHEDULING.test(result.filePath)) return { type: 'sourceFile', filePath: idbScheduling }
   return result
 }
 
