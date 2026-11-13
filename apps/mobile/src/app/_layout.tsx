@@ -9,7 +9,7 @@ import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
-import { Text, View } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 import { boot } from '../store/boot.ts'
 import { font, useColors } from '../lib/theme.ts'
 
@@ -24,7 +24,11 @@ export default function Layout() {
   useEffect(() => {
     boot().then(
       () => setReady(true),
-      (e: Error) => setError(e.message),
+      (e: Error) => {
+        // In a development build, show the stack: the message alone does not say which step failed.
+        if (__DEV__) console.error(e)
+        setError(__DEV__ ? `${e.message}\n\n${e.stack ?? ''}` : e.message)
+      },
     )
   }, [])
   const shown = (loaded || failed) && (ready || error)
@@ -34,9 +38,11 @@ export default function Layout() {
   if (!shown) return null
   if (error)
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, backgroundColor: c.bg }}>
-        <Text style={{ color: c.text, fontSize: 16, textAlign: 'center' }}>Hearers cannot open your data. {error}</Text>
-      </View>
+      <ScrollView style={{ flex: 1, backgroundColor: c.bg }} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}>
+        <Text selectable style={{ color: c.text, fontSize: 16, textAlign: 'center' }}>
+          Hearers cannot open your data. {error}
+        </Text>
+      </ScrollView>
     )
 
   return (
