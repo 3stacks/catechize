@@ -8,3 +8,5 @@ sources/cache
 /site/node_modules
 .dev.vars
 .wrangler/
+google-service-account.json
+.claude/worktrees/

@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     '/',
     '/docs/self-hosting/',
+    '/privacy/',
     ...(Object.keys(SECTIONS) as Section[]).map((s) => `/${s}/`),
     ...DOC_PAGES.map(pagePath),
     ...VERSES.map((v) => `/scripture/${refSlug(parseRef(v.id))}/`),
