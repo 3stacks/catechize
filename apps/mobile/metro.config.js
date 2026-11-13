@@ -14,6 +14,9 @@ const swaps = new Map([
   [path.join(root, 'src/store/host.ts'), path.join(__dirname, 'src/shims/sync-host.ts')],
 ])
 
+// fake-indexeddb must not schedule its tasks as microtasks (idbSchedulingSwap.js).
+const { swapIdbScheduling } = require('./idbSchedulingSwap.js')
+
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // A package that the shared code imports (react, dexie, ts-fsrs) comes from
   // this app's node_modules, so there is one copy of each.
@@ -22,6 +25,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   const from = shared && bare ? { ...context, originModulePath: path.join(__dirname, 'index.ts') } : context
   const result = from.resolveRequest(from, moduleName, platform)
   if (result.type === 'sourceFile' && swaps.has(result.filePath)) return { type: 'sourceFile', filePath: swaps.get(result.filePath) }
+  const idb = result.type === 'sourceFile' ? swapIdbScheduling(result.filePath) : undefined
+  if (idb) return { type: 'sourceFile', filePath: idb }
   return result
 }
 
