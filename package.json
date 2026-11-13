@@ -11,6 +11,7 @@
     "test": "vitest run",
     "data": "node scripts/build-data.ts",
     "extract:creeds": "python3 -I scripts/extract-creeds-docx.py",
+    "extract:schaff": "python3 -I scripts/extract-schaff.py sources/cache/schaff-creeds3.xml sources/schaff.json",
     "site": "npm run build && npm --prefix site run build && node scripts/merge-site.mjs",
     "mobile": "node scripts/mobile-data.ts && npm --prefix apps/mobile start"
   },

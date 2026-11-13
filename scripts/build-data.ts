@@ -218,8 +218,13 @@ function buildWsc(): Doc {
   })
 }
 
+// Words that start a new clause. mapOffset does not move a marker past them.
+const GAP_STOP = new Set(['and', 'but', 'or', 'nor', 'that', 'which', 'who', 'whom', 'whose', 'so', 'yea', 'for', 'whereby', 'wherein', 'wherefore', 'therefore', 'secondly', 'thirdly', 'then', 'since', 'as', 'while', 'because', 'though', 'if', 'yet', 'also',
+  'by', 'of', 'to', 'in', 'into', 'with', 'unto', 'from', 'according', 'afterwards', 'neither', 'not', 'the', 'a', 'an',
+  'he', 'she', 'it', 'we', 'they', 'i', 'thou', 'ye'])
+
 /** Map a character offset in text A to the corresponding offset in text B by aligning words (LCS). */
-function mapOffset(a: string, b: string, at: number): number {
+function mapOffset(a: string, b: string, at: number, gapEnd = false): number {
   const A = tokenize(a)
   const B = tokenize(b)
   const n = A.length
@@ -236,7 +241,29 @@ function mapOffset(a: string, b: string, at: number): number {
   // The marker follows the last A-token starting before `at` (OPC markers sit
   // before trailing punctuation: "grace [1],"); use the
   // nearest aligned token at or before it.
-  for (let k = A.reduce((acc, t, i) => (t.start < at ? i : acc), -1); k >= 0; k--) if (toB[k] >= 0) return B[toB[k]].end
+  const before = A.reduce((acc, t, i) => (t.start < at ? i : acc), -1)
+  for (let k = before; k >= 0; k--) {
+    if (toB[k] < 0) continue
+    // With gapEnd, the phrase before the marker takes the words of B that
+    // match nothing in A. These are the words between the marker and the next
+    // matched word. Thus a translation with a different word, for example
+    // "behalf" for "benefit", keeps the whole phrase. The phrase stops at a
+    // clause break or before a conjunction.
+    let end = B[toB[k]].end
+    if (gapEnd) {
+      const next = toB.findIndex((j, i) => i > before && j >= 0)
+      const stop = next >= 0 ? toB[next] : m
+      const breaksAfter = (j: number) => /[,;:.?!]/.test(b.slice(B[j].end, B[j + 1]?.start ?? b.length))
+      for (let j = toB[k]; j < stop; j++) {
+        if (j > toB[k]) {
+          if (GAP_STOP.has(B[j].norm)) break
+          end = B[j].end
+        }
+        if (breaksAfter(j)) break
+      }
+    }
+    return end
+  }
   return 0
 }
 
@@ -295,8 +322,77 @@ const LORDS_DAYS = [
   88, 92, 96, 99, 101, 103, 104, 105, 108, 110, 112, 113, 116, 120, 122, 123, 124, 125, 126, 127,
 ]
 
+// Heidelberg Catechism and Belgic Confession: the English text in Schaff,
+// The Creeds of Christendom, vol. 3 (1877). scripts/extract-schaff.py writes
+// sources/schaff.json from the CCEL edition.
+const schaff: {
+  heidelberg: { Number: number; Question: string; Answer: string }[]
+  belgic: { Article: number; Title: string; Content: string }[]
+} = readJson(join(SRC, 'schaff.json'))
+
+const SOURCE_SCHAFF = {
+  name: 'Philip Schaff, The Creeds of Christendom, vol. 3 (1877)',
+  url: 'https://ccel.org/ccel/schaff/creeds3',
+  license: 'Public domain',
+}
+
+/**
+ * Move footnote markers from one text of a unit to a different text of the
+ * same unit. The function aligns the words. The markers stay in order. A
+ * marker at the end of the old text goes to the end of the new text.
+ */
+function alignMarkers(from: string, to: string, markers: { id: string; at: number }[]): { id: string; at: number }[] {
+  const clauseEnd = /[,;:.?!]['"’)]*$/
+  let last = 0
+  return markers.map((mk) => {
+    const end = /^[\s.;:,]*$/.test(from.slice(mk.at))
+    let at = end ? to.length : mapOffset(from, to, mk.at, true)
+    // When the clause ends within three words, a marker that closed a clause
+    // in the old text closes the clause here too.
+    if (!end && clauseEnd.test(from.slice(0, mk.at)) && !clauseEnd.test(to.slice(0, at))) {
+      const ahead = [...to.slice(at).matchAll(/\S+/g)].slice(0, 3)
+      const hit = ahead.find((w) => clauseEnd.test(w[0]))
+      if (hit) at += hit.index! + hit[0].length
+    }
+    at = Math.max(last, at)
+    last = at
+    return { id: mk.id, at }
+  })
+}
+
 function buildHc(): Doc {
-  const units = catechismUnits('hc', 'HC', creeds('heidelberg_catechism').Data)
+  // The proof texts come from Creeds.json. Their markers apply to a modern
+  // text, so alignMarkers moves them onto the Schaff text.
+  const withProofs = new Map((creeds('heidelberg_catechism').Data as CatQ[]).map((q) => [q.Number, q]))
+  const units = schaff.heidelberg.map((q) => {
+    const text = q.Answer
+    const where = `HC ${q.Number}`
+    const o = withProofs.get(q.Number)
+    let proofs: Proof[] = []
+    if (o?.AnswerWithProofs && o.Proofs) {
+      const { text: from, markers } = stripMarkers(o.AnswerWithProofs)
+      const byId = new Map(o.Proofs.map((p) => [String(p.Id), p.References]))
+      const all = proofsFromMarkers(text, alignMarkers(from, text, markers), (id) => {
+        const r = byId.get(id)
+        return r && refs(r, where, true)
+      }, where)
+      // Two markers can align to one place. Give the refs of an empty span to the next span.
+      let carry: string[] = []
+      for (const p of all) {
+        if (p.span[1] <= p.span[0]) {
+          carry.push(...p.refs)
+          continue
+        }
+        proofs.push({ span: p.span, refs: [...new Set([...carry, ...p.refs])] })
+        carry = []
+      }
+      if (carry.length && proofs.length) {
+        const lastProof = proofs[proofs.length - 1]
+        lastProof.refs = [...new Set([...lastProof.refs, ...carry])]
+      } else if (carry.length) warn(`${where}: proofs could not be aligned`)
+    }
+    return makeUnit(`hc-${q.Number}`, `Q. ${q.Number}`, q.Question, text, proofs)
+  })
   if (LORDS_DAYS.length !== 52) throw new Error('HC: expected 52 Lord\'s Days')
   const groups: Group[] = LORDS_DAYS.map((a, i) => {
     const b = (LORDS_DAYS[i + 1] ?? 130) - 1
@@ -309,9 +405,8 @@ function buildHc(): Doc {
     kind: 'catechism',
     year: '1563',
     source: {
-      ...SOURCE_CREEDS,
-      license: 'Labelled public domain upstream; see note',
-      note: 'This English text appears to be the Canadian Reformed Book of Praise translation, which is under copyright. Fine for private use; swap for Schaff (1877) before any public release.',
+      ...SOURCE_SCHAFF,
+      note: 'English text from Schaff (1877). The proof texts come from Creeds.json, at github.com/NonlinearFruit/Creeds.json. A script aligns them to this text.',
     },
     groups,
     units,
@@ -360,9 +455,8 @@ function buildWcf(): Doc {
 // ---------------------------------------------------------------- Belgic, Dort
 
 function buildBelgic(): Doc {
-  const data: { Article: number; Title: string; Content: string }[] = creeds('belgic_confession_of_faith').Data
-  const units = data.map((a) =>
-    makeUnit(`bc-${a.Article}`, `Art. ${a.Article}`, `Article ${a.Article}: ${a.Title}`, a.Content.replace(/\s+/g, ' ').trim()),
+  const units = schaff.belgic.map((a) =>
+    makeUnit(`bc-${a.Article}`, `Art. ${a.Article}`, `Article ${a.Article}: ${a.Title}`, a.Content),
   )
   return doc({
     id: 'bc',
@@ -371,9 +465,8 @@ function buildBelgic(): Doc {
     kind: 'confession',
     year: '1561',
     source: {
-      ...SOURCE_CREEDS,
-      license: 'Labelled public domain upstream; see note',
-      note: 'This English text appears to be the CRC 1985 translation, which is under copyright. Fine for private use; swap for a public-domain translation before any public release.',
+      ...SOURCE_SCHAFF,
+      note: 'English text from Schaff (1877). It is the translation of the Reformed (Dutch) Church in America, made from the Latin.',
     },
     groups: [{ title: 'Articles 1–37', units: units.map((u) => u.id) }],
     units,

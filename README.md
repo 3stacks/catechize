@@ -233,8 +233,16 @@ docker exec catechize node server/backup.ts /data/backup.db
 ```bash
 scripts/fetch-sources.sh                 # pinned upstream texts → sources/cache/
 npm run extract:creeds -- "<file>.docx" sources/creeds-annotated.json   # only if the docx changes
+npm run extract:schaff                   # only if the Schaff text changes
 npm run data                             # → public/data/, reports any unresolved reference
 ```
+
+`sources/schaff.json` holds the English Heidelberg Catechism and Belgic
+Confession from Schaff, *The Creeds of Christendom*, vol. 3 (1877), on
+[CCEL](https://ccel.org/ccel/schaff/creeds3). The text is in the public domain.
+`scripts/extract-schaff.py` writes the file and corrects the errors of the
+CCEL transcription. The proof texts of the Heidelberg Catechism come from
+Creeds.json. The build aligns them to the Schaff text.
 
 `sources/small-catechism.json` holds Luther's Small Catechism in the Triglot
 Concordia translation (1921), without the editors' bracketed additions. The
@@ -246,7 +254,7 @@ the annotated table is matched against; edit it if the creed text changes.
 ## Layout
 
 ```
-scripts/        build-data.ts, fetch-sources.sh, extract-creeds-docx.py
+scripts/        build-data.ts, fetch-sources.sh, extract-creeds-docx.py, extract-schaff.py
 sources/        hand-maintained inputs (annotated creeds); cache/ is fetched
 src/lib/        refs (Scripture parsing), chunk, grade: pure, unit-tested
 src/data/       data types and loaders

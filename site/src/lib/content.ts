@@ -280,7 +280,7 @@ export const DOC_PAGES: DocPage[] = [
     name: 'the Heidelberg Catechism',
     title: 'Heidelberg Catechism: all 129 questions and answers',
     description: 'All 129 questions of the Heidelberg Catechism (1563) in 52 Lord’s Days, with its history and outline. Learn it by heart, one clause at a time, free.',
-    lede: 'The Heidelberg Catechism is the most loved catechism of the Reformation. It begins with comfort: "What is your only comfort in life and death? That I am not my own, but belong with body and soul, both in life and in death, to my faithful Saviour Jesus Christ."',
+    lede: 'The Heidelberg Catechism is the most loved catechism of the Reformation. It begins with comfort: "What is thy only comfort in life and in death? That I, with body and soul, both in life and in death, am not my own, but belong to my faithful Saviour Jesus Christ."',
     facts: [
       ['Written', 'Heidelberg, 1563'],
       ['Authors', 'Zacharias Ursinus, with Caspar Olevianus and others'],
@@ -288,7 +288,7 @@ export const DOC_PAGES: DocPage[] = [
       ['Used by', 'Continental Reformed churches. One of the Three Forms of Unity'],
     ],
     about: [
-      'The Heidelberg Catechism speaks to the learner as "you", and the answers say "I". This makes it personal and warm. It is divided into 52 Lord’s Days, so a church can preach through it in one year.',
+      'The Heidelberg Catechism speaks to the learner as "thou", and the answers say "I". This makes it personal and warm. It is divided into 52 Lord’s Days, so a church can preach through it in one year.',
       'It explains the Apostles’ Creed, the sacraments, the Ten Commandments and the Lord’s Prayer.',
     ],
     history: [
