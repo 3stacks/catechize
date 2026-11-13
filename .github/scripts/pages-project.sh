@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Check the Cloudflare API token, and make the Pages project if it is missing.
+# Check the Cloudflare API token, and stop if the Pages project is missing.
 # Prints "url=https://<subdomain>" for $GITHUB_OUTPUT. Errors go to stderr.
 #   CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... pages-project.sh <project>
 set -euo pipefail
@@ -25,12 +25,14 @@ fi
 
 status="$(curl --silent --output project.json --write-out '%{http_code}' --header "$auth" \
   "$api/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${project}")"
+# A missing project is an error. A rename in the dashboard changes the name, so a
+# new project here takes the deploys away from the custom domain.
 if [ "$status" = 404 ]; then
-  echo "Making the Pages project ${project}" >&2
-  curl --fail --silent --show-error --request POST --header "$auth" \
-    --header 'Content-Type: application/json' \
-    --data "{\"name\":\"${project}\",\"production_branch\":\"main\"}" \
-    --output project.json "$api/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects"
+  echo "The Pages project ${project} does not exist." >&2
+  echo "If you renamed the project, change PROJECT in .github/workflows/deploy.yml." >&2
+  echo "For a new site, make the project first:" >&2
+  echo "  npx wrangler pages project create ${project} --production-branch=main" >&2
+  exit 1
 elif [ "$status" != 200 ]; then
   echo "The lookup of the Pages project returned ${status}:" >&2
   jq -c '.errors' project.json >&2 || cat project.json >&2
